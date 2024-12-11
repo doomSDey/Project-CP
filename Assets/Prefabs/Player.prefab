@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3351753990004076119}
   - component: {fileID: 2057803325699019138}
   - component: {fileID: 7298216663316554187}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -145,9 +145,9 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2908549503267067535}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
-  m_UseFullKinematicContacts: 0
+  m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 7325946057027000280}
   - component: {fileID: 7011005421095962602}
   - component: {fileID: 7544404209550568241}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Shooter
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -15,12 +15,12 @@ public class Laser : MonoBehaviour
         rb.linearVelocity = transform.right * speed; // Fixed from `linearVelocity` to `velocity`
     }
 
-    void OnTriggerEnter2D(Collider2D hitInfo)
+    void OnCollisionEnter2D(Collision2D hitInfo)
     {
         // If the laser hits an enemy, deal damage and destroy the laser
-        if (hitInfo.CompareTag("Enemy"))
+        if (hitInfo.gameObject.CompareTag("Enemy"))
         {
-            BaseEnemy enemy = hitInfo.GetComponent<BaseEnemy>();
+            BaseEnemy enemy = hitInfo.gameObject.GetComponent<BaseEnemy>();
             if (enemy != null)
             {
                 enemy.TakeDamage(damage);
@@ -29,7 +29,7 @@ public class Laser : MonoBehaviour
         }
 
         // If the laser hits an obstacle, it is destroyed
-        if (hitInfo.CompareTag("Obstacle"))
+        if (hitInfo.gameObject.CompareTag("Obstacle"))
         {
             Destroy(gameObject);
         }

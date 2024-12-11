@@ -18,9 +18,9 @@ public class Bomb : MonoBehaviour
         rb.linearVelocity = transform.right * speed; // Fixed from `linearVelocity` to `velocity`
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.CompareTag("Enemy") || other.CompareTag("Obstacle"))
+        if (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Obstacle"))
         {
             Explode();
         }
