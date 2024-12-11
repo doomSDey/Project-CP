@@ -8,25 +8,39 @@ public abstract class BaseEnemy : MonoBehaviour
     public float speed = 2f;
     public int damage = 10;
 
-    private Rigidbody2D rb;
+    protected Rigidbody2D rb;
 
-    // Called once on creation
     protected virtual void Start()
     {
         currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
+
+        if (rb == null)
+        {
+            rb = gameObject.AddComponent<Rigidbody2D>();
+        }
+
+        rb.bodyType = RigidbodyType2D.Kinematic; // Enemies don't move due to physics forces
+        rb.freezeRotation = true;
+
+        Collider2D collider = GetComponent<Collider2D>();
+        if (collider == null)
+        {
+            collider = gameObject.AddComponent<BoxCollider2D>();
+        }
+
+        collider.isTrigger = false; // The player should collide with this enemy
     }
 
     // Each enemy will have its own movement pattern
     protected abstract void Move();
 
-    // Called every frame
     protected virtual void Update()
     {
         Move();
     }
 
-    public void TakeDamage(int damageAmount)
+    public virtual void TakeDamage(int damageAmount)
     {
         currentHealth -= damageAmount;
         Debug.Log($"{gameObject.name} took {damageAmount} damage! Current Health: {currentHealth}");
@@ -43,12 +57,16 @@ public abstract class BaseEnemy : MonoBehaviour
         Destroy(gameObject); // Destroy the enemy object
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.CompareTag("PlayerProjectile"))
+        if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log($"{gameObject.name} was hit by {collision.gameObject.name}!");
-            TakeDamage(collision.GetComponent<Projectile>().damage);
+            Debug.Log($"{collision.gameObject.name} collided with Player!");
+            PlayerCapyScript player = collision.gameObject.GetComponent<PlayerCapyScript>();
+            if (player != null)
+            {
+                player.Die();
+            }
         }
     }
 }
