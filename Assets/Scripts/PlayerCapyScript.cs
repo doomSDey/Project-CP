@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement; // To reload the scene
+using UnityEngine.Tilemaps; // For working with the Tilemap
 
 public class PlayerCapyScript : MonoBehaviour
 {
@@ -7,6 +8,12 @@ public class PlayerCapyScript : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 movement;
     private Shooter shooter; // Reference to the shooter component
+
+    // Reference to the tilemap for boundary calculations
+    public Tilemap tilemap;
+
+    private Vector3 minBounds;
+    private Vector3 maxBounds;
 
     void Start()
     {
@@ -19,6 +26,14 @@ public class PlayerCapyScript : MonoBehaviour
         }
 
         rb.gravityScale = 0; // No gravity for the player
+
+        // **Calculate the tilemap bounds**
+        if (tilemap != null)
+        {
+            BoundsInt bounds = tilemap.cellBounds;
+            minBounds = tilemap.CellToWorld(bounds.min);
+            maxBounds = tilemap.CellToWorld(bounds.max);
+        }
     }
 
     void Update()
@@ -36,9 +51,16 @@ public class PlayerCapyScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Apply movement to the player
+        // Move the player
         rb.linearVelocity = movement.normalized * moveSpeed;
+
+        // **Clamp the player's position within the tilemap boundaries**
+        Vector3 clampedPosition = transform.position;
+        clampedPosition.x = Mathf.Clamp(clampedPosition.x, minBounds.x, maxBounds.x);
+        clampedPosition.y = Mathf.Clamp(clampedPosition.y, minBounds.y, maxBounds.y);
+        transform.position = clampedPosition;
     }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
@@ -49,28 +71,21 @@ public class PlayerCapyScript : MonoBehaviour
     }
 
     void HandleShooting()
-{
-    if (Input.GetMouseButton(0)) // Left click to shoot laser
     {
-        shooter.ShootLaser();
-    }
+        if (Input.GetMouseButton(0)) // Left click to shoot laser
+        {
+            shooter.ShootLaser();
+        }
 
-    if (Input.GetMouseButtonDown(1)) // Right click to shoot bomb
-    {
-        shooter.ShootBomb();
+        if (Input.GetMouseButtonDown(1)) // Right click to shoot bomb
+        {
+            shooter.ShootBomb();
+        }
     }
-}
 
     public void Die()
     {
         Debug.Log("Player has died!");
-        // Option 1: Reload the current scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-
-        // Option 2: Disable the player sprite
-        // gameObject.SetActive(false);
-
-        // Option 3: Show a Game Over screen (handled by GameManager)
-        // GameManager.instance.GameOver();
     }
 }
