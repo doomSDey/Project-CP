@@ -7,6 +7,9 @@ public class Bomb : MonoBehaviour
     public float explosionRadius = 2f; // Explosion radius
     public GameObject explosionEffect; // Optional: explosion visual effect
 
+    [SerializeField] private float shakeIntensity = 0.5f; // Value between 0 and 1
+    private CameraShake cameraShake;
+
     private Rigidbody2D rb;
 
     void Start()
@@ -16,6 +19,12 @@ public class Bomb : MonoBehaviour
 
         // Set velocity in the direction the bomb is facing
         rb.linearVelocity = transform.right * speed; // Fixed from `linearVelocity` to `velocity`
+
+        cameraShake = Camera.main.GetComponent<CameraShake>();
+        if (cameraShake == null)
+        {
+            Debug.LogWarning("CameraShake component not found on Main Camera!");
+        }
     }
 
     void OnCollisionEnter2D(Collision2D other)
@@ -28,6 +37,16 @@ public class Bomb : MonoBehaviour
 
     void Explode()
     {
+        Debug.Log("explode");
+        if (cameraShake != null)
+        {
+            Debug.Log("Starting camera shake");
+            cameraShake.AddTrauma(shakeIntensity);
+        }
+        else
+        {
+            Debug.LogWarning("CameraShake is null!");
+        }
         // Optional explosion effect
         if (explosionEffect != null)
         {
