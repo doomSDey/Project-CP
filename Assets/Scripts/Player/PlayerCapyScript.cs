@@ -6,9 +6,19 @@ public class PlayerCapyScript : MonoBehaviour
 {
     public float moveSpeed = 5f;
     private float currentMoveSpeed;  // Added to track current speed
+
     private Rigidbody2D rb;
     private Vector2 movement;
     private Shooter shooter;
+
+    [Header("Dash Settings")]
+    public float dashSpeed = 20f;
+    public float dashDuration = 0.2f;
+    public float dashCooldown = 1f;
+    private float dashTimeLeft;
+    private float dashCooldownTimer;
+    private bool isDashing;
+    private Vector2 dashDirection;
 
     public Tilemap tilemap;
     private Vector3 minBounds;
@@ -54,17 +64,55 @@ public class PlayerCapyScript : MonoBehaviour
         {
             playerSize = Vector3.zero;
         }
+
+        dashTimeLeft = 0f;
+        dashCooldownTimer = 0f;
     }
 
     void Update()
     {
+        if (dashCooldownTimer > 0)
+        {
+            dashCooldownTimer -= Time.deltaTime;
+        }
+
         if (bombCooldownTimer > 0)
         {
             bombCooldownTimer -= Time.deltaTime;
         }
 
+        HandleDash();
         HandleMovement();
         HandleShooting();
+    }
+
+    private void HandleDash()
+    {
+        // Initiate dash when pressing Shift and not in cooldown
+        if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+            && dashCooldownTimer <= 0 && !isDashing)
+        {
+            isDashing = true;
+            dashTimeLeft = dashDuration;
+            dashCooldownTimer = dashCooldown;
+
+            // Store the dash direction based on current movement or facing direction
+            dashDirection = movement.normalized;
+            if (dashDirection == Vector2.zero) // If not moving, dash in facing direction
+            {
+                dashDirection = transform.right; // Or any default direction
+            }
+        }
+
+        // Handle ongoing dash
+        if (isDashing)
+        {
+            dashTimeLeft -= Time.deltaTime;
+            if (dashTimeLeft <= 0)
+            {
+                isDashing = false;
+            }
+        }
     }
 
     private void HandleMovement()
@@ -75,7 +123,14 @@ public class PlayerCapyScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.linearVelocity = movement.normalized * currentMoveSpeed;  // Using currentMoveSpeed instead of moveSpeed
+        if (isDashing)
+        {
+            rb.linearVelocity = dashDirection * dashSpeed;
+        }
+        else
+        {
+            rb.linearVelocity = movement.normalized * currentMoveSpeed;
+        }
 
         BoxCollider2D playerCollider = GetComponent<BoxCollider2D>();
         if (playerCollider == null) return;
@@ -137,6 +192,8 @@ public class PlayerCapyScript : MonoBehaviour
 
     void HandleShooting()
     {
+        if (isDashing) return; // Don't allow shooting while dashing
+
         if (Input.GetMouseButton(0)) // Left click to shoot laser
         {
             shooter.ShootLaser();
