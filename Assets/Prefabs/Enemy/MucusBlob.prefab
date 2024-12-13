@@ -131,7 +131,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 27d4c3df63f2ba749bfc1f3fe3f2c681, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -176,6 +176,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  currentHealth: 100
+  currentHealth: 500
   speed: 2
   damage: 10
+  flickerDuration: 0.1
+  flickerRate: 0.01
+  hitColor: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 1}
