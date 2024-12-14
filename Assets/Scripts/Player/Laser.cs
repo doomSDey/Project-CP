@@ -29,8 +29,12 @@ public class Laser : MonoBehaviour
         }
 
         // If the laser hits an obstacle, it is destroyed
+
         if (hitInfo.gameObject.CompareTag("Obstacle"))
         {
+            Obstacle obstacle = hitInfo.gameObject.GetComponent<Obstacle>();
+            if (obstacle != null)
+                obstacle.TakeDamage(damage);
             Destroy(gameObject);
         }
     }

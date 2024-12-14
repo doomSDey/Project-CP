@@ -20,6 +20,12 @@ public class PlayerCapyScript : MonoBehaviour
     private bool isDashing;
     private Vector2 dashDirection;
 
+    [Header("Bounce Settings")]
+    public float bounceForce = 15f;
+    private bool isBouncing = false;
+    private float bounceTime = 0.2f;
+    private float bounceTimeLeft;
+
     public Tilemap tilemap;
     private Vector3 minBounds;
     private Vector3 maxBounds;
@@ -121,8 +127,44 @@ public class PlayerCapyScript : MonoBehaviour
         movement.y = Input.GetAxisRaw("Vertical");
     }
 
+    // Add this method to handle the bounce
+    public void BounceBack(Vector2 collisionPoint)
+    {
+        if (!isBouncing)
+        {
+            isBouncing = true;
+            bounceTimeLeft = bounceTime;
+
+            // Calculate bounce direction (opposite of current movement)
+            Vector2 bounceDirection;
+            if (rb.linearVelocity.magnitude < 0.1f)
+            {
+                // If barely moving, bounce away from collision point
+                bounceDirection = (transform.position - (Vector3)collisionPoint).normalized;
+            }
+            else
+            {
+                // Bounce in opposite direction of movement
+                bounceDirection = -rb.linearVelocity.normalized;
+            }
+
+            // Apply bounce force
+            rb.linearVelocity = bounceDirection * bounceForce;
+        }
+    }
+
     private void FixedUpdate()
     {
+        if (isBouncing)
+        {
+            bounceTimeLeft -= Time.fixedDeltaTime;
+            if (bounceTimeLeft <= 0)
+            {
+                isBouncing = false;
+            }
+            return; // Skip normal movement while bouncing
+        }
+
         if (isDashing)
         {
             rb.linearVelocity = dashDirection * dashSpeed;

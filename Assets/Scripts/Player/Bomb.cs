@@ -1,3 +1,4 @@
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class Bomb : MonoBehaviour
@@ -65,6 +66,14 @@ public class Bomb : MonoBehaviour
                 {
                     enemy.TakeDamage(damage);
                 }
+            }
+
+            if (collider.CompareTag("Obstacle"))
+            {
+                Obstacle obstacle = gameObject.gameObject.GetComponent<Obstacle>();
+                if (obstacle != null)
+                    obstacle.TakeDamage(damage);
+                Destroy(gameObject);
             }
         }
 
