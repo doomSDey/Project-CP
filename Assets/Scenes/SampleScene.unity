@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -256,6 +257,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf2010c6163a9740942929fc9ad4beb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,6 +384,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mucusBlobPrefab: {fileID: 6563045841928504701, guid: ddc91160ddec0d947a2c7385948b3ea3, type: 3}
   numberOfBlobs: 5
+  spawnInterval: 3
+  minimumSpawnDistance: 5
   groundTilemap: {fileID: 2145754884}
 --- !u!4 &1489424581
 Transform:
@@ -10718,6 +10733,10 @@ PrefabInstance:
     - target: {fileID: 2908549503267067535, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908549503267067535, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 3351753990004076119, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
       propertyPath: m_Size.x
