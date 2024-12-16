@@ -580,6 +580,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16eb2044717b95c4094c4b11580c7731, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canBounceBack: 0
+  bounceInterval: 0.5
+  isDestroyable: 0
+  maxHealth: 100
 --- !u!4 &2008416294
 Transform:
   m_ObjectHideFlags: 0
