@@ -10903,7 +10903,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2057803325699019138, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
       propertyPath: m_BodyType
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2057803325699019138, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
+      propertyPath: m_Constraints
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2908549503267067535, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
       propertyPath: m_Name
