@@ -44,7 +44,6 @@ public class Obstacle : MonoBehaviour
             PlayerCapyScript player = collision.gameObject.GetComponent<PlayerCapyScript>();
             if (player != null)
             {
-                player.BounceBack(collision.contacts[0].point);
                 bounceTimer = bounceInterval;
             }
         }

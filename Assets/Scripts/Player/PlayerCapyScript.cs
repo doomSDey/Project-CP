@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 public class PlayerCapyScript : MonoBehaviour
 {
     public float moveSpeed = 5f;
-    private float currentMoveSpeed;  // Added to track current speed
+    private float currentMoveSpeed;
 
     private Rigidbody2D rb;
     private Vector2 movement;
@@ -32,17 +32,15 @@ public class PlayerCapyScript : MonoBehaviour
     private Camera mainCamera;
     private Vector3 playerSize;
 
-    // Add bomb cooldown variables
     public float bombCooldown = 1.5f;
     private float bombCooldownTimer = 0f;
-
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         shooter = GetComponentInChildren<Shooter>();
         mainCamera = Camera.main;
-        currentMoveSpeed = moveSpeed;  // Initialize current speed
+        currentMoveSpeed = moveSpeed;
 
         if (rb == null)
         {
@@ -94,7 +92,6 @@ public class PlayerCapyScript : MonoBehaviour
 
     private void HandleDash()
     {
-        // Initiate dash when pressing Shift and not in cooldown
         if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
             && dashCooldownTimer <= 0 && !isDashing)
         {
@@ -102,15 +99,13 @@ public class PlayerCapyScript : MonoBehaviour
             dashTimeLeft = dashDuration;
             dashCooldownTimer = dashCooldown;
 
-            // Store the dash direction based on current movement or facing direction
             dashDirection = movement.normalized;
-            if (dashDirection == Vector2.zero) // If not moving, dash in facing direction
+            if (dashDirection == Vector2.zero)
             {
-                dashDirection = transform.right; // Or any default direction
+                dashDirection = transform.right;
             }
         }
 
-        // Handle ongoing dash
         if (isDashing)
         {
             dashTimeLeft -= Time.deltaTime;
@@ -127,44 +122,8 @@ public class PlayerCapyScript : MonoBehaviour
         movement.y = Input.GetAxisRaw("Vertical");
     }
 
-    // Add this method to handle the bounce
-    public void BounceBack(Vector2 collisionPoint)
-    {
-        if (!isBouncing)
-        {
-            isBouncing = true;
-            bounceTimeLeft = bounceTime;
-
-            // Calculate bounce direction (opposite of current movement)
-            Vector2 bounceDirection;
-            if (rb.linearVelocity.magnitude < 0.1f)
-            {
-                // If barely moving, bounce away from collision point
-                bounceDirection = (transform.position - (Vector3)collisionPoint).normalized;
-            }
-            else
-            {
-                // Bounce in opposite direction of movement
-                bounceDirection = -rb.linearVelocity.normalized;
-            }
-
-            // Apply bounce force
-            rb.linearVelocity = bounceDirection * bounceForce;
-        }
-    }
-
     private void FixedUpdate()
     {
-        if (isBouncing)
-        {
-            bounceTimeLeft -= Time.fixedDeltaTime;
-            if (bounceTimeLeft <= 0)
-            {
-                isBouncing = false;
-            }
-            return; // Skip normal movement while bouncing
-        }
-
         if (isDashing)
         {
             rb.linearVelocity = dashDirection * dashSpeed;
@@ -173,32 +132,10 @@ public class PlayerCapyScript : MonoBehaviour
         {
             rb.linearVelocity = movement.normalized * currentMoveSpeed;
         }
+    }
 
-        BoxCollider2D playerCollider = GetComponent<BoxCollider2D>();
-        if (playerCollider == null) return;
-
-        float playerHalfWidth = playerCollider.size.x / 2 * transform.localScale.x;
-        float playerHalfHeight = playerCollider.size.y / 2 * transform.localScale.y;
-
-        float shooterOffsetY = Mathf.Abs(shooter.transform.localPosition.y) * shooter.transform.localScale.y;
-
-        float totalHeight = playerHalfHeight + shooterOffsetY;
-
-        float correctedMinY = minBounds.y + playerHalfHeight;
-
-        float clampedX = Mathf.Clamp(
-            transform.position.x,
-            minBounds.x + playerHalfWidth,
-            maxBounds.x - playerHalfWidth
-        );
-        float clampedY = Mathf.Clamp(
-            transform.position.y,
-            correctedMinY,
-            maxBounds.y - totalHeight
-        );
-
-        transform.position = new Vector3(clampedX, clampedY, transform.position.z);
-
+    private void LateUpdate()
+    {
         CenterCameraOnPlayer();
     }
 
@@ -209,17 +146,23 @@ public class PlayerCapyScript : MonoBehaviour
         float cameraHalfHeight = mainCamera.orthographicSize;
         float cameraHalfWidth = mainCamera.aspect * cameraHalfHeight;
 
+        // Move the camera to match the player position
+        Vector3 targetPosition = transform.position;
+
+        // Clamp the camera so it stays within the bounds of the tilemap
         float clampedX = Mathf.Clamp(
-            transform.position.x,
+            targetPosition.x,
             minBounds.x + cameraHalfWidth,
             maxBounds.x - cameraHalfWidth
         );
+
         float clampedY = Mathf.Clamp(
-            transform.position.y,
+            targetPosition.y,
             minBounds.y + cameraHalfHeight,
             maxBounds.y - cameraHalfHeight
         );
 
+        // Set the camera to follow the player
         mainCamera.transform.position = new Vector3(clampedX, clampedY, mainCamera.transform.position.z);
     }
 
@@ -234,26 +177,22 @@ public class PlayerCapyScript : MonoBehaviour
 
     void HandleShooting()
     {
-        if (isDashing) return; // Don't allow shooting while dashing
+        if (isDashing) return;
 
-        if (Input.GetMouseButton(0)) // Left click to shoot laser
+        if (Input.GetMouseButton(0))
         {
             shooter.ShootLaser();
-            currentMoveSpeed = moveSpeed * 0.6f;  // Reduce speed by 40%
+            currentMoveSpeed = moveSpeed * 0.6f;
         }
-        else if (Input.GetMouseButton(1) && bombCooldownTimer <= 0) // Right click to shoot bomb with cooldown check
+        else if (Input.GetMouseButton(1) && bombCooldownTimer <= 0)
         {
             shooter.ShootBomb();
-            currentMoveSpeed = 0f;  // Reduce speed by 100%
-            bombCooldownTimer = bombCooldown; // Reset the cooldown timer
-        }
-        else if (Input.GetMouseButton(1)) // Still holding right click but in cooldown
-        {
-            currentMoveSpeed = 0f;  // Keep speed at 0 while holding right click
+            currentMoveSpeed = 0f;
+            bombCooldownTimer = bombCooldown;
         }
         else
         {
-            currentMoveSpeed = moveSpeed;  // Reset to normal speed when not shooting
+            currentMoveSpeed = moveSpeed;
         }
     }
 
