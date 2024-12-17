@@ -48,7 +48,7 @@ public class BaseEnemy : MonoBehaviour
         }
     }
 
-    protected virtual void Die()
+    public virtual void Die()
     {
         Debug.Log($"{gameObject.name} has died!");
         // Cancel any ongoing coroutines to prevent errors

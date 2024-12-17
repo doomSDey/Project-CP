@@ -166,15 +166,6 @@ public class PlayerCapyScript : MonoBehaviour
         mainCamera.transform.position = new Vector3(clampedX, clampedY, mainCamera.transform.position.z);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            Debug.Log("Player collided with enemy! Game Over!");
-            Die();
-        }
-    }
-
     void HandleShooting()
     {
         if (isDashing) return;
