@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
         {
             tilemapBounds = groundTilemap.localBounds;
         }
+        FindAnyObjectByType<GlitchEffect>().TriggerGlitch(5f); // Glitch for 5 seconds
 
         // Added: Initialize references
         mainCamera = Camera.main;
