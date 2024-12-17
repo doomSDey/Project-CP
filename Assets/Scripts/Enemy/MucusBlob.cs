@@ -4,14 +4,9 @@ using UnityEngine.Tilemaps;
 public class MucusBlob : BaseEnemy
 {
     [Header("Movement Settings")]
-    [SerializeField] private float speed = 1f; // Slow movement speed
-    [SerializeField] private float directionChangeInterval = 5f; // Change direction every few seconds
+    [SerializeField] private float changeDirectionInterval = 5f; // Change direction every few seconds
     private Vector2 movementDirection;
     private float directionChangeTimer;
-
-    [Header("Health Settings")]
-    [SerializeField] private int maxHealth = 20; // 2 Capy Lazer hits (10 damage each) or 1 Capy Bomb (20 damage)
-    private int currentHealth;
 
     [Header("Bounds Settings")]
     private Vector3 minBounds;
@@ -19,27 +14,18 @@ public class MucusBlob : BaseEnemy
     private float halfWidth;
     private float halfHeight;
 
-    private Rigidbody2D rb;
-
     protected override void Start()
     {
         base.Start();
-        currentHealth = maxHealth;
 
-        rb = GetComponent<Rigidbody2D>();
-        if (rb == null)
-        {
-            rb = gameObject.AddComponent<Rigidbody2D>();
-        }
-
-        // Set the Rigidbody to be Kinematic
-        rb.bodyType = RigidbodyType2D.Kinematic;
-
+        // Set specific stats for the Mucus Blob
+        currentHealth = 20; // 2 Capy Lazer hits (10 each) or 1 Capy Bomb (20 damage)
+        speed = 1f; // Slow movement
         movementDirection = GetRandomDirection();
-        directionChangeTimer = directionChangeInterval;
+        directionChangeTimer = changeDirectionInterval;
 
-        // Get bounds from the tilemap
-        Tilemap tilemap = FindObjectOfType<Tilemap>();
+        // Get the tilemap bounds
+        Tilemap tilemap = FindAnyObjectByType<Tilemap>();
         if (tilemap != null)
         {
             Bounds mapBounds = tilemap.localBounds;
@@ -47,7 +33,7 @@ public class MucusBlob : BaseEnemy
             maxBounds = mapBounds.max;
         }
 
-        // Calculate the object's size for bounds clamping
+        // Calculate the object's size for clamping
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
         {
@@ -55,28 +41,35 @@ public class MucusBlob : BaseEnemy
             halfWidth = objectSize.x / 2;
             halfHeight = objectSize.y / 2;
         }
+
+        // Set Rigidbody to Kinematic
+        rb.bodyType = RigidbodyType2D.Kinematic;
     }
 
     protected override void Move()
     {
         if (rb == null) return;
 
-        // Move the mucus blob in the current movement direction
+        // Move the Mucus Blob according to its movement direction
         Vector2 newPosition = rb.position + movementDirection * speed * Time.fixedDeltaTime;
         rb.MovePosition(newPosition);
 
         // Check if the blob collides with screen bounds and reflect if necessary
         CheckBounds();
 
-        // Update the timer to change direction periodically
+        // Periodically change movement direction
         directionChangeTimer -= Time.deltaTime;
         if (directionChangeTimer <= 0f)
         {
             movementDirection = GetRandomDirection();
-            directionChangeTimer = directionChangeInterval;
+            directionChangeTimer = changeDirectionInterval;
         }
     }
 
+    /// <summary>
+    /// Ensures the blob stays within the defined bounds.
+    /// If it touches the edge, it bounces back.
+    /// </summary>
     private void CheckBounds()
     {
         Vector3 position = transform.position;
@@ -98,6 +91,9 @@ public class MucusBlob : BaseEnemy
         }
     }
 
+    /// <summary>
+    /// Get a random direction for the blob to move.
+    /// </summary>
     private Vector2 GetRandomDirection()
     {
         Vector2[] possibleDirections = { Vector2.left, Vector2.right, Vector2.up, Vector2.down };
@@ -105,22 +101,9 @@ public class MucusBlob : BaseEnemy
         return possibleDirections[randomIndex];
     }
 
-    public override void TakeDamage(float damage)
-    {
-        currentHealth -= (int)damage;
-
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-    }
-
-    public void Die()
-    {
-        Debug.Log($"{gameObject.name} has died!");
-        Destroy(gameObject);
-    }
-
+    /// <summary>
+    /// Handles collision logic for when the MucusBlob collides with another object.
+    /// </summary>
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -135,18 +118,29 @@ public class MucusBlob : BaseEnemy
         }
         else if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Obstacle"))
         {
-            // Reflect direction on collision with another object
-            Vector2 collisionNormal = collision.contacts[0].normal;
-            movementDirection = Vector2.Reflect(movementDirection, collisionNormal).normalized;
-            Debug.Log($"{gameObject.name} collided with {collision.gameObject.name} and bounced off.");
+            HandleObstacleCollision(collision);
         }
     }
 
+    /// <summary>
+    /// Push the player away from the mucus blob.
+    /// </summary>
     private void PushPlayerBack(Rigidbody2D playerRb, Vector2 collisionNormal)
     {
         // Calculate push-back direction (opposite of collision normal)
         Vector2 pushDirection = collisionNormal.normalized;
         float pushForce = 5f; // How much force to push the player back with
         playerRb.AddForce(pushDirection * pushForce, ForceMode2D.Impulse);
+    }
+
+    /// <summary>
+    /// Handles collision with obstacles and changes direction on collision.
+    /// </summary>
+    private  void HandleObstacleCollision(Collision2D collision)
+    {
+        Vector2 collisionNormal = collision.GetContact(0).normal;
+        movementDirection = Vector2.Reflect(movementDirection, collisionNormal).normalized;
+        rb.linearVelocity = movementDirection * speed;
+        Debug.Log($"{gameObject.name} bounced off {collision.gameObject.name} in direction {movementDirection}");
     }
 }

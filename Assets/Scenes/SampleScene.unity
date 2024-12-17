@@ -450,7 +450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16736a0ef37890a45bd6482b6bea69a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mucusBlobPrefab: {fileID: 6563045841928504701, guid: ddc91160ddec0d947a2c7385948b3ea3, type: 3}
+  macrophagePrefab: {fileID: 0}
   numberOfBlobs: 5
   spawnInterval: 3
   minimumSpawnDistance: 5
