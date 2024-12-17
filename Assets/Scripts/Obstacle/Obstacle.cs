@@ -17,6 +17,7 @@ public class Obstacle : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
     private bool isFlickering = false;
+    private bool isAlive = true; // New flag to track if the object is alive
 
     private void Start()
     {
@@ -97,6 +98,7 @@ public class Obstacle : MonoBehaviour
 
         if (currentHealth <= 0)
         {
+            isAlive = false; // Object is no longer "alive"
             Destroy(gameObject);
         }
     }
@@ -112,8 +114,22 @@ public class Obstacle : MonoBehaviour
 
         for (int i = 0; i < flickerCount; i++)
         {
+            // Check if object is destroyed
+            if (!this || spriteRenderer == null || !isAlive)
+            {
+                Debug.Log("Object destroyed. Exiting flicker early.");
+                break; // Exit flicker logic early
+            }
+
             spriteRenderer.color = damageColor;
             await Task.Delay((int)(flickerDuration * 1000));
+
+            if (!this || spriteRenderer == null || !isAlive)
+            {
+                Debug.Log("Object destroyed. Exiting flicker early.");
+                break; // Exit flicker logic early
+            }
+
             spriteRenderer.color = originalColor;
             await Task.Delay((int)(flickerDuration * 1000));
         }
