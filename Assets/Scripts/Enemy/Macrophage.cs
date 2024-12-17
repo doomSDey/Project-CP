@@ -7,37 +7,35 @@ public class Macrophage : BaseEnemy
     [SerializeField] private float chaseRange = 10f;
     [SerializeField] private float stunDuration = 2f;
     [SerializeField] private float obstacleAvoidanceRange = 1f;
-    [SerializeField] private LayerMask obstacleLayer; // Set this in inspector to include walls/obstacles
+    [SerializeField] private LayerMask obstacleLayer;
     private GameObject player;
     private bool isStunned = false;
     private float currentSpeed;
 
-    [Header("Obstacle Avoidance")]
-    [SerializeField] private float raycastDistance = 1.5f;
-    [SerializeField] private float avoidanceWeight = 1.5f;
-    private Vector2 currentDirection;
-    private Collider2D enemyCollider;
+    [Header("Movement")]
+    [SerializeField] private float moveForce = 20f;
+    [SerializeField] private float maxSpeed = 5f;
+    private Vector2 moveDirection;
 
     protected override void Start()
     {
         base.Start();
-        rb.bodyType = RigidbodyType2D.Dynamic; // Changed to Dynamic
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-        rb.gravityScale = 0f; // Ensure no gravity affects the enemy
-        rb.constraints = RigidbodyConstraints2D.FreezeRotation; // Prevent rotation
-        rb.linearDamping = 5f; // Add some drag to prevent sliding
 
+        // Setup rigidbody
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
+        rb.gravityScale = 0f;
+        rb.linearDamping = 2f;
+        rb.angularDamping = 2f;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        // Find player
         player = GameObject.FindGameObjectWithTag("Player");
+
+        // Initialize variables
+        currentSpeed = speed;
         maxHealth = Mathf.Infinity;
         currentHealth = maxHealth;
-        currentSpeed = speed;
-        currentDirection = Vector2.zero;
-
-        enemyCollider = GetComponent<Collider2D>();
-        if (enemyCollider != null)
-        {
-            enemyCollider.isTrigger = false; // Ensure the collider is not a trigger
-        }
     }
 
     protected override void Move()
@@ -48,53 +46,68 @@ public class Macrophage : BaseEnemy
             return;
         }
 
+        // Calculate distance to player
         float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
+
+        // Only chase if within range
         if (distanceToPlayer <= chaseRange)
         {
+            // Get direction to player
             Vector2 directionToPlayer = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
-            Vector2 avoidanceDirection = HandleObstacleAvoidance();
 
-            // Combine pursuit and avoidance
-            Vector2 targetDirection = (directionToPlayer + avoidanceDirection * avoidanceWeight).normalized;
-
-            // Smoothly interpolate the current direction
-            currentDirection = Vector2.Lerp(currentDirection, targetDirection, Time.fixedDeltaTime * 5f);
-
-            // Use AddForce instead of directly setting velocity
-            rb.AddForce(currentDirection * currentSpeed * 10f);
-
-            // Clamp velocity to prevent excessive speed
-            rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, currentSpeed);
-        }
-        else
-        {
-            // Gradually slow down when out of range
-            rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, Time.fixedDeltaTime * 5f);
-        }
-    }
-
-    private Vector2 HandleObstacleAvoidance()
-    {
-        Vector2 avoidanceDirection = Vector2.zero;
-        float raySpread = 45f;
-        int rayCount = 8;
-
-        for (int i = 0; i < rayCount; i++)
-        {
-            float angle = transform.eulerAngles.z - raySpread + (2 * raySpread * i / (rayCount - 1));
-            Vector2 direction = Quaternion.Euler(0, 0, angle) * Vector2.right;
-
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, raycastDistance, obstacleLayer);
-            Debug.DrawRay(transform.position, direction * raycastDistance, Color.yellow);
+            // Check for obstacles
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, directionToPlayer, obstacleAvoidanceRange, obstacleLayer);
 
             if (hit.collider != null)
             {
-                float weight = 1 - (hit.distance / raycastDistance);
-                avoidanceDirection -= (Vector2)hit.normal * weight;
+                // If there's an obstacle, try to move around it
+                Vector2 avoidanceDirection = Vector2.zero;
+
+                // Cast rays at different angles to find a clear path
+                for (int i = 0; i < 8; i++)
+                {
+                    float angle = i * 45f;
+                    Vector2 direction = Quaternion.Euler(0, 0, angle) * directionToPlayer;
+                    RaycastHit2D obstacleCheck = Physics2D.Raycast(transform.position, direction, obstacleAvoidanceRange, obstacleLayer);
+
+                    if (obstacleCheck.collider == null)
+                    {
+                        avoidanceDirection = direction;
+                        break;
+                    }
+                }
+
+                // If we found a clear direction, use it
+                if (avoidanceDirection != Vector2.zero)
+                {
+                    moveDirection = avoidanceDirection;
+                }
+                else
+                {
+                    // If no clear path, move along the wall
+                    moveDirection = Vector2.Perpendicular(hit.normal);
+                }
             }
+            else
+            {
+                // No obstacles, move directly towards player
+                moveDirection = directionToPlayer;
+            }
+
+            // Apply movement force
+            rb.AddForce(moveDirection * moveForce);
+
+            // Clamp velocity to max speed
+            rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, maxSpeed);
+        }
+        else
+        {
+            // Slow down when out of range
+            rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, Time.fixedDeltaTime * 2f);
         }
 
-        return avoidanceDirection.normalized;
+        // Debug visualization
+        Debug.DrawRay(transform.position, moveDirection * 2f, Color.red);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -115,11 +128,11 @@ public class Macrophage : BaseEnemy
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        // Add slight repulsion force when colliding with obstacles
+        // Add bounce effect when colliding with obstacles
         if (((1 << collision.gameObject.layer) & obstacleLayer) != 0)
         {
-            Vector2 repulsionDirection = (transform.position - collision.transform.position).normalized;
-            rb.AddForce(repulsionDirection * currentSpeed * 5f);
+            Vector2 bounceDirection = ((Vector2)transform.position - collision.contacts[0].point).normalized;
+            rb.AddForce(bounceDirection * moveForce * 0.5f);
         }
     }
 
@@ -165,7 +178,7 @@ public class Macrophage : BaseEnemy
         Gizmos.DrawWireSphere(transform.position, chaseRange);
 
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, raycastDistance);
+        Gizmos.DrawWireSphere(transform.position, obstacleAvoidanceRange);
     }
 
     private void OnDisable()
