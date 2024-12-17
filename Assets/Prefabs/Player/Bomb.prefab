@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7429500698603295150}
   m_Layer: 10
   m_Name: Bomb
-  m_TagString: Untagged
+  m_TagString: Bomb
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -133,6 +133,7 @@ MonoBehaviour:
   damage: 20
   explosionRadius: 1.4
   explosionEffect: {fileID: 0}
+  shakeIntensity: 0.5
 --- !u!58 &7429500698603295150
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -223,6 +224,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7977834119987526890, guid: 218a40caaeaca344ea94341899ebc608, type: 3}
       propertyPath: m_Name
+      value: Bomb
+      objectReference: {fileID: 0}
+    - target: {fileID: 7977834119987526890, guid: 218a40caaeaca344ea94341899ebc608, type: 3}
+      propertyPath: m_TagString
       value: Bomb
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -4,7 +4,7 @@ using UnityEngine.Tilemaps;
 public class GameManager : MonoBehaviour
 {
     [Header("Enemy Prefabs")]
-    public GameObject mucusBlobPrefab;
+    public GameObject macrophagePrefab;
 
     [Header("Spawn Settings")]
     public int numberOfBlobs = 5;
@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
         while (Vector3.Distance(spawnPosition, playerTransform.position) < minimumSpawnDistance);
 
         // Instantiate the Mucus Blob
-        GameObject blob = Instantiate(mucusBlobPrefab, spawnPosition, Quaternion.identity);
-        blob.name = "MucusBlob_" + Random.Range(1000, 9999);
+        GameObject blob = Instantiate(macrophagePrefab, spawnPosition, Quaternion.identity);
+        blob.name = "Macrophage_" + Random.Range(1000, 9999);
     }
 }
