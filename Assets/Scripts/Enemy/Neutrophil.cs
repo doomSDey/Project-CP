@@ -120,7 +120,7 @@ public class Neutrophil : BaseEnemy
             Debug.Log("Neutrophil collided with Player — Exploding!");
             Explode();
         }
-        else if (collision.gameObject.CompareTag("Lazer"))
+        else if (collision.gameObject.CompareTag("Laser") || collision.gameObject.CompareTag("Bomb"))
         {
             Debug.Log("Neutrophil hit by Capy Lazer — Detonating remotely!");
             Explode();
