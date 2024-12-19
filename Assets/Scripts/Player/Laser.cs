@@ -17,7 +17,7 @@ public class Laser : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D hitInfo)
     {
-        // If the laser hits an enemy, deal damage and destroy the laser
+        // If the laser  hits an enemy, deal damage and destroy the laser
         if (hitInfo.gameObject.CompareTag("Enemy"))
         {
             BaseEnemy enemy = hitInfo.gameObject.GetComponent<BaseEnemy>();
