@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 public class Boss : MonoBehaviour
 {
@@ -16,19 +15,20 @@ public class Boss : MonoBehaviour
     [Header("Phases & Timers")]
     [SerializeField] private float phaseSwitchInterval = 20f;
     [SerializeField] private float phaseDuration = 15f;
-    [SerializeField] private int testPhase = 0; // Test each phase
+    [SerializeField] private int testPhase = 0;
     private int currentPhase = 1;
 
     [Header("Phase 1: Bullet Waves")]
     [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private Transform bulletSpawnPoint;
+    [SerializeField] private float bulletSpawnDistance = 1.5f;
     [SerializeField] private int bulletsPerWave = 15;
     [SerializeField] private float bulletFireRate = 0.5f;
+    [SerializeField] private float bulletSpeed = 5f;
 
     [Header("Phase 2: Summon Minions")]
     [SerializeField] private GameObject minionPrefab;
     [SerializeField] private int minionsToSpawn = 5;
-    [SerializeField] private float minionSpawnDistance = 1f;
+    [SerializeField] private float minionSpawnDistance = 1.5f;
     [SerializeField] private float minionLaunchForce = 5f;
 
     [Header("Phase 3: Random Lasers")]
@@ -128,7 +128,7 @@ public class Boss : MonoBehaviour
     {
         if (player == null) return;
 
-        Vector2 directionToPlayer = ((Vector2)player.transform.position - (Vector2)bulletSpawnPoint.position).normalized;
+        Vector2 directionToPlayer = (player.transform.position - transform.position).normalized;
         float baseAngle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg;
 
         float angleStep = 180f / (bulletsPerWave - 1);
@@ -137,12 +137,23 @@ public class Boss : MonoBehaviour
         for (int i = 0; i < bulletsPerWave; i++)
         {
             float angle = startAngle + (i * angleStep);
-            Vector2 direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
+            Vector2 direction = new Vector2(
+                Mathf.Cos(angle * Mathf.Deg2Rad),
+                Mathf.Sin(angle * Mathf.Deg2Rad)
+            );
 
-            GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
-            bullet.GetComponent<Rigidbody2D>().linearVelocity = direction * 5f;
+            Vector2 spawnPosition = (Vector2)transform.position + direction * bulletSpawnDistance;
+
+            // Rotate the bullet to face 'angle'
+            Quaternion rotation = Quaternion.Euler(0, 0, angle);
+
+            GameObject bullet = Instantiate(bulletPrefab, spawnPosition, rotation);
+
+            // No need to set velocity here since bullet handles its own movement via Translate.
+            // Just ensure that transform.right is pointing in the correct firing direction.
         }
     }
+
 
     private IEnumerator Phase2_SpawnAndLaunchMinions()
     {
@@ -169,9 +180,59 @@ public class Boss : MonoBehaviour
 
     private IEnumerator Phase3_AllAttacks()
     {
-        yield return StartCoroutine(Phase2_SpawnAndLaunchMinions());
-        Instantiate(laserPrefab, laserSpawnPoint.position, Quaternion.identity);
-        yield return new WaitForSeconds(laserFireRate);
+        // Spawn and launch minions first (as original code)
+        //yield return StartCoroutine(Phase2_SpawnAndLaunchMinions());
+
+        // Now fire multiple lasers at intervals
+        int numberOfLasers = 5; // for example, fire 5 lasers
+        for (int i = 0; i < numberOfLasers; i++)
+        {
+            FireLaserAtPlayer();
+            yield return new WaitForSeconds(laserFireRate);
+        }
+    }
+
+    private void FireLaserAtPlayer()
+    {
+        if (player == null) return;
+
+        // Calculate direction to player
+        Vector2 directionToPlayer = (player.transform.position - laserSpawnPoint.position).normalized;
+        float angle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg;
+
+        // Rotate the laser to face the player
+        Quaternion rotation = Quaternion.Euler(0, 0, angle);
+        Instantiate(laserPrefab, laserSpawnPoint.position, rotation);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Check if the collision is with the player
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("Player hit");
+            PlayerCapyScript player = collision.gameObject.GetComponent<PlayerCapyScript>();
+            if (player != null)
+            {
+                player.Die(); // Kill the player
+            }
+        }
+        // Check if the collision is with an obstacle
+        else if (collision.gameObject.CompareTag("Obstacle"))
+        {
+            Debug.Log("Collided with an obstacle");
+
+            // Stop the boss's movement
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector2.zero; // Stop any ongoing movement
+                rb.angularVelocity = 0f;   // Stop any rotational movement
+            }
+
+            // Adjust the position slightly away from the obstacle
+            Vector2 collisionNormal = collision.GetContact(0).normal;
+            transform.position += (Vector3)collisionNormal * 0.1f;
+        }
     }
 
     private IEnumerator RushAttack()
@@ -179,16 +240,52 @@ public class Boss : MonoBehaviour
         if (player == null) yield break;
         isRushing = true;
 
-        while (Vector2.Distance(transform.position, player.transform.position) > stopDistance)
+        float rushDuration = 2f; // Set how long the boss will chase the player
+        float rushStartTime = Time.time;
+        float obstacleAvoidanceDistance = 1f; // Distance to check for obstacles
+
+        while (Time.time < rushStartTime + rushDuration)
         {
-            Vector2 newPosition = Vector2.MoveTowards(transform.position, player.transform.position, rushSpeed * Time.deltaTime);
+            if (player == null) break;
+
+            // Calculate direction to player
+            Vector2 directionToPlayer = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
+
+            // Use raycast to check for obstacles
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, directionToPlayer, obstacleAvoidanceDistance, LayerMask.GetMask("Obstacle"));
+
+            if (hit.collider != null)
+            {
+                // If there's an obstacle, find a way around it
+                Vector2 avoidanceDirection = Vector2.Perpendicular(hit.normal).normalized;
+
+                // Determine which side to move (left or right around the obstacle)
+                Vector2 testPosition1 = (Vector2)transform.position + avoidanceDirection * obstacleAvoidanceDistance;
+                Vector2 testPosition2 = (Vector2)transform.position - avoidanceDirection * obstacleAvoidanceDistance;
+
+                // Use the side with the least obstruction
+                if (Physics2D.Raycast(testPosition1, directionToPlayer, obstacleAvoidanceDistance, LayerMask.GetMask("Obstacle")).collider == null)
+                {
+                    directionToPlayer = (testPosition1 - (Vector2)transform.position).normalized;
+                }
+                else if (Physics2D.Raycast(testPosition2, directionToPlayer, obstacleAvoidanceDistance, LayerMask.GetMask("Obstacle")).collider == null)
+                {
+                    directionToPlayer = (testPosition2 - (Vector2)transform.position).normalized;
+                }
+            }
+
+            // Move towards the player or around the obstacle
+            Vector2 newPosition = Vector2.MoveTowards(transform.position, (Vector2)transform.position + directionToPlayer, rushSpeed * Time.deltaTime);
             transform.position = newPosition;
-            yield return null;
+
+            yield return null; // Wait for the next frame
         }
 
+        // Stop rushing and wait for a cooldown
         yield return new WaitForSeconds(2f);
         isRushing = false;
     }
+
 
     public void TakeDamage(float damage)
     {
@@ -216,26 +313,6 @@ public class Boss : MonoBehaviour
         shieldVisual.SetActive(true);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Laser"))
-        {
-            TakeDamage(10);
-        }
-        else if (collision.gameObject.CompareTag("Bomb"))
-        {
-            TakeDamage(20);
-        }
-        else if (collision.gameObject.CompareTag("Player"))
-        {
-            PlayerCapyScript player = collision.gameObject.GetComponent<PlayerCapyScript>();
-            if (player != null)
-            {
-                player.Die();
-            }
-        }
-    }
-
     private void Die()
     {
         Destroy(gameObject);
@@ -244,6 +321,6 @@ public class Boss : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, minionSpawnDistance);
+        Gizmos.DrawWireSphere(transform.position, bulletSpawnDistance);
     }
 }

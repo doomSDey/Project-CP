@@ -24,7 +24,7 @@ public class EnemyLaser : MonoBehaviour
 
         Debug.Log("player hit");
         // Damage the player or enemy it collides with
-        if (player.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player"))
         {
             if (player != null)
             {
