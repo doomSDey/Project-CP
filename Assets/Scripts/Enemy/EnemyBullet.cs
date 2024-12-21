@@ -22,7 +22,6 @@ public class EnemyBullet : MonoBehaviour
     {
         PlayerCapyScript player = collision.gameObject.GetComponent<PlayerCapyScript>();
 
-        Debug.Log("player hit");
         // Damage the player or enemy it collides with
         if (collision.gameObject.CompareTag("Player"))
         {
@@ -36,6 +35,8 @@ public class EnemyBullet : MonoBehaviour
         // Destroy bullet on impact
         if (collision.gameObject.CompareTag("Obstacle"))
         {
+            Debug.Log("Obstacle bullet hit");
+
             Destroy(gameObject);
         }
     }
