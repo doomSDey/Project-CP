@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
@@ -10,6 +11,9 @@ public class PlayerCapyScript : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 movement;
     private Shooter shooter;
+
+    [Header("Lives Settings")]
+    public int lives = 3; // Number of lives the player has
 
     [Header("Dash Settings")]
     public float dashSpeed = 20f;
@@ -35,10 +39,13 @@ public class PlayerCapyScript : MonoBehaviour
     public float bombCooldown = 1.5f;
     private float bombCooldownTimer = 0f;
 
+    private SpriteRenderer spriteRenderer;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         shooter = GetComponentInChildren<Shooter>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         mainCamera = Camera.main;
         currentMoveSpeed = moveSpeed;
 
@@ -146,10 +153,8 @@ public class PlayerCapyScript : MonoBehaviour
         float cameraHalfHeight = mainCamera.orthographicSize;
         float cameraHalfWidth = mainCamera.aspect * cameraHalfHeight;
 
-        // Move the camera to match the player position
         Vector3 targetPosition = transform.position;
 
-        // Clamp the camera so it stays within the bounds of the tilemap
         float clampedX = Mathf.Clamp(
             targetPosition.x,
             minBounds.x + cameraHalfWidth,
@@ -162,7 +167,6 @@ public class PlayerCapyScript : MonoBehaviour
             maxBounds.y - cameraHalfHeight
         );
 
-        // Set the camera to follow the player
         mainCamera.transform.position = new Vector3(clampedX, clampedY, mainCamera.transform.position.z);
     }
 
@@ -189,7 +193,33 @@ public class PlayerCapyScript : MonoBehaviour
 
     public void Die()
     {
-        Debug.Log("Player has died!");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        lives--; // Reduce lives by 1
+        Debug.Log($"Player has died! Lives remaining: {lives}");
+
+        if (lives > 0)
+        {
+            StartCoroutine(FlickerEffect()); // Play flicker effect
+            transform.position = Vector3.zero; // Respawn the player at a specific location (modify as needed)
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Restart the game
+        }
+    }
+
+    private IEnumerator FlickerEffect()
+    {
+        float flickerDuration = 1f; // Total duration of the flicker effect
+        float flickerInterval = 0.1f; // Time between visibility toggles
+        float elapsedTime = 0f;
+
+        while (elapsedTime < flickerDuration)
+        {
+            spriteRenderer.enabled = !spriteRenderer.enabled; // Toggle visibility
+            elapsedTime += flickerInterval;
+            yield return new WaitForSeconds(flickerInterval);
+        }
+
+        spriteRenderer.enabled = true; // Ensure visibility is restored
     }
 }
