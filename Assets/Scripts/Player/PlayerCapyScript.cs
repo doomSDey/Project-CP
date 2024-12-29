@@ -126,6 +126,16 @@ public class PlayerCapyScript : MonoBehaviour
     {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
+
+        // Flip the sprite based on horizontal movement
+        if (movement.x > 0)
+        {
+            spriteRenderer.flipX = true; // Facing right
+        }
+        else if (movement.x < 0)
+        {
+            spriteRenderer.flipX = false; // Facing left
+        }
     }
 
     private void UpdateAnimator()

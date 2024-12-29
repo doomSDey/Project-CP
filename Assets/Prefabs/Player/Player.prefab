@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 3351753990004076119}
   - component: {fileID: 2057803325699019138}
   - component: {fileID: 7298216663316554187}
+  - component: {fileID: 6264608908904613501}
   m_Layer: 9
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -80,7 +81,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1871358977822574080, guid: 456b9ba75529a5646a7c1481e701495f, type: 3}
+  m_Sprite: {fileID: -855298285791758126, guid: df8737a94e7c04bd3aa7a238f8693f7a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -125,17 +126,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.01647973, y: 0.016480088}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.99, y: 2.94}
+    oldSize: {x: 3, y: 2.48}
     newSize: {x: 1.99, y: 2.94}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.99, y: 2.94}
+  m_Size: {x: 3.1876874, y: 2.6374376}
   m_EdgeRadius: 0
 --- !u!50 &2057803325699019138
 Rigidbody2D:
@@ -145,7 +146,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2908549503267067535}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 1
   m_UseAutoMass: 0
@@ -162,8 +163,8 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
+  m_CollisionDetection: 1
+  m_Constraints: 4
 --- !u!114 &7298216663316554187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,6 +178,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+  dashSpeed: 20
+  dashDuration: 0.2
+  dashCooldown: 1
+  bounceForce: 15
+  tilemap: {fileID: 0}
+  bombCooldown: 1.5
+--- !u!95 &6264608908904613501
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2908549503267067535}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 55c3bc3f6210148199dc14202c6f8aac, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6123813712346158972
 GameObject:
   m_ObjectHideFlags: 0
@@ -280,5 +309,7 @@ MonoBehaviour:
   laserPrefab: {fileID: 7082788330160886087, guid: aba2fcf5ef5cc084ea23bbf2691f71d1, type: 3}
   bombPrefab: {fileID: 6821830284371612225, guid: 40dd0ccba351bed44aa094a96cec4946, type: 3}
   firePoint: {fileID: 0}
-  laserSpeed: 10
-  bombSpeed: 5
+  laserForce: 500
+  bombForce: 250
+  bufferDistance: 0.5
+  rotationSpeed: 10

@@ -337,33 +337,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &608588490 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2908549503267067535, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-  m_PrefabInstance: {fileID: 8847354896035365310}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &608588496
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 608588490}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 55c3bc3f6210148199dc14202c6f8aac, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -11065,28 +11038,24 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 2908549503267067535, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 2908549503267067535, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 3351753990004076119, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
       propertyPath: m_Size.x
-      value: 2.1
+      value: 3.1876874
       objectReference: {fileID: 0}
     - target: {fileID: 3351753990004076119, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
       propertyPath: m_Size.y
-      value: 3
+      value: 2.6374376
       objectReference: {fileID: 0}
     - target: {fileID: 3351753990004076119, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: m_Enabled
-      value: 1
+      propertyPath: m_Offset.x
+      value: -0.01647973
       objectReference: {fileID: 0}
     - target: {fileID: 3351753990004076119, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
       propertyPath: m_Offset.y
-      value: 0
+      value: 0.016480088
       objectReference: {fileID: 0}
     - target: {fileID: 3351753990004076119, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
@@ -11136,29 +11105,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6123813712346158972, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 7298216663316554187, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
       propertyPath: tilemap
       value: 
       objectReference: {fileID: 2145754884}
-    - target: {fileID: 7544404209550568241, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: firePoint
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 7544404209550568241, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2908549503267067535, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 608588496}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
