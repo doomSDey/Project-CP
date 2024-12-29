@@ -24,7 +24,6 @@ public class PlayerCapyScript : MonoBehaviour
     [Header("Bounce Settings")]
     public float bounceForce = 15f;
 
-
     public Tilemap tilemap;
     private Vector3 minBounds;
     private Vector3 maxBounds;
@@ -36,11 +35,15 @@ public class PlayerCapyScript : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
 
+    // Animator Reference
+    private Animator animator;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         shooter = GetComponentInChildren<Shooter>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
         mainCamera = Camera.main;
         currentMoveSpeed = moveSpeed;
 
@@ -90,6 +93,7 @@ public class PlayerCapyScript : MonoBehaviour
         HandleDash();
         HandleMovement();
         HandleShooting();
+        UpdateAnimator();
     }
 
     private void HandleDash()
@@ -122,6 +126,13 @@ public class PlayerCapyScript : MonoBehaviour
     {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
+    }
+
+    private void UpdateAnimator()
+    {
+        // Update isRunning parameter in the Animator
+        bool isRunning = movement != Vector2.zero && !isDashing;
+        animator.SetBool("isRunning", isRunning);
     }
 
     private void FixedUpdate()
