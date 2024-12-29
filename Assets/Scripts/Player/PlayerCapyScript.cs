@@ -12,9 +12,6 @@ public class PlayerCapyScript : MonoBehaviour
     private Vector2 movement;
     private Shooter shooter;
 
-    [Header("Lives Settings")]
-    public int lives = 3; // Number of lives the player has
-
     [Header("Dash Settings")]
     public float dashSpeed = 20f;
     public float dashDuration = 0.2f;
@@ -26,9 +23,7 @@ public class PlayerCapyScript : MonoBehaviour
 
     [Header("Bounce Settings")]
     public float bounceForce = 15f;
-    private bool isBouncing = false;
-    private float bounceTime = 0.2f;
-    private float bounceTimeLeft;
+
 
     public Tilemap tilemap;
     private Vector3 minBounds;
@@ -193,18 +188,34 @@ public class PlayerCapyScript : MonoBehaviour
 
     public void Die()
     {
-        lives--; // Reduce lives by 1
-        Debug.Log($"Player has died! Lives remaining: {lives}");
+        Debug.Log("Player has died!");
 
-        if (lives > 0)
+        // Inform the LivesManager
+        LivesManager.Instance.LoseLife();
+
+        if (LivesManager.Instance.GetCurrentLives() > 0)
         {
-            StartCoroutine(FlickerEffect()); // Play flicker effect
-            transform.position = Vector3.zero; // Respawn the player at a specific location (modify as needed)
+            // Play flicker effect and respawn the player
+            StartCoroutine(FlickerEffect());
+            transform.position = Vector3.zero; // Respawn at a specific location
         }
         else
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // Restart the game
+            // End the game when lives reach 0
+            EndGame();
         }
+    }
+
+    private void EndGame()
+    {
+        Debug.Log("Game Over!");
+
+        // Reset lives for the next game
+        LivesManager.Instance.ResetLives();
+
+        // Load the Game Over scene or display a Game Over UI
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
+        //SceneManager.LoadScene("GameOver"); // Replace "GameOver" with your actual game-over scene name
     }
 
     private IEnumerator FlickerEffect()
