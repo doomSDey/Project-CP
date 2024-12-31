@@ -7,6 +7,7 @@ public class PlayerCapyScript : MonoBehaviour
 {
     public float moveSpeed = 5f;
     private float currentMoveSpeed;
+    private bool isBeingPushedBack = false; // Flag to track pushback
 
     private Rigidbody2D rb;
     private Vector2 movement;
@@ -147,6 +148,8 @@ public class PlayerCapyScript : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isBeingPushedBack) return; // Skip movement logic when being pushed back
+
         if (isDashing)
         {
             rb.linearVelocity = dashDirection * dashSpeed;
@@ -155,6 +158,23 @@ public class PlayerCapyScript : MonoBehaviour
         {
             rb.linearVelocity = movement.normalized * currentMoveSpeed;
         }
+    }
+
+    public void ApplyPushBack(Vector2 force)
+    {
+        isBeingPushedBack = true;
+
+        // Apply the pushback force directly to the player's Rigidbody
+        rb.linearVelocity = force;
+
+        // Reset the flag after a short delay
+        StartCoroutine(ResetPushBack());
+    }
+
+    private IEnumerator ResetPushBack()
+    {
+        yield return new WaitForSeconds(0.2f); // Adjust duration as needed
+        isBeingPushedBack = false;
     }
 
     private void LateUpdate()
