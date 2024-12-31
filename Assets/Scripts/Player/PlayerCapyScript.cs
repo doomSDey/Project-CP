@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
@@ -5,7 +6,8 @@ using UnityEngine.Tilemaps;
 public class PlayerCapyScript : MonoBehaviour
 {
     public float moveSpeed = 5f;
-    private float currentMoveSpeed;  // Added to track current speed
+    private float currentMoveSpeed;
+    private bool isBeingPushedBack = false; // Flag to track pushback
 
     private Rigidbody2D rb;
     private Vector2 movement;
@@ -22,9 +24,6 @@ public class PlayerCapyScript : MonoBehaviour
 
     [Header("Bounce Settings")]
     public float bounceForce = 15f;
-    private bool isBouncing = false;
-    private float bounceTime = 0.2f;
-    private float bounceTimeLeft;
 
     public Tilemap tilemap;
     private Vector3 minBounds;
@@ -32,17 +31,22 @@ public class PlayerCapyScript : MonoBehaviour
     private Camera mainCamera;
     private Vector3 playerSize;
 
-    // Add bomb cooldown variables
     public float bombCooldown = 1.5f;
     private float bombCooldownTimer = 0f;
 
+    private SpriteRenderer spriteRenderer;
+
+    // Animator Reference
+    private Animator animator;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         shooter = GetComponentInChildren<Shooter>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
         mainCamera = Camera.main;
-        currentMoveSpeed = moveSpeed;  // Initialize current speed
+        currentMoveSpeed = moveSpeed;
 
         if (rb == null)
         {
@@ -90,11 +94,11 @@ public class PlayerCapyScript : MonoBehaviour
         HandleDash();
         HandleMovement();
         HandleShooting();
+        UpdateAnimator();
     }
 
     private void HandleDash()
     {
-        // Initiate dash when pressing Shift and not in cooldown
         if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
             && dashCooldownTimer <= 0 && !isDashing)
         {
@@ -102,15 +106,13 @@ public class PlayerCapyScript : MonoBehaviour
             dashTimeLeft = dashDuration;
             dashCooldownTimer = dashCooldown;
 
-            // Store the dash direction based on current movement or facing direction
             dashDirection = movement.normalized;
-            if (dashDirection == Vector2.zero) // If not moving, dash in facing direction
+            if (dashDirection == Vector2.zero)
             {
-                dashDirection = transform.right; // Or any default direction
+                dashDirection = transform.right;
             }
         }
 
-        // Handle ongoing dash
         if (isDashing)
         {
             dashTimeLeft -= Time.deltaTime;
@@ -125,45 +127,28 @@ public class PlayerCapyScript : MonoBehaviour
     {
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
+
+        // Flip the sprite based on horizontal movement
+        if (movement.x > 0)
+        {
+            spriteRenderer.flipX = true; // Facing right
+        }
+        else if (movement.x < 0)
+        {
+            spriteRenderer.flipX = false; // Facing left
+        }
     }
 
-    // Add this method to handle the bounce
-    public void BounceBack(Vector2 collisionPoint)
+    private void UpdateAnimator()
     {
-        if (!isBouncing)
-        {
-            isBouncing = true;
-            bounceTimeLeft = bounceTime;
-
-            // Calculate bounce direction (opposite of current movement)
-            Vector2 bounceDirection;
-            if (rb.linearVelocity.magnitude < 0.1f)
-            {
-                // If barely moving, bounce away from collision point
-                bounceDirection = (transform.position - (Vector3)collisionPoint).normalized;
-            }
-            else
-            {
-                // Bounce in opposite direction of movement
-                bounceDirection = -rb.linearVelocity.normalized;
-            }
-
-            // Apply bounce force
-            rb.linearVelocity = bounceDirection * bounceForce;
-        }
+        // Update isRunning parameter in the Animator
+        bool isRunning = movement != Vector2.zero && !isDashing;
+        animator.SetBool("isRunning", isRunning);
     }
 
     private void FixedUpdate()
     {
-        if (isBouncing)
-        {
-            bounceTimeLeft -= Time.fixedDeltaTime;
-            if (bounceTimeLeft <= 0)
-            {
-                isBouncing = false;
-            }
-            return; // Skip normal movement while bouncing
-        }
+        if (isBeingPushedBack) return; // Skip movement logic when being pushed back
 
         if (isDashing)
         {
@@ -173,32 +158,27 @@ public class PlayerCapyScript : MonoBehaviour
         {
             rb.linearVelocity = movement.normalized * currentMoveSpeed;
         }
+    }
 
-        BoxCollider2D playerCollider = GetComponent<BoxCollider2D>();
-        if (playerCollider == null) return;
+    public void ApplyPushBack(Vector2 force)
+    {
+        isBeingPushedBack = true;
 
-        float playerHalfWidth = playerCollider.size.x / 2 * transform.localScale.x;
-        float playerHalfHeight = playerCollider.size.y / 2 * transform.localScale.y;
+        // Apply the pushback force directly to the player's Rigidbody
+        rb.linearVelocity = force;
 
-        float shooterOffsetY = Mathf.Abs(shooter.transform.localPosition.y) * shooter.transform.localScale.y;
+        // Reset the flag after a short delay
+        StartCoroutine(ResetPushBack());
+    }
 
-        float totalHeight = playerHalfHeight + shooterOffsetY;
+    private IEnumerator ResetPushBack()
+    {
+        yield return new WaitForSeconds(0.2f); // Adjust duration as needed
+        isBeingPushedBack = false;
+    }
 
-        float correctedMinY = minBounds.y + playerHalfHeight;
-
-        float clampedX = Mathf.Clamp(
-            transform.position.x,
-            minBounds.x + playerHalfWidth,
-            maxBounds.x - playerHalfWidth
-        );
-        float clampedY = Mathf.Clamp(
-            transform.position.y,
-            correctedMinY,
-            maxBounds.y - totalHeight
-        );
-
-        transform.position = new Vector3(clampedX, clampedY, transform.position.z);
-
+    private void LateUpdate()
+    {
         CenterCameraOnPlayer();
     }
 
@@ -209,13 +189,16 @@ public class PlayerCapyScript : MonoBehaviour
         float cameraHalfHeight = mainCamera.orthographicSize;
         float cameraHalfWidth = mainCamera.aspect * cameraHalfHeight;
 
+        Vector3 targetPosition = transform.position;
+
         float clampedX = Mathf.Clamp(
-            transform.position.x,
+            targetPosition.x,
             minBounds.x + cameraHalfWidth,
             maxBounds.x - cameraHalfWidth
         );
+
         float clampedY = Mathf.Clamp(
-            transform.position.y,
+            targetPosition.y,
             minBounds.y + cameraHalfHeight,
             maxBounds.y - cameraHalfHeight
         );
@@ -223,43 +206,72 @@ public class PlayerCapyScript : MonoBehaviour
         mainCamera.transform.position = new Vector3(clampedX, clampedY, mainCamera.transform.position.z);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Enemy"))
-        {
-            Debug.Log("Player collided with enemy! Game Over!");
-            Die();
-        }
-    }
-
     void HandleShooting()
     {
-        if (isDashing) return; // Don't allow shooting while dashing
+        if (isDashing) return;
 
-        if (Input.GetMouseButton(0)) // Left click to shoot laser
+        if (Input.GetMouseButton(0))
         {
             shooter.ShootLaser();
-            currentMoveSpeed = moveSpeed * 0.6f;  // Reduce speed by 40%
+            currentMoveSpeed = moveSpeed * 0.6f;
         }
-        else if (Input.GetMouseButton(1) && bombCooldownTimer <= 0) // Right click to shoot bomb with cooldown check
+        else if (Input.GetMouseButton(1) && bombCooldownTimer <= 0)
         {
             shooter.ShootBomb();
-            currentMoveSpeed = 0f;  // Reduce speed by 100%
-            bombCooldownTimer = bombCooldown; // Reset the cooldown timer
-        }
-        else if (Input.GetMouseButton(1)) // Still holding right click but in cooldown
-        {
-            currentMoveSpeed = 0f;  // Keep speed at 0 while holding right click
+            currentMoveSpeed = 0f;
+            bombCooldownTimer = bombCooldown;
         }
         else
         {
-            currentMoveSpeed = moveSpeed;  // Reset to normal speed when not shooting
+            currentMoveSpeed = moveSpeed;
         }
     }
 
     public void Die()
     {
         Debug.Log("Player has died!");
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+
+        // Inform the LivesManager
+        LivesManager.Instance.LoseLife();
+
+        if (LivesManager.Instance.GetCurrentLives() > 0)
+        {
+            // Play flicker effect and respawn the player
+            StartCoroutine(FlickerEffect());
+            transform.position = Vector3.zero; // Respawn at a specific location
+        }
+        else
+        {
+            // End the game when lives reach 0
+            EndGame();
+        }
+    }
+
+    private void EndGame()
+    {
+        Debug.Log("Game Over!");
+
+        // Reset lives for the next game
+        LivesManager.Instance.ResetLives();
+
+        // Load the Game Over scene or display a Game Over UI
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
+        //SceneManager.LoadScene("GameOver"); // Replace "GameOver" with your actual game-over scene name
+    }
+
+    private IEnumerator FlickerEffect()
+    {
+        float flickerDuration = 1f; // Total duration of the flicker effect
+        float flickerInterval = 0.1f; // Time between visibility toggles
+        float elapsedTime = 0f;
+
+        while (elapsedTime < flickerDuration)
+        {
+            spriteRenderer.enabled = !spriteRenderer.enabled; // Toggle visibility
+            elapsedTime += flickerInterval;
+            yield return new WaitForSeconds(flickerInterval);
+        }
+
+        spriteRenderer.enabled = true; // Ensure visibility is restored
     }
 }

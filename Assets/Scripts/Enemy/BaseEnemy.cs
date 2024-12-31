@@ -1,112 +1,84 @@
 using UnityEngine;
-using System.Collections;
 
-public abstract class BaseEnemy : MonoBehaviour
+public class BaseEnemy : MonoBehaviour
 {
-    [Header("Enemy Stats")]
-    public int maxHealth = 100;
-    public int currentHealth;
-    public float speed = 2f;
-    public int damage = 10;
-
-    [Header("Damage Feedback")]
-    [SerializeField] private float flickerDuration = 0.2f;
-    [SerializeField] private float flickerRate = 0.1f;
-    [SerializeField] private Color hitColor = Color.red;
-
+    protected float maxHealth = 100f;
+    protected float currentHealth;
+    protected float speed = 5f;
     protected Rigidbody2D rb;
-    private SpriteRenderer spriteRenderer;
-    private Color originalColor;
-    private Coroutine flickerCoroutine;
+    protected SpriteRenderer spriteRenderer;
+    protected Color originalColor;
+
+    [SerializeField] protected float damageFlashDuration = 0.1f;
+    [SerializeField] protected Color damageFlashColor = Color.red;
+    protected bool isFlashing = false;
 
     protected virtual void Start()
     {
-        currentHealth = maxHealth;
         rb = GetComponent<Rigidbody2D>();
-
-        if (rb == null)
-        {
-            rb = gameObject.AddComponent<Rigidbody2D>();
-        }
-
-        rb.bodyType = RigidbodyType2D.Kinematic;
-        rb.useFullKinematicContacts = true;
-        rb.freezeRotation = true;
-
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
         {
             originalColor = spriteRenderer.color;
         }
+        currentHealth = maxHealth;
     }
-
-    protected abstract void Move();
 
     protected virtual void Update()
     {
         Move();
     }
 
-    public virtual void TakeDamage(int damageAmount)
+    protected virtual void Move()
     {
-        currentHealth -= damageAmount;
+        // Base movement behavior - override in derived classes
+    }
 
-        if (spriteRenderer != null)
-        {
-            if (flickerCoroutine != null)
-            {
-                StopCoroutine(flickerCoroutine);
-            }
-            flickerCoroutine = StartCoroutine(FlickerEffect());
-        }
+    public virtual void TakeDamage(float damage)
+    {
+        currentHealth -= damage;
+        Debug.Log($"{gameObject.name} took {damage} damage. Health: {currentHealth}/{maxHealth}");
+
+        StartDamageFlash();
 
         if (currentHealth <= 0)
         {
-            StartCoroutine(DieWithFlicker());
+            // Wait for the flash to complete before dying
+            Invoke("Die", damageFlashDuration);
         }
     }
 
-    private IEnumerator FlickerEffect()
+    public virtual void Die()
     {
-        float elapsed = 0f;
-
-        while (elapsed < flickerDuration)
-        {
-            spriteRenderer.color = hitColor;
-            yield return new WaitForSeconds(flickerRate);
-            spriteRenderer.color = originalColor;
-            yield return new WaitForSeconds(flickerRate);
-
-            elapsed += flickerRate * 2;
-        }
-
-        spriteRenderer.color = originalColor;
+        Debug.Log($"{gameObject.name} has died!");
+        // Cancel any ongoing coroutines to prevent errors
+        StopAllCoroutines();
+        // Ensure the enemy is destroyed
+        Destroy(gameObject);
     }
 
-    private IEnumerator DieWithFlicker()
+    protected void StartDamageFlash()
     {
-        if (flickerCoroutine != null)
+        if (!isFlashing && spriteRenderer != null)
         {
-            yield return flickerCoroutine;
+            isFlashing = true;
+            spriteRenderer.color = damageFlashColor;
+            Invoke("EndDamageFlash", damageFlashDuration);
         }
-
-        Die();
     }
 
-    protected virtual void Die()
+    protected void EndDamageFlash()
     {
         if (spriteRenderer != null)
         {
             spriteRenderer.color = originalColor;
         }
-        Destroy(gameObject);
+        isFlashing = false;
     }
 
     private void OnDestroy()
     {
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.color = originalColor;
-        }
+        // Clean up any remaining invokes when destroyed
+        CancelInvoke();
     }
 }
