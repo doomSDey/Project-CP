@@ -10,7 +10,7 @@ public class Platelet : BaseEnemy
     private Vector2 moveDirection; // The movement direction of the platelet
 
     [Header("Clot Settings")]
-    [SerializeField] private GameObject clotPrefab; // Clot prefab to be spawned
+    private GameObject clotPrefab; // Clot prefab to be spawned
     [SerializeField] private float clotSpawnInterval = 2f; // How often to spawn clot (seconds)
     private float clotSpawnTimer;
 
