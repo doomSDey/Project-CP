@@ -9384,7 +9384,7 @@ MonoBehaviour:
   x: 10
   multiplier: 3
   boostedDuration: 30
-  maxActivePrefabs: 2
+  maxActivePrefabs: 100
 --- !u!1 &1939204924
 GameObject:
   m_ObjectHideFlags: 0
