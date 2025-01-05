@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BaseEnemy : MonoBehaviour
@@ -8,6 +9,7 @@ public class BaseEnemy : MonoBehaviour
     protected Rigidbody2D rb;
     protected SpriteRenderer spriteRenderer;
     protected Color originalColor;
+    public event Action<GameObject> OnDestroyed;
 
     [SerializeField] protected float damageFlashDuration = 0.1f;
     [SerializeField] protected Color damageFlashColor = Color.red;
@@ -43,7 +45,7 @@ public class BaseEnemy : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            // Wait for the flash to complete before dying
+            // Wait for the flash to complete before "dying"
             Invoke("Die", damageFlashDuration);
         }
     }
@@ -51,10 +53,15 @@ public class BaseEnemy : MonoBehaviour
     public virtual void Die()
     {
         Debug.Log($"{gameObject.name} has died!");
-        // Cancel any ongoing coroutines to prevent errors
-        StopAllCoroutines();
-        // Ensure the enemy is destroyed
-        Destroy(gameObject);
+
+        // Notify the spawner and deactivate the object
+        OnDestroyed?.Invoke(gameObject);
+
+        // Reset health for future reuse
+        currentHealth = maxHealth;
+
+        // Deactivate the enemy instead of destroying it
+        gameObject.SetActive(false);
     }
 
     protected void StartDamageFlash()
@@ -74,11 +81,5 @@ public class BaseEnemy : MonoBehaviour
             spriteRenderer.color = originalColor;
         }
         isFlashing = false;
-    }
-
-    private void OnDestroy()
-    {
-        // Clean up any remaining invokes when destroyed
-        CancelInvoke();
     }
 }

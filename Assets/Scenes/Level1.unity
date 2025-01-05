@@ -4893,7 +4893,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 297009788}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d78209bc87cde7440b070bd6224df130, type: 3}
   m_Name: 
@@ -4904,6 +4904,7 @@ MonoBehaviour:
   x: 10
   multiplier: 3
   boostedDuration: 30
+  maxActivePrefabs: 4
 --- !u!1 &525631176
 GameObject:
   m_ObjectHideFlags: 0
@@ -4948,12 +4949,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d78209bc87cde7440b070bd6224df130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 7750000381546170329, guid: 12f8b42da0b8b084d9a4864788836890, type: 3}
-  spawnPoint: {fileID: 525631177}
+  prefabToSpawn: {fileID: 0}
+  spawnPoint: {fileID: 0}
   n: 5
   x: 10
   multiplier: 3
   boostedDuration: 30
+  maxActivePrefabs: 20
 --- !u!1 &610747625
 GameObject:
   m_ObjectHideFlags: 0
@@ -4993,7 +4995,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 610747625}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d78209bc87cde7440b070bd6224df130, type: 3}
   m_Name: 
@@ -5004,6 +5006,7 @@ MonoBehaviour:
   x: 10
   multiplier: 3
   boostedDuration: 30
+  maxActivePrefabs: 2
 --- !u!1 &911375376
 GameObject:
   m_ObjectHideFlags: 0
@@ -5048,12 +5051,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d78209bc87cde7440b070bd6224df130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 6563045841928504701, guid: ddc91160ddec0d947a2c7385948b3ea3, type: 3}
-  spawnPoint: {fileID: 911375377}
-  n: 2
-  x: 40
-  multiplier: 2
+  prefabToSpawn: {fileID: 0}
+  spawnPoint: {fileID: 0}
+  n: 5
+  x: 10
+  multiplier: 3
   boostedDuration: 30
+  maxActivePrefabs: 20
 --- !u!1 &1033295129
 GameObject:
   m_ObjectHideFlags: 0
@@ -9376,10 +9380,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 6563045841928504701, guid: ddc91160ddec0d947a2c7385948b3ea3, type: 3}
   spawnPoint: {fileID: 1762714128}
-  n: 2
-  x: 40
-  multiplier: 2
+  n: 5
+  x: 10
+  multiplier: 3
   boostedDuration: 30
+  maxActivePrefabs: 2
 --- !u!1 &1939204924
 GameObject:
   m_ObjectHideFlags: 0
@@ -9424,12 +9429,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d78209bc87cde7440b070bd6224df130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 6563045841928504701, guid: ddc91160ddec0d947a2c7385948b3ea3, type: 3}
-  spawnPoint: {fileID: 1939204925}
-  n: 2
-  x: 40
-  multiplier: 2
+  prefabToSpawn: {fileID: 0}
+  spawnPoint: {fileID: 0}
+  n: 5
+  x: 10
+  multiplier: 3
   boostedDuration: 30
+  maxActivePrefabs: 20
 --- !u!4 &2014276805 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5430872712975605905, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
