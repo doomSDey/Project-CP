@@ -3,48 +3,68 @@ using UnityEngine;
 public class MucusBlob : BaseEnemy
 {
     [Header("Movement Settings")]
-    [SerializeField] private float changeDirectionInterval = 5f; // Change direction every few seconds
+    [SerializeField] private float changeDirectionInterval = 5f;
     private Vector2 movementDirection;
     private float directionChangeTimer;
 
     [Header("Physics Settings")]
-    [SerializeField] private LayerMask obstacleLayer; // Layer mask for obstacles
+    [SerializeField] private LayerMask obstacleLayer;
+
+    [Header("Attachment Settings")]
+    [SerializeField] private float speedReductionAmount = 1f;
+
+    private bool isAttached = false;
+    private PlayerCapyScript attachedPlayer;
 
     protected override void Start()
     {
         base.Start();
 
         // Set specific stats for the Mucus Blob
-        currentHealth = 20; // 2 Capy Lazer hits (10 each) or 1 Capy Bomb (20 damage)
-        speed = 1f; // Slow movement
+        currentHealth = 20;
+        speed = 1f;
         movementDirection = GetRandomDirection();
         directionChangeTimer = changeDirectionInterval;
 
-        // Set Rigidbody to Dynamic for proper collision handling
+        // Subscribe to OnDestroyed so we can restore speed if we die
+        OnDestroyed += HandleBlobDestroyed;
+
         rb.bodyType = RigidbodyType2D.Dynamic;
-        rb.gravityScale = 0; // No gravity
-        rb.constraints = RigidbodyConstraints2D.FreezeRotation; // Prevent rotation
+        rb.gravityScale = 0;
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
+
+    private void HandleBlobDestroyed(GameObject blobGameObject)
+    {
+        // If this blob is destroyed and we were attached, restore speed
+        if (blobGameObject == gameObject && isAttached && attachedPlayer != null)
+        {
+            attachedPlayer.ModifySpeed(speedReductionAmount);
+            Debug.Log($"{name} destroyed; speed restored by {speedReductionAmount}.");
+        }
     }
 
     protected override void Move()
     {
-        if (rb == null) return;
+        if (isAttached || rb == null) return;
 
-        // Move the Mucus Blob according to its movement direction
         Vector2 newPosition = rb.position + movementDirection * speed * Time.fixedDeltaTime;
 
-        // Check for obstacles in the direction of movement
-        RaycastHit2D hit = Physics2D.Raycast(rb.position, movementDirection, speed * Time.fixedDeltaTime, obstacleLayer);
+        RaycastHit2D hit = Physics2D.Raycast(
+            rb.position,
+            movementDirection,
+            speed * Time.fixedDeltaTime,
+            obstacleLayer
+        );
         if (hit.collider != null)
         {
-            BounceBack(hit.normal); // Reflect direction if obstacle detected
+            BounceBack(hit.normal);
         }
         else
         {
             rb.MovePosition(newPosition);
         }
 
-        // Periodically change movement direction
         directionChangeTimer -= Time.deltaTime;
         if (directionChangeTimer <= 0f)
         {
@@ -55,36 +75,56 @@ public class MucusBlob : BaseEnemy
 
     private Vector2 GetRandomDirection()
     {
-        Vector2[] possibleDirections = { Vector2.left, Vector2.right, Vector2.up, Vector2.down };
+        Vector2[] possibleDirections = { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
         int randomIndex = Random.Range(0, possibleDirections.Length);
         return possibleDirections[randomIndex];
     }
 
     private void BounceBack(Vector2 collisionNormal)
     {
-        // Reflect the movement direction based on the collision normal
         movementDirection = Vector2.Reflect(movementDirection, collisionNormal).normalized;
-        Debug.Log($"{gameObject.name} bounced back after hitting {collisionNormal}");
+        Debug.Log($"{name} bounced back after hitting {collisionNormal}");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        // If we hit Player and not attached yet, attach
+        if (!isAttached && collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Player collided with Mucus Blob — Player is pushed back!");
-
-            Rigidbody2D playerRb = collision.gameObject.GetComponent<Rigidbody2D>();
-            if (playerRb != null)
-            {
-                PushPlayerBack(playerRb, collision.contacts[0].normal);
-            }
+            AttachToPlayer(collision.gameObject);
         }
     }
 
-    private void PushPlayerBack(Rigidbody2D playerRb, Vector2 collisionNormal)
+    private void AttachToPlayer(GameObject playerObject)
     {
-        Vector2 pushDirection = collisionNormal.normalized;
-        float pushForce = 5f; // Push-back force
-        playerRb.AddForce(pushDirection * pushForce, ForceMode2D.Impulse);
+        attachedPlayer = playerObject.GetComponent<PlayerCapyScript>();
+        if (attachedPlayer == null)
+        {
+            Debug.LogWarning($"{name} collided with Player, but no PlayerCapyScript found!");
+            return;
+        }
+
+        // Parent to the player so we visually follow
+        transform.SetParent(playerObject.transform);
+
+        // Make the blob kinematic so it won't fight the player's movement
+        rb.bodyType = RigidbodyType2D.Kinematic;
+        rb.linearVelocity = Vector2.zero;
+
+        // Ignore collisions with the Player
+        Collider2D playerCollider = playerObject.GetComponent<Collider2D>();
+        Collider2D blobCollider = GetComponent<Collider2D>();
+        if (playerCollider && blobCollider)
+        {
+            Physics2D.IgnoreCollision(playerCollider, blobCollider, true);
+        }
+
+        isAttached = true;
+
+        // Apply speed reduction (subtract)
+        attachedPlayer.ModifySpeed(-speedReductionAmount);
+        Debug.Log($"{name} attached to Player. Speed reduced by {speedReductionAmount}.");
     }
+
+  
 }

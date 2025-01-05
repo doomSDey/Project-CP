@@ -5,7 +5,9 @@ using UnityEngine.Tilemaps;
 
 public class PlayerCapyScript : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    // Use baseMoveSpeed to store your original move speed
+    public float baseMoveSpeed = 5f;
+    public float moveSpeed = 5f;  // This might still be used in other parts of your code
     private float currentMoveSpeed;
     private bool isBeingPushedBack = false; // Flag to track pushback
 
@@ -46,7 +48,10 @@ public class PlayerCapyScript : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         mainCamera = Camera.main;
+
+        // Initialize speeds
         currentMoveSpeed = moveSpeed;
+        baseMoveSpeed = moveSpeed;    // Make sure baseMoveSpeed tracks your intended default
 
         if (rb == null)
         {
@@ -160,23 +165,6 @@ public class PlayerCapyScript : MonoBehaviour
         }
     }
 
-    public void ApplyPushBack(Vector2 force)
-    {
-        isBeingPushedBack = true;
-
-        // Apply the pushback force directly to the player's Rigidbody
-        rb.linearVelocity = force;
-
-        // Reset the flag after a short delay
-        StartCoroutine(ResetPushBack());
-    }
-
-    private IEnumerator ResetPushBack()
-    {
-        yield return new WaitForSeconds(0.2f); // Adjust duration as needed
-        isBeingPushedBack = false;
-    }
-
     private void LateUpdate()
     {
         CenterCameraOnPlayer();
@@ -213,18 +201,64 @@ public class PlayerCapyScript : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             shooter.ShootLaser();
-            currentMoveSpeed = moveSpeed * 0.6f;
+            // Slight speed penalty while shooting a laser
+            currentMoveSpeed = (moveSpeed * 0.6f);
         }
         else if (Input.GetMouseButton(1) && bombCooldownTimer <= 0)
         {
             shooter.ShootBomb();
+            // Stop movement temporarily while tossing a bomb
             currentMoveSpeed = 0f;
             bombCooldownTimer = bombCooldown;
         }
         else
         {
+            // Return to normal currentMoveSpeed (but still include any MucusBlob penalties)
             currentMoveSpeed = moveSpeed;
         }
+    }
+
+    public float GetMoveSpeed()
+    {
+        return moveSpeed;
+    }
+
+    /// <summary>
+    /// Adjust the player's movement speed by an amount (can be positive or negative).
+    /// This method clamps the resultant speed so it never goes below zero.
+    /// For example, a negative amount can be used to apply a penalty.
+    /// </summary>
+    /// 
+
+    public void ModifySpeed(float amount)
+    {
+        float ms = moveSpeed + amount;
+        if ((int)moveSpeed > (int)baseMoveSpeed) return;
+        moveSpeed = ms;
+        if (moveSpeed < 0f) moveSpeed = 0f; // clamp to 0
+        Debug.Log($"Speed: {moveSpeed} {baseMoveSpeed} {(int)moveSpeed > (int)baseMoveSpeed}"); // Use string interpolation for logging
+        
+        // If you're not in some special dash state, also update your currentMoveSpeed
+        currentMoveSpeed = moveSpeed;
+
+        Debug.Log($"Player speed changed by {amount}. New moveSpeed = {moveSpeed}");
+    }
+
+    public void ApplyPushBack(Vector2 force)
+    {
+        isBeingPushedBack = true;
+
+        // Apply the pushback force directly to the player's Rigidbody
+        rb.linearVelocity = force;
+
+        // Reset the flag after a short delay
+        StartCoroutine(ResetPushBack());
+    }
+
+    private IEnumerator ResetPushBack()
+    {
+        yield return new WaitForSeconds(0.2f); // Adjust duration as needed
+        isBeingPushedBack = false;
     }
 
     public void Die()
@@ -255,7 +289,7 @@ public class PlayerCapyScript : MonoBehaviour
         LivesManager.Instance.ResetLives();
 
         // Load the Game Over scene or display a Game Over UI
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         //SceneManager.LoadScene("GameOver"); // Replace "GameOver" with your actual game-over scene name
     }
 
