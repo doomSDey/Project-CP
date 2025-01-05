@@ -4,20 +4,35 @@ public class Laser : MonoBehaviour
 {
     public float speed = 10f; // Speed of the laser
     public int damage = 10; // Damage dealt by the laser
+    public AudioClip laserFireSound; // Laser fire sound effect
+    public float minPitch = 0.9f; // Minimum pitch for variation
+    public float maxPitch = 1.1f; // Maximum pitch for variation
 
     private Rigidbody2D rb;
+    private AudioSource audioSource;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
 
         // Set velocity in the direction the laser is facing
-        rb.linearVelocity = transform.right * speed; // Fixed from `linearVelocity` to `velocity`
+        rb.linearVelocity = transform.right * speed;
+
+        // Add an AudioSource component to play the sound
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.clip = laserFireSound;
+        audioSource.playOnAwake = false;
+
+        // Apply pitch variation
+        audioSource.pitch = Random.Range(minPitch, maxPitch);
+
+        // Play the laser fire sound
+        audioSource.Play();
     }
 
     void OnCollisionEnter2D(Collision2D hitInfo)
     {
-        // If the laser  hits an enemy, deal damage and destroy the laser
+        // If the laser hits an enemy, deal damage and destroy the laser
         if (hitInfo.gameObject.CompareTag("Enemy"))
         {
             BaseEnemy enemy = hitInfo.gameObject.GetComponent<BaseEnemy>();
@@ -29,7 +44,6 @@ public class Laser : MonoBehaviour
         }
 
         // If the laser hits an obstacle, it is destroyed
-
         if (hitInfo.gameObject.CompareTag("Obstacle"))
         {
             Obstacle obstacle = hitInfo.gameObject.GetComponent<Obstacle>();
