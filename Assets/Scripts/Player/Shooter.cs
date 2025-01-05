@@ -15,6 +15,13 @@ public class Shooter : MonoBehaviour
     [Header("Rotation Settings")]
     public float rotationSpeed = 10f;
 
+    [Header("Audio Settings")]
+    public AudioClip laserSound; // Laser sound effect
+    public AudioClip bombSound;  // Bomb sound effect
+    public float minPitch = 0.9f; // Minimum pitch for variation
+    public float maxPitch = 1.1f; // Maximum pitch for variation
+
+    private AudioSource audioSource; // Shared audio source for both sounds
     private Camera mainCamera;
 
     void Start()
@@ -24,6 +31,10 @@ public class Shooter : MonoBehaviour
             firePoint = transform;
         }
         mainCamera = Camera.main;
+
+        // Add an AudioSource component to the shooter
+        audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.playOnAwake = false;
     }
 
     void Update()
@@ -59,31 +70,29 @@ public class Shooter : MonoBehaviour
     {
         if (laserPrefab != null)
         {
-            // 1️⃣ Calculate the direction of the shot
+            // Calculate the direction of the shot
             Vector2 direction = firePoint.right.normalized;
-
-            // 2️⃣ Calculate the spawn position of the laser
             Vector2 spawnPosition = (Vector2)firePoint.position + direction * bufferDistance;
 
-            // 3️⃣ Instantiate the laser at the calculated position
+            // Instantiate the laser
             GameObject laser = Instantiate(laserPrefab, spawnPosition, firePoint.rotation);
-
-            // 4️⃣ Get the Rigidbody of the laser
             Rigidbody2D rb = laser.GetComponent<Rigidbody2D>();
 
             if (rb != null)
             {
-                // 5️⃣ Apply force to the laser
                 rb.AddForce(direction * laserForce, ForceMode2D.Impulse);
             }
 
-            // 6️⃣ Ignore collision with player
+            // Ignore collision with player
             Collider2D playerCollider = transform.parent.GetComponent<Collider2D>();
             Collider2D bulletCollider = laser.GetComponent<Collider2D>();
             if (playerCollider != null && bulletCollider != null)
             {
                 Physics2D.IgnoreCollision(playerCollider, bulletCollider);
             }
+
+            // Play laser sound
+            PlaySound(laserSound);
         }
     }
 
@@ -94,31 +103,42 @@ public class Shooter : MonoBehaviour
     {
         if (bombPrefab != null)
         {
-            // 1️⃣ Calculate the direction of the shot
+            // Calculate the direction of the shot
             Vector2 direction = firePoint.right.normalized;
-
-            // 2️⃣ Calculate the spawn position of the bomb
             Vector2 spawnPosition = (Vector2)firePoint.position + direction * bufferDistance;
 
-            // 3️⃣ Instantiate the bomb at the calculated position
+            // Instantiate the bomb
             GameObject bomb = Instantiate(bombPrefab, spawnPosition, firePoint.rotation);
-
-            // 4️⃣ Get the Rigidbody of the bomb
             Rigidbody2D rb = bomb.GetComponent<Rigidbody2D>();
 
             if (rb != null)
             {
-                // 5️⃣ Apply force to the bomb
                 rb.AddForce(direction * bombForce, ForceMode2D.Impulse);
             }
 
-            // 6️⃣ Ignore collision with player
+            // Ignore collision with player
             Collider2D playerCollider = transform.parent.GetComponent<Collider2D>();
             Collider2D bulletCollider = bomb.GetComponent<Collider2D>();
             if (playerCollider != null && bulletCollider != null)
             {
                 Physics2D.IgnoreCollision(playerCollider, bulletCollider);
             }
+
+            // Play bomb sound
+            PlaySound(bombSound);
+        }
+    }
+
+    /// <summary>
+    /// Plays the specified sound with optional pitch variation.
+    /// </summary>
+    private void PlaySound(AudioClip clip)
+    {
+        if (clip != null && audioSource != null)
+        {
+            audioSource.clip = clip;
+            audioSource.pitch = Random.Range(minPitch, maxPitch); // Apply pitch variation
+            audioSource.Play();
         }
     }
 }
