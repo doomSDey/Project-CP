@@ -16,6 +16,8 @@ public class Macrophage : BaseEnemy
     [SerializeField] private float maxSpeed = 5f;
     private Vector2 moveDirection;
 
+    private Animator animator;
+
     protected override void Start()
     {
         base.Start();
@@ -34,6 +36,9 @@ public class Macrophage : BaseEnemy
         // Initialize health
         maxHealth = 100f; // Set to desired health
         currentHealth = maxHealth;
+
+        // Get the Animator component
+        animator = GetComponent<Animator>();
     }
 
     protected override void Move()
@@ -41,6 +46,7 @@ public class Macrophage : BaseEnemy
         if (isStunned || player == null)
         {
             rb.linearVelocity = Vector2.zero;
+            SetAnimatorMoving(false);
             return;
         }
 
@@ -76,10 +82,12 @@ public class Macrophage : BaseEnemy
 
             rb.AddForce(moveDirection * moveForce);
             rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, maxSpeed);
+            SetAnimatorMoving(true);
         }
         else
         {
             rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, Time.fixedDeltaTime * 2f);
+            SetAnimatorMoving(false);
         }
 
         Debug.DrawRay(transform.position, moveDirection * 2f, Color.red);
@@ -133,6 +141,7 @@ public class Macrophage : BaseEnemy
     {
         isStunned = true;
         rb.linearVelocity = Vector2.zero;
+        SetAnimatorMoving(false);
 
         if (spriteRenderer != null)
         {
@@ -146,6 +155,14 @@ public class Macrophage : BaseEnemy
         if (spriteRenderer != null)
         {
             spriteRenderer.color = originalColor;
+        }
+    }
+
+    private void SetAnimatorMoving(bool isMoving)
+    {
+        if (animator != null)
+        {
+            animator.SetBool("Moving", isMoving);
         }
     }
 
