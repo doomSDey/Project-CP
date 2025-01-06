@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2365317703862806705}
   - component: {fileID: 7440754744368371895}
   - component: {fileID: 630950240889304996}
+  - component: {fileID: 649738909237061029}
   m_Layer: 11
   m_Name: Macrophage
   m_TagString: Enemy
@@ -175,3 +176,16 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &649738909237061029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7750000381546170329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65a92adf18b74e049975af6b24ad22c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreValue: 20
