@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7148156688281686724}
   - component: {fileID: 2136285172923456288}
   - component: {fileID: 3357131336418672845}
+  - component: {fileID: -2517460931608263428}
   m_Layer: 11
   m_Name: MucusBlob
   m_TagString: Enemy
@@ -182,3 +183,16 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8192
   speedReductionAmount: 1
+--- !u!114 &-2517460931608263428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6563045841928504701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65a92adf18b74e049975af6b24ad22c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreValue: 10
