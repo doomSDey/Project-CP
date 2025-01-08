@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class ScoreManager : MonoBehaviour
 {
@@ -23,6 +24,19 @@ public class ScoreManager : MonoBehaviour
 
     private void Start()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded; // Subscribe to sceneLoaded event
+        UpdateScoreUI();
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded; // Unsubscribe from sceneLoaded event
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Try to find the scoreText in the newly loaded scene
+        scoreText = GameObject.Find("ScoreText")?.GetComponent<TMP_Text>();
         UpdateScoreUI();
     }
 
