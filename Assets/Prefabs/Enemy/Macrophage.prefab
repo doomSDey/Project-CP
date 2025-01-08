@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 7750000381546170329}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.87132204, y: 4.9391737, z: -0.15542537}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.24, y: 1.24, z: 1.24}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -53,12 +53,15 @@ MonoBehaviour:
   damageFlashColor: {r: 1, g: 0, b: 0, a: 1}
   chaseRange: 10
   stunDuration: 3
-  obstacleAvoidanceRange: 1
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 8192
-  moveForce: 20
+  avoidanceSamples: 16
+  obstacleAvoidanceRange: 0.2
+  moveForce: 5
   maxSpeed: 5
+  flickerDuration: 0.2
+  flickerCount: 2
 --- !u!212 &2365317703862806705
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -149,7 +152,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.80627334
+  m_Radius: 0.32817265
 --- !u!50 &630950240889304996
 Rigidbody2D:
   serializedVersion: 5

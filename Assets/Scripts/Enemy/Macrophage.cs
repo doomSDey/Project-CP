@@ -6,8 +6,17 @@ public class Macrophage : BaseEnemy
     [Header("Chase Settings")]
     [SerializeField] private float chaseRange = 10f;
     [SerializeField] private float stunDuration = 2f;
-    [SerializeField] private float obstacleAvoidanceRange = 1f;
+
+    // The layer(s) to treat as obstacles (walls, etc.).
+    // Be sure NOT to include the Player layer here.
     [SerializeField] private LayerMask obstacleLayer;
+
+    [Tooltip("Number of directions (around a circle) to check for a free path if blocked.")]
+    [SerializeField] private int avoidanceSamples = 16;
+
+    // If we can't find a free direction after all samples, we revert to direct line movement.
+    [SerializeField] private float obstacleAvoidanceRange = 1f;
+
     private GameObject player;
     private bool isStunned = false;
 
@@ -17,6 +26,12 @@ public class Macrophage : BaseEnemy
     private Vector2 moveDirection;
 
     private Animator animator;
+    private SpriteRenderer spriteRenderer;
+
+    // Flicker settings
+    [SerializeField] private float flickerDuration = 0.2f;
+    [SerializeField] private int flickerCount = 2;
+    private Color originalColor;
 
     protected override void Start()
     {
@@ -34,11 +49,16 @@ public class Macrophage : BaseEnemy
         player = GameObject.FindGameObjectWithTag("Player");
 
         // Initialize health
-        maxHealth = 100f; // Set to desired health
+        maxHealth = 100f;
         currentHealth = maxHealth;
 
-        // Get the Animator component
+        // Setup references
         animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            originalColor = spriteRenderer.color;
+        }
     }
 
     protected override void Move()
@@ -56,27 +76,34 @@ public class Macrophage : BaseEnemy
         {
             Vector2 directionToPlayer = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
 
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, directionToPlayer, obstacleAvoidanceRange, obstacleLayer);
+            // Check for obstacles EXCEPT the player
+            RaycastHit2D hit = Physics2D.Raycast(
+                transform.position,
+                directionToPlayer,
+                obstacleAvoidanceRange,
+                obstacleLayer // Do NOT include the player layer here
+            );
+
             if (hit.collider != null)
             {
-                Vector2 avoidanceDirection = Vector2.zero;
-                for (int i = 0; i < 8; i++)
+                // Attempt to find a free direction
+                Vector2 avoidanceDirection = FindAvoidanceDirection(directionToPlayer);
+
+                // If we found a free direction, use it; otherwise just continue toward the player
+                if (avoidanceDirection != Vector2.zero)
                 {
-                    float angle = i * 45f;
-                    Vector2 direction = Quaternion.Euler(0, 0, angle) * directionToPlayer;
-                    RaycastHit2D obstacleCheck = Physics2D.Raycast(transform.position, direction, obstacleAvoidanceRange, obstacleLayer);
-
-                    if (obstacleCheck.collider == null)
-                    {
-                        avoidanceDirection = direction;
-                        break;
-                    }
+                    moveDirection = avoidanceDirection;
                 }
-
-                moveDirection = avoidanceDirection != Vector2.zero ? avoidanceDirection : Vector2.Perpendicular(hit.normal);
+                else
+                {
+                    // Worst case: move directly at the player 
+                    // (ensures we don't get stuck if there's no immediately free direction)
+                    moveDirection = directionToPlayer;
+                }
             }
             else
             {
+                // No obstacle, go straight to player
                 moveDirection = directionToPlayer;
             }
 
@@ -86,6 +113,7 @@ public class Macrophage : BaseEnemy
         }
         else
         {
+            // Player out of range, slow to a stop
             rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, Time.fixedDeltaTime * 2f);
             SetAnimatorMoving(false);
         }
@@ -93,27 +121,81 @@ public class Macrophage : BaseEnemy
         Debug.DrawRay(transform.position, moveDirection * 2f, Color.red);
     }
 
+    /// <summary>
+    /// Tries multiple angles around 'baseDirection' to find a direction not blocked by an obstacle.
+    /// Returns Vector2.zero if none found.
+    /// </summary>
+    private Vector2 FindAvoidanceDirection(Vector2 baseDirection)
+    {
+        // We'll sample in small angle increments around the baseDirection
+        float angleIncrement = 360f / avoidanceSamples;
+
+        // If we find a direction with no obstacle, we return it immediately
+        for (int i = 0; i < avoidanceSamples; i++)
+        {
+            float angle = i * angleIncrement;
+            // Rotate baseDirection by 'angle' degrees
+            Vector2 checkDir = Quaternion.Euler(0, 0, angle) * baseDirection;
+
+            RaycastHit2D obstacleCheck = Physics2D.Raycast(
+                transform.position,
+                checkDir,
+                obstacleAvoidanceRange,
+                obstacleLayer
+            );
+
+            // If we didn't hit an obstacle, we can move in this direction
+            if (obstacleCheck.collider == null)
+            {
+                return checkDir.normalized;
+            }
+        }
+
+        // No free direction found
+        return Vector2.zero;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // 1) If we collide with Player, kill the player
         if (collision.gameObject.CompareTag("Player"))
         {
             PlayerCapyScript playerScript = collision.gameObject.GetComponent<PlayerCapyScript>();
             if (playerScript != null)
             {
                 playerScript.Die(); // Kill player on contact
-                Debug.Log("Player killed on contact.");
+                Debug.Log("Player killed on contact by Macrophage.");
             }
         }
+        // 2) If we collide with a Bomb, stun this Macrophage
         else if (collision.gameObject.CompareTag("Bomb"))
         {
             Stun();
+        }
+        // 3) For obstacles or other enemies, do a small bounce
+        else
+        {
+            // If it's an obstacle or another Macrophage/enemy, apply a slight bounce
+            int collisionLayer = collision.gameObject.layer;
+            if (((1 << collisionLayer) & obstacleLayer) != 0 || collision.gameObject.GetComponent<BaseEnemy>() != null)
+            {
+                // Take the first contact normal
+                Vector2 bounceDirection = collision.contacts[0].normal;
+                rb.AddForce(bounceDirection * 5f, ForceMode2D.Impulse); // Adjust bounce force as needed
+            }
         }
     }
 
     public override void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        Debug.Log($"{gameObject.name} took {damage} damage. Remaining health: {currentHealth}");
+        Debug.Log($"{name} took {damage} damage. Remaining health: {currentHealth}");
+
+        // Flicker on damage
+        if (spriteRenderer != null)
+        {
+            StartCoroutine(DamageFlickerCoroutine());
+        }
 
         if (currentHealth <= 0)
         {
@@ -123,7 +205,7 @@ public class Macrophage : BaseEnemy
 
     public override void Die()
     {
-        Debug.Log($"{gameObject.name} has been killed!");
+        Debug.Log($"{name} has been killed!");
         // Add any death effects or animations here
         Destroy(gameObject);
     }
@@ -132,7 +214,7 @@ public class Macrophage : BaseEnemy
     {
         if (!isStunned)
         {
-            StopAllCoroutines();
+            StopAllCoroutines(); // Stop any ongoing flickers, etc.
             StartCoroutine(ApplyStun());
         }
     }
@@ -143,6 +225,7 @@ public class Macrophage : BaseEnemy
         rb.linearVelocity = Vector2.zero;
         SetAnimatorMoving(false);
 
+        // Change color or play stun animation
         if (spriteRenderer != null)
         {
             spriteRenderer.color = Color.blue;
@@ -158,21 +241,28 @@ public class Macrophage : BaseEnemy
         }
     }
 
+    /// <summary>
+    /// Flicker the sprite a few times when damaged.
+    /// </summary>
+    private IEnumerator DamageFlickerCoroutine()
+    {
+        float flickerInterval = flickerDuration / (flickerCount * 2f);
+        for (int i = 0; i < flickerCount; i++)
+        {
+            spriteRenderer.enabled = false;
+            yield return new WaitForSeconds(flickerInterval);
+
+            spriteRenderer.enabled = true;
+            yield return new WaitForSeconds(flickerInterval);
+        }
+    }
+
     private void SetAnimatorMoving(bool isMoving)
     {
         if (animator != null)
         {
             animator.SetBool("Moving", isMoving);
         }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, chaseRange);
-
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, obstacleAvoidanceRange);
     }
 
     private void OnDisable()

@@ -1362,7 +1362,7 @@ CompositeCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:
@@ -4880,8 +4880,8 @@ Transform:
   m_GameObject: {fileID: 297009788}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.51, y: 1.13, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 9.55, y: -0.15, z: 0}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1563811434}
@@ -5010,8 +5010,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d78209bc87cde7440b070bd6224df130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 0}
-  spawnPoint: {fileID: 0}
+  prefabToSpawn: {fileID: 7750000381546170329, guid: 12f8b42da0b8b084d9a4864788836890, type: 3}
+  spawnPoint: {fileID: 525631177}
   n: 5
   x: 10
   multiplier: 3
@@ -5056,7 +5056,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 610747625}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d78209bc87cde7440b070bd6224df130, type: 3}
   m_Name: 
@@ -5112,8 +5112,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d78209bc87cde7440b070bd6224df130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 0}
-  spawnPoint: {fileID: 0}
+  prefabToSpawn: {fileID: 6563045841928504701, guid: ddc91160ddec0d947a2c7385948b3ea3, type: 3}
+  spawnPoint: {fileID: 911375377}
   n: 5
   x: 10
   multiplier: 3
@@ -6654,7 +6654,7 @@ CompositeCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
+  m_GeometryType: 1
   m_GenerationType: 0
   m_EdgeRadius: 0
   m_ColliderPaths:
@@ -9380,10 +9380,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1762714128}
   - {fileID: 610747626}
   - {fileID: 297009789}
   - {fileID: 525631177}
+  - {fileID: 1762714128}
   - {fileID: 911375377}
   - {fileID: 1939204925}
   m_Father: {fileID: 0}
@@ -9556,7 +9556,7 @@ Transform:
   m_GameObject: {fileID: 1939204924}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.8, y: -3.2, z: 0}
+  m_LocalPosition: {x: -9.88, y: -2.89, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9574,8 +9574,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d78209bc87cde7440b070bd6224df130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 0}
-  spawnPoint: {fileID: 0}
+  prefabToSpawn: {fileID: 6563045841928504701, guid: ddc91160ddec0d947a2c7385948b3ea3, type: 3}
+  spawnPoint: {fileID: 1939204925}
   n: 5
   x: 10
   multiplier: 3
