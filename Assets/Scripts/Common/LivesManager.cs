@@ -1,20 +1,22 @@
 using UnityEngine;
+using UnityEngine.SceneManagement; // For restarting the game
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
 
 public class LivesManager : MonoBehaviour
 {
     public static LivesManager Instance;
 
     [Header("Lives Settings")]
-    [SerializeField] private int maxLives = 3;             // Maximum number of lives
+    [SerializeField] private int maxLives = 3; // Maximum number of lives
     private int currentLives;
 
     [Header("UI Settings")]
-    [SerializeField] private Transform livesPanel;         // Panel to hold heart images
-    [SerializeField] private Sprite heartSprite;           // Sprite for heart image
+    [SerializeField] private Transform livesPanel; // Panel to hold heart images
+    [SerializeField] private Sprite heartSprite;   // Sprite for heart image
 
-    private List<Image> heartImages = new List<Image>();   // List to store heart UI components
+    private List<Image> heartImages = new List<Image>(); // List to store heart UI components
 
     private void Awake()
     {
@@ -31,7 +33,37 @@ public class LivesManager : MonoBehaviour
 
     private void Start()
     {
-        ResetLives();
+        InitializeLives();
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Find the lives panel again after the scene reloads
+        livesPanel = GameObject.Find("LivesPanel")?.transform;
+
+        if (livesPanel == null)
+        {
+            Debug.LogError("LivesPanel not found in the scene.");
+            return;
+        }
+
+        InitializeLivesUI();
+    }
+
+    private void InitializeLives()
+    {
+        currentLives = maxLives;
+        InitializeLivesUI();
     }
 
     public void LoseLife()
@@ -40,30 +72,45 @@ public class LivesManager : MonoBehaviour
         {
             currentLives--;
             UpdateLivesUI();
+
+            if (currentLives <= 0)
+            {
+                Debug.Log("All lives lost!");
+                StartCoroutine(GoToGameOverScene());
+            }
         }
     }
 
-    public int GetCurrentLives()
+    private IEnumerator GoToGameOverScene()
     {
-        return currentLives;
+        yield return new WaitForSeconds(1f);
+        SceneManager.LoadScene("GameOver"); // A separate scene
     }
 
     public void ResetLives()
     {
         currentLives = maxLives;
-        InitializeLivesUI();
+        UpdateLivesUI();
     }
 
     private void InitializeLivesUI()
     {
-        // Clear existing hearts
+        // Clear old hearts safely
         foreach (Image heart in heartImages)
         {
-            Destroy(heart.gameObject);
+            if (heart != null)
+            {
+                Destroy(heart.gameObject);
+            }
         }
         heartImages.Clear();
 
-        // Create hearts based on maxLives
+        if (livesPanel == null)
+        {
+            Debug.LogError("LivesPanel is not assigned.");
+            return;
+        }
+
         for (int i = 0; i < maxLives; i++)
         {
             GameObject heartObj = new GameObject($"Heart_{i}", typeof(Image));
@@ -72,9 +119,8 @@ public class LivesManager : MonoBehaviour
             Image heartImage = heartObj.GetComponent<Image>();
             heartImage.sprite = heartSprite;
 
-            // Explicitly set the size of the heart sprite
             RectTransform rectTransform = heartObj.GetComponent<RectTransform>();
-            rectTransform.sizeDelta = new Vector2(80, 80); // Adjust to your desired size (e.g., 64x64)
+            rectTransform.sizeDelta = new Vector2(80, 80);
 
             heartImages.Add(heartImage);
         }
@@ -86,8 +132,15 @@ public class LivesManager : MonoBehaviour
     {
         for (int i = 0; i < heartImages.Count; i++)
         {
-            // Enable hearts for current lives, disable for lost lives
-            heartImages[i].enabled = i < currentLives;
+            if (heartImages[i] != null)
+            {
+                heartImages[i].enabled = i < currentLives;
+            }
         }
+    }
+
+    public int GetCurrentLives()
+    {
+        return currentLives;
     }
 }

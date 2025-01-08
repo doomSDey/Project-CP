@@ -270,28 +270,14 @@ public class PlayerCapyScript : MonoBehaviour
 
         if (LivesManager.Instance.GetCurrentLives() > 0)
         {
-            // Play flicker effect and respawn the player
             StartCoroutine(FlickerEffect());
-            transform.position = Vector3.zero; // Respawn at a specific location
         }
         else
         {
-            // End the game when lives reach 0
-            EndGame();
+            Debug.Log("Game Over!");
         }
     }
 
-    private void EndGame()
-    {
-        Debug.Log("Game Over!");
-
-        // Reset lives for the next game
-        LivesManager.Instance.ResetLives();
-
-        // Load the Game Over scene or display a Game Over UI
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        //SceneManager.LoadScene("GameOver"); // Replace "GameOver" with your actual game-over scene name
-    }
 
     private IEnumerator FlickerEffect()
     {
