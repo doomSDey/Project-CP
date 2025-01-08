@@ -35,7 +35,7 @@ public class ScoreManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Try to find the scoreText in the newly loaded scene
+        // Try to find the scoreDropText in the newly loaded scene
         scoreText = GameObject.Find("ScoreText")?.GetComponent<TMP_Text>();
         UpdateScoreUI();
     }
