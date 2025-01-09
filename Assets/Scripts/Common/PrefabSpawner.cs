@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,7 @@ public class PrefabSpawner : MonoBehaviour
     private bool isBoosted = false;
     private int currentActivePrefabs = 0;
     private Queue<GameObject> prefabPool = new Queue<GameObject>();
+    public event Action<GameObject> OnDestroyed;
 
     private void Start()
     {
@@ -32,8 +34,12 @@ public class PrefabSpawner : MonoBehaviour
             obj.SetActive(false);
             prefabPool.Enqueue(obj);
 
-            // Subscribe to the OnDestroyed event
-            obj.GetComponent<BaseEnemy>().OnDestroyed += HandlePrefabDestroyed;
+            // Subscribe to the OnDestroyed event if the prefab has a BaseEnemy component
+            BaseEnemy baseEnemy = obj.GetComponent<BaseEnemy>();
+            if (baseEnemy != null)
+            {
+                baseEnemy.OnDestroyed += HandlePrefabDestroyed;
+            }
         }
     }
 
@@ -78,19 +84,31 @@ public class PrefabSpawner : MonoBehaviour
         if (prefabPool.Count > 0)
         {
             GameObject obj = prefabPool.Dequeue();
-            obj.transform.position = spawnPoint.position;
-            obj.transform.rotation = Quaternion.identity;
-            obj.SetActive(true);
 
-            currentActivePrefabs++;
+            if (!obj.activeSelf)
+            {
+                obj.transform.position = spawnPoint.position;
+                obj.transform.rotation = Quaternion.identity;
+                obj.SetActive(true);
+
+                currentActivePrefabs++;
+            }
+            else
+            {
+                prefabPool.Enqueue(obj); // If the prefab is still active, return it to the pool
+                Debug.LogWarning("Attempted to spawn an already active prefab. Skipping.");
+            }
         }
     }
 
     private void HandlePrefabDestroyed(GameObject destroyedPrefab)
     {
-        destroyedPrefab.SetActive(false);
-        prefabPool.Enqueue(destroyedPrefab);
+        if (destroyedPrefab != null)
+        {
+            destroyedPrefab.SetActive(false); // Disable prefab
+            prefabPool.Enqueue(destroyedPrefab); // Return to pool
 
-        currentActivePrefabs--;
+            currentActivePrefabs = Mathf.Max(0, currentActivePrefabs - 1); // Decrease active prefab count safely
+        }
     }
 }
