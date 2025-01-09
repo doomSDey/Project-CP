@@ -186,30 +186,6 @@ public class Macrophage : BaseEnemy
         }
     }
 
-    public override void TakeDamage(float damage)
-    {
-        currentHealth -= damage;
-        Debug.Log($"{name} took {damage} damage. Remaining health: {currentHealth}");
-
-        // Flicker on damage
-        if (spriteRenderer != null)
-        {
-            StartCoroutine(DamageFlickerCoroutine());
-        }
-
-        if (currentHealth <= 0)
-        {
-            Die();
-        }
-    }
-
-    public override void Die()
-    {
-        Debug.Log($"{name} has been killed!");
-        // Add any death effects or animations here
-        Destroy(gameObject);
-    }
-
     public void Stun()
     {
         if (!isStunned)
