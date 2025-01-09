@@ -14,6 +14,10 @@ public class PrefabSpawner : MonoBehaviour
     public float boostedDuration = 30f;
     public int maxActivePrefabs = 20;
 
+    [Header("Player Settings")]
+    public Transform player; // Reference to the player's transform
+    public float noSpawnRadius = 5f; // Radius around the spawner within which no prefabs will spawn if the player is nearby
+
     private bool isBoosted = false;
     private int currentActivePrefabs = 0;
     private Queue<GameObject> prefabPool = new Queue<GameObject>();
@@ -83,6 +87,14 @@ public class PrefabSpawner : MonoBehaviour
     {
         if (prefabPool.Count > 0)
         {
+            // Check distance between player and spawner
+            float distanceToPlayer = Vector3.Distance(player.position, spawnPoint.position);
+            if (distanceToPlayer <= noSpawnRadius)
+            {
+                Debug.Log($"Skipping spawn as player is within {noSpawnRadius} units of the spawner.");
+                return;
+            }
+
             GameObject obj = prefabPool.Dequeue();
 
             if (!obj.activeSelf)
