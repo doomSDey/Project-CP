@@ -5037,7 +5037,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 673066354}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 65ecb6d13e725cb45ae84802c6276f00, type: 3}
@@ -9316,6 +9316,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 2014276805}
   tilemap: {fileID: 1515776541}
+--- !u!82 &1180688572 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 80126036495641003, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
+  m_PrefabInstance: {fileID: 1650944961}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1207551164
 GameObject:
   m_ObjectHideFlags: 0
@@ -9853,18 +9858,6 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 5430872712975605905, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.360082
-      objectReference: {fileID: 0}
-    - target: {fileID: 5430872712975605905, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.360082
-      objectReference: {fileID: 0}
-    - target: {fileID: 5430872712975605905, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.360082
-      objectReference: {fileID: 0}
-    - target: {fileID: 5430872712975605905, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.0151
       objectReference: {fileID: 0}
@@ -9904,14 +9897,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5430872712975605905, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7298216663316554187, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: tilemap
-      value: 
-      objectReference: {fileID: 80429593}
     - target: {fileID: 7298216663316554187, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
       propertyPath: dashSpeed
       value: 15
@@ -9921,17 +9906,13 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7298216663316554187, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 1180688572}
+    - target: {fileID: 7298216663316554187, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
       propertyPath: baseMoveSpeed
       value: 8
       objectReference: {fileID: 0}
-    - target: {fileID: 7544404209550568241, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: bombSound
-      value: 
-      objectReference: {fileID: 8300000, guid: 2cd5caebd4a2d0a41935099c8c24089b, type: 3}
-    - target: {fileID: 7544404209550568241, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: laserSound
-      value: 
-      objectReference: {fileID: 8300000, guid: 602670470eebfd046b2bbbd40250aa45, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
