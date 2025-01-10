@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 2365317703862806705}
   - component: {fileID: 7440754744368371895}
   - component: {fileID: 630950240889304996}
+  - component: {fileID: 649738909237061029}
+  - component: {fileID: 3943507716290518908}
   m_Layer: 11
   m_Name: Macrophage
   m_TagString: Enemy
@@ -29,9 +31,9 @@ Transform:
   m_GameObject: {fileID: 7750000381546170329}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.87132204, y: 4.9391737, z: -0.15542537}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.24, y: 1.24, z: 1.24}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -51,12 +53,15 @@ MonoBehaviour:
   damageFlashColor: {r: 1, g: 0, b: 0, a: 1}
   chaseRange: 10
   stunDuration: 3
-  obstacleAvoidanceRange: 1
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 8192
-  raycastDistance: 1.5
-  avoidanceWeight: 1.5
+  avoidanceSamples: 16
+  obstacleAvoidanceRange: 0.2
+  moveForce: 5
+  maxSpeed: 5
+  flickerDuration: 0.2
+  flickerCount: 2
 --- !u!212 &2365317703862806705
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -101,7 +106,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2741225206318957235, guid: 9687114b9f9983243a3ad81ba3e1e7a9, type: 3}
+  m_Sprite: {fileID: 3778870572069284394, guid: 9796a0b562edbbf41905b57e33ea2240, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -147,7 +152,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.80627334
+  m_Radius: 0.32817265
 --- !u!50 &630950240889304996
 Rigidbody2D:
   serializedVersion: 5
@@ -163,7 +168,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -175,3 +180,38 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &649738909237061029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7750000381546170329}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65a92adf18b74e049975af6b24ad22c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreValue: 20
+--- !u!95 &3943507716290518908
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7750000381546170329}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a8e376c87b3f22248b9d379568ee2302, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

@@ -6,16 +6,32 @@ public class Macrophage : BaseEnemy
     [Header("Chase Settings")]
     [SerializeField] private float chaseRange = 10f;
     [SerializeField] private float stunDuration = 2f;
-    [SerializeField] private float obstacleAvoidanceRange = 1f;
+
+    // The layer(s) to treat as obstacles (walls, etc.).
+    // Be sure NOT to include the Player layer here.
     [SerializeField] private LayerMask obstacleLayer;
+
+    [Tooltip("Number of directions (around a circle) to check for a free path if blocked.")]
+    [SerializeField] private int avoidanceSamples = 16;
+
+    // If we can't find a free direction after all samples, we revert to direct line movement.
+    [SerializeField] private float obstacleAvoidanceRange = 1f;
+
     private GameObject player;
     private bool isStunned = false;
-    private float currentSpeed;
 
     [Header("Movement")]
     [SerializeField] private float moveForce = 20f;
     [SerializeField] private float maxSpeed = 5f;
     private Vector2 moveDirection;
+
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
+
+    // Flicker settings
+    [SerializeField] private float flickerDuration = 0.2f;
+    [SerializeField] private int flickerCount = 2;
+    private Color originalColor;
 
     protected override void Start()
     {
@@ -32,10 +48,17 @@ public class Macrophage : BaseEnemy
         // Find player
         player = GameObject.FindGameObjectWithTag("Player");
 
-        // Initialize variables
-        currentSpeed = speed;
-        maxHealth = Mathf.Infinity;
+        // Initialize health
+        maxHealth = 100f;
         currentHealth = maxHealth;
+
+        // Setup references
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            originalColor = spriteRenderer.color;
+        }
     }
 
     protected override void Move()
@@ -43,96 +66,123 @@ public class Macrophage : BaseEnemy
         if (isStunned || player == null)
         {
             rb.linearVelocity = Vector2.zero;
+            SetAnimatorMoving(false);
             return;
         }
 
-        // Calculate distance to player
         float distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
 
-        // Only chase if within range
         if (distanceToPlayer <= chaseRange)
         {
-            // Get direction to player
             Vector2 directionToPlayer = ((Vector2)player.transform.position - (Vector2)transform.position).normalized;
 
-            // Check for obstacles
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, directionToPlayer, obstacleAvoidanceRange, obstacleLayer);
+            // Check for obstacles EXCEPT the player
+            RaycastHit2D hit = Physics2D.Raycast(
+                transform.position,
+                directionToPlayer,
+                obstacleAvoidanceRange,
+                obstacleLayer // Do NOT include the player layer here
+            );
 
             if (hit.collider != null)
             {
-                // If there's an obstacle, try to move around it
-                Vector2 avoidanceDirection = Vector2.zero;
+                // Attempt to find a free direction
+                Vector2 avoidanceDirection = FindAvoidanceDirection(directionToPlayer);
 
-                // Cast rays at different angles to find a clear path
-                for (int i = 0; i < 8; i++)
-                {
-                    float angle = i * 45f;
-                    Vector2 direction = Quaternion.Euler(0, 0, angle) * directionToPlayer;
-                    RaycastHit2D obstacleCheck = Physics2D.Raycast(transform.position, direction, obstacleAvoidanceRange, obstacleLayer);
-
-                    if (obstacleCheck.collider == null)
-                    {
-                        avoidanceDirection = direction;
-                        break;
-                    }
-                }
-
-                // If we found a clear direction, use it
+                // If we found a free direction, use it; otherwise just continue toward the player
                 if (avoidanceDirection != Vector2.zero)
                 {
                     moveDirection = avoidanceDirection;
                 }
                 else
                 {
-                    // If no clear path, move along the wall
-                    moveDirection = Vector2.Perpendicular(hit.normal);
+                    // Worst case: move directly at the player 
+                    // (ensures we don't get stuck if there's no immediately free direction)
+                    moveDirection = directionToPlayer;
                 }
             }
             else
             {
-                // No obstacles, move directly towards player
+                // No obstacle, go straight to player
                 moveDirection = directionToPlayer;
             }
 
-            // Apply movement force
             rb.AddForce(moveDirection * moveForce);
-
-            // Clamp velocity to max speed
             rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, maxSpeed);
+            SetAnimatorMoving(true);
         }
         else
         {
-            // Slow down when out of range
+            // Player out of range, slow to a stop
             rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, Time.fixedDeltaTime * 2f);
+            SetAnimatorMoving(false);
         }
 
-        // Debug visualization
         Debug.DrawRay(transform.position, moveDirection * 2f, Color.red);
+    }
+
+    /// <summary>
+    /// Tries multiple angles around 'baseDirection' to find a direction not blocked by an obstacle.
+    /// Returns Vector2.zero if none found.
+    /// </summary>
+    private Vector2 FindAvoidanceDirection(Vector2 baseDirection)
+    {
+        // We'll sample in small angle increments around the baseDirection
+        float angleIncrement = 360f / avoidanceSamples;
+
+        // If we find a direction with no obstacle, we return it immediately
+        for (int i = 0; i < avoidanceSamples; i++)
+        {
+            float angle = i * angleIncrement;
+            // Rotate baseDirection by 'angle' degrees
+            Vector2 checkDir = Quaternion.Euler(0, 0, angle) * baseDirection;
+
+            RaycastHit2D obstacleCheck = Physics2D.Raycast(
+                transform.position,
+                checkDir,
+                obstacleAvoidanceRange,
+                obstacleLayer
+            );
+
+            // If we didn't hit an obstacle, we can move in this direction
+            if (obstacleCheck.collider == null)
+            {
+                return checkDir.normalized;
+            }
+        }
+
+        // No free direction found
+        return Vector2.zero;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // 1) If we collide with Player, kill the player
         if (collision.gameObject.CompareTag("Player"))
         {
-            PlayerCapyScript player = collision.gameObject.GetComponent<PlayerCapyScript>();
-            if (player != null)
+            PlayerCapyScript playerScript = collision.gameObject.GetComponent<PlayerCapyScript>();
+            if (playerScript != null)
             {
-                player.Die();
+                playerScript.Die(); // Kill player on contact
+                Debug.Log("Player killed on contact by Macrophage.");
             }
         }
+        // 2) If we collide with a Bomb, stun this Macrophage
         else if (collision.gameObject.CompareTag("Bomb"))
         {
             Stun();
         }
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        // Add bounce effect when colliding with obstacles
-        if (((1 << collision.gameObject.layer) & obstacleLayer) != 0)
+        // 3) For obstacles or other enemies, do a small bounce
+        else
         {
-            Vector2 bounceDirection = ((Vector2)transform.position - collision.contacts[0].point).normalized;
-            rb.AddForce(bounceDirection * moveForce * 0.5f);
+            // If it's an obstacle or another Macrophage/enemy, apply a slight bounce
+            int collisionLayer = collision.gameObject.layer;
+            if (((1 << collisionLayer) & obstacleLayer) != 0 || collision.gameObject.GetComponent<BaseEnemy>() != null)
+            {
+                // Take the first contact normal
+                Vector2 bounceDirection = collision.contacts[0].normal;
+                rb.AddForce(bounceDirection * 5f, ForceMode2D.Impulse); // Adjust bounce force as needed
+            }
         }
     }
 
@@ -140,7 +190,7 @@ public class Macrophage : BaseEnemy
     {
         if (!isStunned)
         {
-            StopAllCoroutines();
+            StopAllCoroutines(); // Stop any ongoing flickers, etc.
             StartCoroutine(ApplyStun());
         }
     }
@@ -148,9 +198,10 @@ public class Macrophage : BaseEnemy
     private IEnumerator ApplyStun()
     {
         isStunned = true;
-        currentSpeed = 0f;
         rb.linearVelocity = Vector2.zero;
+        SetAnimatorMoving(false);
 
+        // Change color or play stun animation
         if (spriteRenderer != null)
         {
             spriteRenderer.color = Color.blue;
@@ -159,7 +210,6 @@ public class Macrophage : BaseEnemy
         yield return new WaitForSeconds(stunDuration);
 
         isStunned = false;
-        currentSpeed = speed;
 
         if (spriteRenderer != null)
         {
@@ -167,18 +217,28 @@ public class Macrophage : BaseEnemy
         }
     }
 
-    public override void TakeDamage(float damage)
+    /// <summary>
+    /// Flicker the sprite a few times when damaged.
+    /// </summary>
+    private IEnumerator DamageFlickerCoroutine()
     {
-        Debug.Log($"{gameObject.name} is unkillable. Ignoring damage.");
+        float flickerInterval = flickerDuration / (flickerCount * 2f);
+        for (int i = 0; i < flickerCount; i++)
+        {
+            spriteRenderer.enabled = false;
+            yield return new WaitForSeconds(flickerInterval);
+
+            spriteRenderer.enabled = true;
+            yield return new WaitForSeconds(flickerInterval);
+        }
     }
 
-    private void OnDrawGizmosSelected()
+    private void SetAnimatorMoving(bool isMoving)
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, chaseRange);
-
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, obstacleAvoidanceRange);
+        if (animator != null)
+        {
+            animator.SetBool("Moving", isMoving);
+        }
     }
 
     private void OnDisable()

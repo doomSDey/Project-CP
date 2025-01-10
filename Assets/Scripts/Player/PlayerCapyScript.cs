@@ -1,13 +1,13 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Tilemaps;
 
 public class PlayerCapyScript : MonoBehaviour
 {
+    public float baseMoveSpeed = 5f;
     public float moveSpeed = 5f;
     private float currentMoveSpeed;
-    private bool isBeingPushedBack = false; // Flag to track pushback
+    private bool isBeingPushedBack = false;
 
     private Rigidbody2D rb;
     private Vector2 movement;
@@ -25,18 +25,10 @@ public class PlayerCapyScript : MonoBehaviour
     [Header("Bounce Settings")]
     public float bounceForce = 15f;
 
-    public Tilemap tilemap;
-    private Vector3 minBounds;
-    private Vector3 maxBounds;
-    private Camera mainCamera;
-    private Vector3 playerSize;
-
     public float bombCooldown = 1.5f;
     private float bombCooldownTimer = 0f;
 
     private SpriteRenderer spriteRenderer;
-
-    // Animator Reference
     private Animator animator;
 
     void Start()
@@ -45,35 +37,16 @@ public class PlayerCapyScript : MonoBehaviour
         shooter = GetComponentInChildren<Shooter>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        mainCamera = Camera.main;
+
+        // Initialize speeds
         currentMoveSpeed = moveSpeed;
+        baseMoveSpeed = moveSpeed;
 
         if (rb == null)
         {
             rb = gameObject.AddComponent<Rigidbody2D>();
         }
-
         rb.gravityScale = 0;
-
-        if (tilemap != null)
-        {
-            Bounds mapBounds = tilemap.localBounds;
-            Vector3 tilemapWorldMin = tilemap.CellToWorld(tilemap.cellBounds.min);
-            Vector3 tilemapWorldMax = tilemap.CellToWorld(tilemap.cellBounds.max);
-
-            minBounds = new Vector3(tilemapWorldMin.x, tilemapWorldMin.y, 0);
-            maxBounds = new Vector3(tilemapWorldMax.x, tilemapWorldMax.y, 0);
-        }
-
-        Collider2D collider = GetComponent<Collider2D>();
-        if (collider != null)
-        {
-            playerSize = collider.bounds.extents;
-        }
-        else
-        {
-            playerSize = Vector3.zero;
-        }
 
         dashTimeLeft = 0f;
         dashCooldownTimer = 0f;
@@ -141,7 +114,6 @@ public class PlayerCapyScript : MonoBehaviour
 
     private void UpdateAnimator()
     {
-        // Update isRunning parameter in the Animator
         bool isRunning = movement != Vector2.zero && !isDashing;
         animator.SetBool("isRunning", isRunning);
     }
@@ -160,52 +132,6 @@ public class PlayerCapyScript : MonoBehaviour
         }
     }
 
-    public void ApplyPushBack(Vector2 force)
-    {
-        isBeingPushedBack = true;
-
-        // Apply the pushback force directly to the player's Rigidbody
-        rb.linearVelocity = force;
-
-        // Reset the flag after a short delay
-        StartCoroutine(ResetPushBack());
-    }
-
-    private IEnumerator ResetPushBack()
-    {
-        yield return new WaitForSeconds(0.2f); // Adjust duration as needed
-        isBeingPushedBack = false;
-    }
-
-    private void LateUpdate()
-    {
-        CenterCameraOnPlayer();
-    }
-
-    private void CenterCameraOnPlayer()
-    {
-        if (mainCamera == null) return;
-
-        float cameraHalfHeight = mainCamera.orthographicSize;
-        float cameraHalfWidth = mainCamera.aspect * cameraHalfHeight;
-
-        Vector3 targetPosition = transform.position;
-
-        float clampedX = Mathf.Clamp(
-            targetPosition.x,
-            minBounds.x + cameraHalfWidth,
-            maxBounds.x - cameraHalfWidth
-        );
-
-        float clampedY = Mathf.Clamp(
-            targetPosition.y,
-            minBounds.y + cameraHalfHeight,
-            maxBounds.y - cameraHalfHeight
-        );
-
-        mainCamera.transform.position = new Vector3(clampedX, clampedY, mainCamera.transform.position.z);
-    }
-
     void HandleShooting()
     {
         if (isDashing) return;
@@ -213,7 +139,7 @@ public class PlayerCapyScript : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             shooter.ShootLaser();
-            currentMoveSpeed = moveSpeed * 0.6f;
+            currentMoveSpeed = (moveSpeed * 0.6f); // slight penalty
         }
         else if (Input.GetMouseButton(1) && bombCooldownTimer <= 0)
         {
@@ -223,55 +149,68 @@ public class PlayerCapyScript : MonoBehaviour
         }
         else
         {
+            // Return to normal speed (accounting for MucusBlob penalties if any)
             currentMoveSpeed = moveSpeed;
         }
+    }
+
+    public float GetMoveSpeed()
+    {
+        return moveSpeed;
+    }
+
+    public void ModifySpeed(float amount)
+    {
+        float ms = moveSpeed + amount;
+        if (moveSpeed > baseMoveSpeed) return; // Or remove this if you'd rather allow speed to exceed base
+        moveSpeed = ms;
+        if (moveSpeed < 0f) moveSpeed = 0f;
+
+        currentMoveSpeed = moveSpeed;
+        Debug.Log($"Player speed changed by {amount}. New moveSpeed = {moveSpeed}");
+    }
+
+    public void ApplyPushBack(Vector2 force)
+    {
+        isBeingPushedBack = true;
+        rb.linearVelocity = force;
+        StartCoroutine(ResetPushBack());
+    }
+
+    private IEnumerator ResetPushBack()
+    {
+        yield return new WaitForSeconds(0.2f);
+        isBeingPushedBack = false;
     }
 
     public void Die()
     {
         Debug.Log("Player has died!");
-
-        // Inform the LivesManager
         LivesManager.Instance.LoseLife();
 
         if (LivesManager.Instance.GetCurrentLives() > 0)
         {
-            // Play flicker effect and respawn the player
             StartCoroutine(FlickerEffect());
-            transform.position = Vector3.zero; // Respawn at a specific location
         }
         else
         {
-            // End the game when lives reach 0
-            EndGame();
+            Debug.Log("Game Over!");
         }
-    }
-
-    private void EndGame()
-    {
-        Debug.Log("Game Over!");
-
-        // Reset lives for the next game
-        LivesManager.Instance.ResetLives();
-
-        // Load the Game Over scene or display a Game Over UI
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); 
-        //SceneManager.LoadScene("GameOver"); // Replace "GameOver" with your actual game-over scene name
     }
 
     private IEnumerator FlickerEffect()
     {
-        float flickerDuration = 1f; // Total duration of the flicker effect
-        float flickerInterval = 0.1f; // Time between visibility toggles
+        float flickerDuration = 1f;
+        float flickerInterval = 0.1f;
         float elapsedTime = 0f;
 
         while (elapsedTime < flickerDuration)
         {
-            spriteRenderer.enabled = !spriteRenderer.enabled; // Toggle visibility
+            spriteRenderer.enabled = !spriteRenderer.enabled;
             elapsedTime += flickerInterval;
             yield return new WaitForSeconds(flickerInterval);
         }
 
-        spriteRenderer.enabled = true; // Ensure visibility is restored
+        spriteRenderer.enabled = true;
     }
 }
