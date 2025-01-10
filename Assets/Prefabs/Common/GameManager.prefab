@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4810909650970126343}
   - component: {fileID: 503907939426001252}
   - component: {fileID: 4334011871716365766}
-  - component: {fileID: 5088826329632836195}
   - component: {fileID: 6185862533370028715}
   - component: {fileID: 968014364622633139}
   m_Layer: 0
@@ -64,32 +63,6 @@ MonoBehaviour:
   maxLives: 3
   livesPanel: {fileID: 0}
   heartSprite: {fileID: 2741225206318957235, guid: 9687114b9f9983243a3ad81ba3e1e7a9, type: 3}
---- !u!114 &5088826329632836195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1716210624173996042}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b44e7beb772c4b4ea860b0d6d5db114, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scoreDropsPrefab: {fileID: 2664048806934744407, guid: f2eda081d91d2c84abcd234a1fb47e59, type: 3}
-  numberOfScoreItems: 10
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 8192
-  spawnCheckRadius: 0.5
-  spawnInterval: 5
-  player: {fileID: 0}
-  sprite20: {fileID: 2741225206318957235, guid: 9687114b9f9983243a3ad81ba3e1e7a9, type: 3}
-  sprite40: {fileID: -7009519644620502278, guid: 4fc1f6329163c45f9ac16330d55a0928, type: 3}
-  sprite60: {fileID: 2741225206318957235, guid: 9687114b9f9983243a3ad81ba3e1e7a9, type: 3}
-  sprite80: {fileID: 2741225206318957235, guid: 9687114b9f9983243a3ad81ba3e1e7a9, type: 3}
-  sprite100: {fileID: 2741225206318957235, guid: 9687114b9f9983243a3ad81ba3e1e7a9, type: 3}
-  sprite500: {fileID: 2741225206318957235, guid: 9687114b9f9983243a3ad81ba3e1e7a9, type: 3}
 --- !u!114 &6185862533370028715
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,8 +76,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelDuration: 11
-  timerText: {fileID: 0}
   nextSceneName: Level2
+  timerText: {fileID: 0}
 --- !u!114 &968014364622633139
 MonoBehaviour:
   m_ObjectHideFlags: 0
