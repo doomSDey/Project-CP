@@ -1,15 +1,13 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Tilemaps;
 
 public class PlayerCapyScript : MonoBehaviour
 {
-    // Use baseMoveSpeed to store your original move speed
     public float baseMoveSpeed = 5f;
-    public float moveSpeed = 5f;  // This might still be used in other parts of your code
+    public float moveSpeed = 5f;
     private float currentMoveSpeed;
-    private bool isBeingPushedBack = false; // Flag to track pushback
+    private bool isBeingPushedBack = false;
 
     private Rigidbody2D rb;
     private Vector2 movement;
@@ -27,18 +25,10 @@ public class PlayerCapyScript : MonoBehaviour
     [Header("Bounce Settings")]
     public float bounceForce = 15f;
 
-    public Tilemap tilemap;
-    private Vector3 minBounds;
-    private Vector3 maxBounds;
-    private Camera mainCamera;
-    private Vector3 playerSize;
-
     public float bombCooldown = 1.5f;
     private float bombCooldownTimer = 0f;
 
     private SpriteRenderer spriteRenderer;
-
-    // Animator Reference
     private Animator animator;
 
     void Start()
@@ -47,38 +37,16 @@ public class PlayerCapyScript : MonoBehaviour
         shooter = GetComponentInChildren<Shooter>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
-        mainCamera = Camera.main;
 
         // Initialize speeds
         currentMoveSpeed = moveSpeed;
-        baseMoveSpeed = moveSpeed;    // Make sure baseMoveSpeed tracks your intended default
+        baseMoveSpeed = moveSpeed;
 
         if (rb == null)
         {
             rb = gameObject.AddComponent<Rigidbody2D>();
         }
-
         rb.gravityScale = 0;
-
-        if (tilemap != null)
-        {
-            Bounds mapBounds = tilemap.localBounds;
-            Vector3 tilemapWorldMin = tilemap.CellToWorld(tilemap.cellBounds.min);
-            Vector3 tilemapWorldMax = tilemap.CellToWorld(tilemap.cellBounds.max);
-
-            minBounds = new Vector3(tilemapWorldMin.x, tilemapWorldMin.y, 0);
-            maxBounds = new Vector3(tilemapWorldMax.x, tilemapWorldMax.y, 0);
-        }
-
-        Collider2D collider = GetComponent<Collider2D>();
-        if (collider != null)
-        {
-            playerSize = collider.bounds.extents;
-        }
-        else
-        {
-            playerSize = Vector3.zero;
-        }
 
         dashTimeLeft = 0f;
         dashCooldownTimer = 0f;
@@ -146,7 +114,6 @@ public class PlayerCapyScript : MonoBehaviour
 
     private void UpdateAnimator()
     {
-        // Update isRunning parameter in the Animator
         bool isRunning = movement != Vector2.zero && !isDashing;
         animator.SetBool("isRunning", isRunning);
     }
@@ -165,35 +132,6 @@ public class PlayerCapyScript : MonoBehaviour
         }
     }
 
-    private void LateUpdate()
-    {
-        CenterCameraOnPlayer();
-    }
-
-    private void CenterCameraOnPlayer()
-    {
-        if (mainCamera == null) return;
-
-        float cameraHalfHeight = mainCamera.orthographicSize;
-        float cameraHalfWidth = mainCamera.aspect * cameraHalfHeight;
-
-        Vector3 targetPosition = transform.position;
-
-        float clampedX = Mathf.Clamp(
-            targetPosition.x,
-            minBounds.x + cameraHalfWidth,
-            maxBounds.x - cameraHalfWidth
-        );
-
-        float clampedY = Mathf.Clamp(
-            targetPosition.y,
-            minBounds.y + cameraHalfHeight,
-            maxBounds.y - cameraHalfHeight
-        );
-
-        mainCamera.transform.position = new Vector3(clampedX, clampedY, mainCamera.transform.position.z);
-    }
-
     void HandleShooting()
     {
         if (isDashing) return;
@@ -201,19 +139,17 @@ public class PlayerCapyScript : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             shooter.ShootLaser();
-            // Slight speed penalty while shooting a laser
-            currentMoveSpeed = (moveSpeed * 0.6f);
+            currentMoveSpeed = (moveSpeed * 0.6f); // slight penalty
         }
         else if (Input.GetMouseButton(1) && bombCooldownTimer <= 0)
         {
             shooter.ShootBomb();
-            // Stop movement temporarily while tossing a bomb
             currentMoveSpeed = 0f;
             bombCooldownTimer = bombCooldown;
         }
         else
         {
-            // Return to normal currentMoveSpeed (but still include any MucusBlob penalties)
+            // Return to normal speed (accounting for MucusBlob penalties if any)
             currentMoveSpeed = moveSpeed;
         }
     }
@@ -223,49 +159,33 @@ public class PlayerCapyScript : MonoBehaviour
         return moveSpeed;
     }
 
-    /// <summary>
-    /// Adjust the player's movement speed by an amount (can be positive or negative).
-    /// This method clamps the resultant speed so it never goes below zero.
-    /// For example, a negative amount can be used to apply a penalty.
-    /// </summary>
-    /// 
-
     public void ModifySpeed(float amount)
     {
         float ms = moveSpeed + amount;
-        if ((int)moveSpeed > (int)baseMoveSpeed) return;
+        if (moveSpeed > baseMoveSpeed) return; // Or remove this if you'd rather allow speed to exceed base
         moveSpeed = ms;
-        if (moveSpeed < 0f) moveSpeed = 0f; // clamp to 0
-        Debug.Log($"Speed: {moveSpeed} {baseMoveSpeed} {(int)moveSpeed > (int)baseMoveSpeed}"); // Use string interpolation for logging
-        
-        // If you're not in some special dash state, also update your currentMoveSpeed
-        currentMoveSpeed = moveSpeed;
+        if (moveSpeed < 0f) moveSpeed = 0f;
 
+        currentMoveSpeed = moveSpeed;
         Debug.Log($"Player speed changed by {amount}. New moveSpeed = {moveSpeed}");
     }
 
     public void ApplyPushBack(Vector2 force)
     {
         isBeingPushedBack = true;
-
-        // Apply the pushback force directly to the player's Rigidbody
         rb.linearVelocity = force;
-
-        // Reset the flag after a short delay
         StartCoroutine(ResetPushBack());
     }
 
     private IEnumerator ResetPushBack()
     {
-        yield return new WaitForSeconds(0.2f); // Adjust duration as needed
+        yield return new WaitForSeconds(0.2f);
         isBeingPushedBack = false;
     }
 
     public void Die()
     {
         Debug.Log("Player has died!");
-
-        // Inform the LivesManager
         LivesManager.Instance.LoseLife();
 
         if (LivesManager.Instance.GetCurrentLives() > 0)
@@ -278,20 +198,19 @@ public class PlayerCapyScript : MonoBehaviour
         }
     }
 
-
     private IEnumerator FlickerEffect()
     {
-        float flickerDuration = 1f; // Total duration of the flicker effect
-        float flickerInterval = 0.1f; // Time between visibility toggles
+        float flickerDuration = 1f;
+        float flickerInterval = 0.1f;
         float elapsedTime = 0f;
 
         while (elapsedTime < flickerDuration)
         {
-            spriteRenderer.enabled = !spriteRenderer.enabled; // Toggle visibility
+            spriteRenderer.enabled = !spriteRenderer.enabled;
             elapsedTime += flickerInterval;
             yield return new WaitForSeconds(flickerInterval);
         }
 
-        spriteRenderer.enabled = true; // Ensure visibility is restored
+        spriteRenderer.enabled = true;
     }
 }
