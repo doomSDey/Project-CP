@@ -113,7 +113,7 @@ public class PrefabSpawner : MonoBehaviour
         }
     }
 
-    private void HandlePrefabDestroyed(GameObject destroyedPrefab)
+    public void HandlePrefabDestroyed(GameObject destroyedPrefab)
     {
         if (destroyedPrefab != null)
         {
