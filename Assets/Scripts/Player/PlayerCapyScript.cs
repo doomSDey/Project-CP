@@ -30,8 +30,6 @@ public class PlayerCapyScript : MonoBehaviour
 
     [Header("Audio Settings")]
     public AudioSource audioSource;
-    public float minPitch = 0.9f;
-    public float maxPitch = 1.1f;
 
     private SpriteRenderer spriteRenderer;
     private Animator animator;
@@ -124,7 +122,6 @@ public class PlayerCapyScript : MonoBehaviour
         {
             if (!audioSource.isPlaying)
             {
-                audioSource.pitch = Random.Range(minPitch, maxPitch); // Apply pitch variation
                 audioSource.Play();
             }
         }
