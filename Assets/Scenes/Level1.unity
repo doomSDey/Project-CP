@@ -9637,6 +9637,10 @@ PrefabInstance:
       value: GameManager
       objectReference: {fileID: 0}
     - target: {fileID: 4334011871716365766, guid: 54da4a596c2b041448cfb025531df02c, type: 3}
+      propertyPath: maxLives
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4334011871716365766, guid: 54da4a596c2b041448cfb025531df02c, type: 3}
       propertyPath: livesPanel
       value: 
       objectReference: {fileID: 989621595}

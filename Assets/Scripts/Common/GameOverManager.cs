@@ -7,6 +7,7 @@ public class GameOverManager : MonoBehaviour
     {
         LivesManager.Instance.ResetLives();
         ScoreManager.Instance.ResetScore();
+        TimerManager.Instance.ResetTimer();
         SceneManager.LoadScene("Level1");
     }
 

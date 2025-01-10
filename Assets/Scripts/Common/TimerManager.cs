@@ -4,17 +4,39 @@ using TMPro;
 
 public class TimerManager : MonoBehaviour
 {
+    public static TimerManager Instance;
+
     [Header("Timer Settings")]
-    public float levelDuration = 60f; // Duration in seconds before moving to the next scene
-    public TMP_Text timerText;        // Reference to the UI Text for displaying the timer
+    public float levelDuration = 60f;         // Duration in seconds before moving to the next scene
     public string nextSceneName = "NextScene"; // Name of the next scene to load
+
+    [SerializeField] private TMP_Text timerText; // Reference to the UI Text for displaying the timer
 
     private float remainingTime;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void Start()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded; // Subscribe to sceneLoaded event
         remainingTime = levelDuration;
         UpdateTimerDisplay();
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded; // Unsubscribe from sceneLoaded event
     }
 
     private void Update()
@@ -28,6 +50,13 @@ public class TimerManager : MonoBehaviour
         }
     }
 
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Try to find the TimerText in the newly loaded scene
+        timerText = GameObject.Find("TimerText")?.GetComponent<TMP_Text>();
+        UpdateTimerDisplay();
+    }
+
     private void UpdateTimerDisplay()
     {
         if (remainingTime <= 0f) remainingTime = 0f;
@@ -35,16 +64,25 @@ public class TimerManager : MonoBehaviour
         int minutes = Mathf.FloorToInt(remainingTime / 60f);
         int seconds = Mathf.FloorToInt(remainingTime % 60f);
 
-        if (remainingTime <= 10f)
+        if (timerText != null)
         {
-            // Exaggerated text for the last 10 seconds
-            timerText.text = $"<size=48><color=red>HURRY! {seconds}s</color></size>";
+            if (remainingTime <= 10f)
+            {
+                // Exaggerated text for the last 10 seconds
+                timerText.text = $"<size=48><color=red>HURRY! {seconds}s</color></size>";
+            }
+            else
+            {
+                // Regular timer display
+                timerText.text = $"{minutes:00}:{seconds:00}";
+            }
         }
-        else
-        {
-            // Regular timer display
-            timerText.text = $"{minutes:00}:{seconds:00}";
-        }
+    }
+
+    public void ResetTimer()
+    {
+        remainingTime = levelDuration;
+        UpdateTimerDisplay();
     }
 
     private void LoadNextScene()
