@@ -9856,14 +9856,18 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1038998318}
-    - target: {fileID: 2573211247772408680, guid: 53371d4c2a588c14b9054e2ee8e201f4, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 431c587a20131e44b8ebd9cd0e390dff, type: 2}
-    - target: {fileID: 2573211247772408680, guid: 53371d4c2a588c14b9054e2ee8e201f4, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -1252995155167830153, guid: 431c587a20131e44b8ebd9cd0e390dff, type: 2}
+    - target: {fileID: 2318133898374406494, guid: 53371d4c2a588c14b9054e2ee8e201f4, type: 3}
+      propertyPath: m_Color.b
+      value: 0.6226415
+      objectReference: {fileID: 0}
+    - target: {fileID: 2318133898374406494, guid: 53371d4c2a588c14b9054e2ee8e201f4, type: 3}
+      propertyPath: m_Color.g
+      value: 0.6226415
+      objectReference: {fileID: 0}
+    - target: {fileID: 2318133898374406494, guid: 53371d4c2a588c14b9054e2ee8e201f4, type: 3}
+      propertyPath: m_Color.r
+      value: 0.6226415
+      objectReference: {fileID: 0}
     - target: {fileID: 3294102591550986226, guid: 53371d4c2a588c14b9054e2ee8e201f4, type: 3}
       propertyPath: m_Name
       value: HUD
@@ -9948,14 +9952,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8073117361508746734, guid: 53371d4c2a588c14b9054e2ee8e201f4, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 431c587a20131e44b8ebd9cd0e390dff, type: 2}
-    - target: {fileID: 8073117361508746734, guid: 53371d4c2a588c14b9054e2ee8e201f4, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -1252995155167830153, guid: 431c587a20131e44b8ebd9cd0e390dff, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
