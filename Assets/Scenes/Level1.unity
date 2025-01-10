@@ -9316,11 +9316,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 2014276805}
   tilemap: {fileID: 1515776541}
---- !u!82 &1180688572 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 80126036495641003, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-  m_PrefabInstance: {fileID: 1650944961}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1207551164
 GameObject:
   m_ObjectHideFlags: 0
@@ -9897,24 +9892,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7298216663316554187, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: dashSpeed
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 7298216663316554187, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: moveSpeed
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 7298216663316554187, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: audioSource
-      value: 
-      objectReference: {fileID: 1180688572}
-    - target: {fileID: 7298216663316554187, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
-      propertyPath: baseMoveSpeed
-      value: 8
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4889504036477432110, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
+    - {fileID: 1135870302944096210, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}

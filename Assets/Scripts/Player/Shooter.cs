@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class Shooter : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class Shooter : MonoBehaviour
 
     private AudioSource audioSource; // Shared audio source for both sounds
     private Camera mainCamera;
+    private bool isShootingLaser = false; // Tracks if laser is being shot
 
     void Start()
     {
@@ -35,11 +37,13 @@ public class Shooter : MonoBehaviour
         // Add an AudioSource component to the shooter
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
+        audioSource.loop = true; // Enable looping for laser sound
     }
 
     void Update()
     {
         SmoothRotateTowardsMouse();
+        HandleLaserShooting();
     }
 
     /// <summary>
@@ -51,30 +55,47 @@ public class Shooter : MonoBehaviour
         Vector2 direction = (mousePosition - (Vector2)transform.position).normalized;
 
         float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        float currentAngle = transform.eulerAngles.z;
-        float angleDiff = Mathf.DeltaAngle(currentAngle, targetAngle);
-
-        float newAngle = Mathf.MoveTowardsAngle(
-            currentAngle,
-            currentAngle + angleDiff,
-            rotationSpeed * Time.deltaTime * 100
-        );
-
-        transform.rotation = Quaternion.Euler(0, 0, newAngle);
+        transform.rotation = Quaternion.Euler(0, 0, targetAngle);
     }
 
     /// <summary>
-    /// Shoots a laser projectile from the firePoint.
+    /// Handles shooting the laser with looping sound.
     /// </summary>
+    private void HandleLaserShooting()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            isShootingLaser = true;
+            StartCoroutine(FireLaserStream());
+            PlayLaserSound();
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            isShootingLaser = false;
+            StopLaserSound();
+        }
+    }
+
+    /// <summary>
+    /// Shoots a laser projectile continuously while holding the mouse button.
+    /// </summary>
+    private IEnumerator FireLaserStream()
+    {
+        while (isShootingLaser)
+        {
+            ShootLaser();
+            yield return new WaitForSeconds(0.1f); // Adjust fire rate as needed
+        }
+    }
+
     public void ShootLaser()
     {
         if (laserPrefab != null)
         {
-            // Calculate the direction of the shot
             Vector2 direction = firePoint.right.normalized;
             Vector2 spawnPosition = (Vector2)firePoint.position + direction * bufferDistance;
 
-            // Instantiate the laser
             GameObject laser = Instantiate(laserPrefab, spawnPosition, firePoint.rotation);
             Rigidbody2D rb = laser.GetComponent<Rigidbody2D>();
 
@@ -83,7 +104,6 @@ public class Shooter : MonoBehaviour
                 rb.AddForce(direction * laserForce, ForceMode2D.Impulse);
             }
 
-            // Ignore collision with player
             Collider2D playerCollider = transform.parent.GetComponent<Collider2D>();
             Collider2D bulletCollider = laser.GetComponent<Collider2D>();
             if (playerCollider != null && bulletCollider != null)
@@ -91,23 +111,41 @@ public class Shooter : MonoBehaviour
                 Physics2D.IgnoreCollision(playerCollider, bulletCollider);
             }
 
-            // Play laser sound
-            PlaySound(laserSound);
+            Destroy(laser, 2f); // Destroy laser after 2 seconds
         }
     }
 
     /// <summary>
-    /// Shoots a bomb projectile from the firePoint.
+    /// Plays the laser sound on loop.
     /// </summary>
+    private void PlayLaserSound()
+    {
+        if (laserSound != null && audioSource != null && !audioSource.isPlaying)
+        {
+            audioSource.clip = laserSound;
+            audioSource.pitch = Random.Range(minPitch, maxPitch);
+            audioSource.Play();
+        }
+    }
+
+    /// <summary>
+    /// Stops the laser sound.
+    /// </summary>
+    private void StopLaserSound()
+    {
+        if (audioSource != null && audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
+    }
+
     public void ShootBomb()
     {
         if (bombPrefab != null)
         {
-            // Calculate the direction of the shot
             Vector2 direction = firePoint.right.normalized;
             Vector2 spawnPosition = (Vector2)firePoint.position + direction * bufferDistance;
 
-            // Instantiate the bomb
             GameObject bomb = Instantiate(bombPrefab, spawnPosition, firePoint.rotation);
             Rigidbody2D rb = bomb.GetComponent<Rigidbody2D>();
 
@@ -116,29 +154,18 @@ public class Shooter : MonoBehaviour
                 rb.AddForce(direction * bombForce, ForceMode2D.Impulse);
             }
 
-            // Ignore collision with player
-            Collider2D playerCollider = transform.parent.GetComponent<Collider2D>();
-            Collider2D bulletCollider = bomb.GetComponent<Collider2D>();
-            if (playerCollider != null && bulletCollider != null)
-            {
-                Physics2D.IgnoreCollision(playerCollider, bulletCollider);
-            }
-
-            // Play bomb sound
             PlaySound(bombSound);
+            Destroy(bomb, 3f); // Destroy bomb after 3 seconds
         }
     }
 
-    /// <summary>
-    /// Plays the specified sound with optional pitch variation.
-    /// </summary>
     private void PlaySound(AudioClip clip)
     {
         if (clip != null && audioSource != null)
         {
             audioSource.clip = clip;
-            audioSource.pitch = Random.Range(minPitch, maxPitch); // Apply pitch variation
-            audioSource.Play();
+            audioSource.pitch = Random.Range(minPitch, maxPitch);
+            audioSource.PlayOneShot(clip);
         }
     }
 }
