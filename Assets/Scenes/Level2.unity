@@ -856,6 +856,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 976291940}
     - target: {fileID: 1336038158074661053, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336038158074661053, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: prefabToSpawn
       value: 
       objectReference: {fileID: 2036972513985395981, guid: 63985136f28db9f4cac3e43d6d7d3e10, type: 3}
@@ -943,10 +947,18 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 976291940}
+    - target: {fileID: 6720998353400339106, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7134094804804950161, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 976291940}
+    - target: {fileID: 7134094804804950161, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7385421370202777395, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: m_Name
       value: NeutrophilSpawns (1)
@@ -10959,6 +10971,10 @@ PrefabInstance:
       propertyPath: timerText
       value: 
       objectReference: {fileID: 1284754005}
+    - target: {fileID: 6185862533370028715, guid: 54da4a596c2b041448cfb025531df02c, type: 3}
+      propertyPath: nextSceneName
+      value: Level3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

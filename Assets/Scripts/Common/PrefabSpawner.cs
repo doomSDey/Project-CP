@@ -16,11 +16,14 @@ public class PrefabSpawner : MonoBehaviour
 
     [Header("Player Settings")]
     public Transform player; // Reference to the player's transform
-    public float noSpawnRadius = 5f; // Radius around the spawner within which no prefabs will spawn if the player is nearby
+    public float noSpawnRadius = 5f; // Radius within which no prefabs spawn if player is nearby
 
     private bool isBoosted = false;
     private int currentActivePrefabs = 0;
     private Queue<GameObject> prefabPool = new Queue<GameObject>();
+    private float lastSpawnCheckTime = 0f;
+    private float spawnCooldown = 1f;
+
     public event Action<GameObject> OnDestroyed;
 
     private void Start()
@@ -51,22 +54,27 @@ public class PrefabSpawner : MonoBehaviour
     {
         while (true)
         {
-            int spawnCount = isBoosted ? n * multiplier : n;
-
-            for (int i = 0; i < spawnCount; i++)
+            if (Time.time - lastSpawnCheckTime >= spawnCooldown)
             {
-                if (currentActivePrefabs < maxActivePrefabs)
+                int spawnCount = isBoosted ? n * multiplier : n;
+
+                for (int i = 0; i < spawnCount; i++)
                 {
-                    SpawnFromPool();
+                    if (currentActivePrefabs < maxActivePrefabs)
+                    {
+                        SpawnFromPool();
+                    }
+                    else
+                    {
+                        Debug.Log("Spawn limit reached. Waiting for prefabs to be destroyed.");
+                        break;
+                    }
                 }
-                else
-                {
-                    Debug.Log("Spawn limit reached. Waiting for prefabs to be destroyed.");
-                    break;
-                }
+
+                lastSpawnCheckTime = Time.time;
             }
 
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f); // Reduced frequency for smoother frame rate
         }
     }
 
