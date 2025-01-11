@@ -5,9 +5,6 @@ TextureImporter:
   - first:
       213: -6271655566472003870
     second: Untitled_Artwork-1 8_0
-  - first:
-      213: -3048509547330189183
-    second: Untitled_Artwork-1 8_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -119,10 +116,10 @@ TextureImporter:
       name: Untitled_Artwork-1 8_0
       rect:
         serializedVersion: 2
-        x: 57
-        y: 297
-        width: 2827
-        height: 2189
+        x: 4
+        y: 6
+        width: 286
+        height: 244
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -133,28 +130,6 @@ TextureImporter:
       bones: []
       spriteID: 2eeb5dead7a96f8a0800000000000000
       internalID: -6271655566472003870
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Untitled_Artwork-1 8_1
-      rect:
-        serializedVersion: 2
-        x: 1817
-        y: 82
-        width: 7
-        height: 7
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 1884ff8e7b481b5d0800000000000000
-      internalID: -3048509547330189183
       vertices: []
       indices: 
       edges: []

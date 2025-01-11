@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement; // For scene transition
 using System.Collections;
 
 public class MiniBoss : MonoBehaviour
@@ -26,6 +27,9 @@ public class MiniBoss : MonoBehaviour
 
     private GameObject player;
     private Rigidbody2D rb;
+    private Animator animator; // Animator reference
+
+    private int score; // Player's score
 
     private void Start()
     {
@@ -36,6 +40,13 @@ public class MiniBoss : MonoBehaviour
         rb.gravityScale = 0;
 
         player = GameObject.FindGameObjectWithTag("Player");
+
+        // Get Animator component
+        animator = GetComponent<Animator>();
+        if (animator == null)
+        {
+            Debug.LogWarning("Animator not found! Please attach an Animator component.");
+        }
 
         StartCoroutine(AttackCycle());
     }
@@ -115,11 +126,28 @@ public class MiniBoss : MonoBehaviour
             Vector2 newPosition = Vector2.MoveTowards(transform.position, (Vector2)transform.position + direction, rushSpeed * Time.deltaTime);
             transform.position = newPosition;
 
+            // Update Animator to show moving state
+            UpdateAnimator(true);
+
             yield return null;
         }
 
+        // Stop moving
+        UpdateAnimator(false);
+
         yield return new WaitForSeconds(1f); // Pause before the next attack
         isRushing = false;
+    }
+
+    /// <summary>
+    /// Updates the Animator's Moving property based on movement state.
+    /// </summary>
+    private void UpdateAnimator(bool isMoving)
+    {
+        if (animator != null)
+        {
+            animator.SetBool("Moving", isMoving);
+        }
     }
 
     public void TakeDamage(float damage)
@@ -131,7 +159,24 @@ public class MiniBoss : MonoBehaviour
     private void Die()
     {
         Debug.Log("MiniBoss defeated!");
+        UpdateAnimator(false); // Ensure Moving is set to false
+
+        // Award points
+        AwardPoints(1000);
+
+        // Transition to GameFin scene
+        SceneManager.LoadScene("GameFin");
+
         Destroy(gameObject);
+    }
+
+    /// <summary>
+    /// Awards points to the player's score.
+    /// </summary>
+    private void AwardPoints(int points)
+    {
+        score += points;
+        Debug.Log($"Player awarded {points} points! Total score: {score}");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
