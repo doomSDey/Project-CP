@@ -109,7 +109,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: -6271655566472003870, guid: 52def28b9a82c6246b51c7285cacfbea, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
+  m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 2.86, y: 2.44}
@@ -166,7 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ef64978e90610049a2b8efc4127278f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  miniBossMaxHealth: 500
+  miniBossMaxHealth: 5000
   bulletPrefab: {fileID: 6355146631454322436, guid: e4113a33a002763418c24f036dab83c7, type: 3}
   bulletSpawnDistance: 1.2
   bulletsPerWave: 10
@@ -178,6 +178,10 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 8192
+  spriteRenderer: {fileID: 0}
+  damageColor: {r: 1, g: 0, b: 0, a: 1}
+  flickerDuration: 0.2
+  flickerCount: 3
 --- !u!95 &5227551700685808106
 Animator:
   serializedVersion: 7
