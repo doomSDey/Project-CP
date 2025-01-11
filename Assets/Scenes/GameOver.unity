@@ -311,6 +311,8 @@ GameObject:
   - component: {fileID: 630552635}
   - component: {fileID: 630552634}
   - component: {fileID: 630552636}
+  - component: {fileID: 630552637}
+  - component: {fileID: 630552638}
   m_Layer: 0
   m_Name: GameOverManager
   m_TagString: Untagged
@@ -364,6 +366,36 @@ MonoBehaviour:
   apiUrl: https://aco7wkvnqd.execute-api.ap-south-1.amazonaws.com/Prod/Project-CP
   rankText: {fileID: 1033002092}
   scoreText: {fileID: 1121994442}
+--- !u!114 &630552637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630552633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c4e4cc929770aa41a8e141a027fe802, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxLives: 3
+  livesPanel: {fileID: 0}
+  heartSprite: {fileID: 0}
+--- !u!114 &630552638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630552633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba2067c16e5b4a846b9207657380cf15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelDuration: 60
+  nextSceneName: NextScene
+  timerText: {fileID: 0}
 --- !u!1 &1033002089
 GameObject:
   m_ObjectHideFlags: 0
