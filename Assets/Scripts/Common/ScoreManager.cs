@@ -35,7 +35,7 @@ public class ScoreManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "GameOver" || scene.name == "EndGame") // If GameOver scene is loaded
+        if (scene.name == "GameOver" || scene.name == "GameFin") // If GameOver scene is loaded
         {
             string playerName = PlayerPrefs.GetString("GamerName", "UnknownPlayer");
             AWSRequestSigner awsRequestSigner = FindObjectOfType<AWSRequestSigner>();
