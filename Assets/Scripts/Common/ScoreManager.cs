@@ -35,7 +35,13 @@ public class ScoreManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Try to find the scoreDropText in the newly loaded scene
+        if (scene.name == "GameOver" || scene.name == "EndGame") // If GameOver scene is loaded
+        {
+            string playerName = PlayerPrefs.GetString("GamerName", "UnknownPlayer");
+            AWSRequestSigner awsRequestSigner = FindObjectOfType<AWSRequestSigner>();
+            awsRequestSigner.InsertHighScore(playerName, currentScore);
+        }
+
         scoreText = GameObject.Find("ScoreText")?.GetComponent<TMP_Text>();
         UpdateScoreUI();
     }
