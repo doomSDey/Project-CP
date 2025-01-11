@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7822355259580069257}
   - component: {fileID: 5633217576367778589}
   - component: {fileID: 4413680287261057290}
+  - component: {fileID: -3738866993461778798}
   m_Layer: 11
   m_Name: Neutrophil
   m_TagString: Enemy
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 6.96, y: 2.19, z: -0.15542603}
-  m_LocalScale: {x: 1.24, y: 1.24, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -106,12 +107,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -7469740316118452663, guid: 27d85322896e24d2dacdd06c1996a304, type: 3}
+  m_Sprite: {fileID: 1139520349666336131, guid: c6bab900820a6b544a54e856a1104a7f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.52, y: 1.54}
+  m_Size: {x: 1.88, y: 1.96}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -181,3 +182,25 @@ MonoBehaviour:
   explosionEffect: {fileID: 0}
   flashInterval: 0.2
   flashColor: {r: 1, g: 0, b: 0, a: 1}
+--- !u!95 &-3738866993461778798
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036972513985395981}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 552be275ca1ad9342a1769c86896eb26, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
