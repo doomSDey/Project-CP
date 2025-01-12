@@ -48,6 +48,12 @@ public class LivesManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // Skip initialization in GameOver scene
+        if (scene.name == "GameOver" || scene.name == "GameFin")
+        {
+            return;
+        }
+
         // Find the lives panel again after the scene reloads
         livesPanel = GameObject.Find("LivesPanel")?.transform;
 

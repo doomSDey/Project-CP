@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class AWSRequestSigner : MonoBehaviour
 {
@@ -18,6 +19,35 @@ public class AWSRequestSigner : MonoBehaviour
     [Header("GameOver UI Elements")]
     public TMP_Text rankText;
     public TMP_Text scoreText;
+
+    private void Awake()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded; // Subscribe to sceneLoaded event
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded; // Unsubscribe from sceneLoaded event
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "GameOver" || scene.name == "GameFin")
+        {
+            // Reassign UI elements dynamically
+            rankText = GameObject.Find("Rank")?.GetComponent<TMP_Text>();
+            scoreText = GameObject.Find("Score")?.GetComponent<TMP_Text>();
+
+            if (rankText == null || scoreText == null)
+            {
+                Debug.LogError("Failed to find RankText or ScoreText in the current scene.");
+            }
+
+            string playerName = PlayerPrefs.GetString("GamerName", "UnknownPlayer");
+            int currentScore = ScoreManager.Instance.GetScore(); // Access the instance method correctly
+            InsertHighScore(playerName, currentScore);
+        }
+    }
 
     public void InsertHighScore(string playerId, int highScore)
     {
@@ -79,15 +109,20 @@ public class AWSRequestSigner : MonoBehaviour
 
     private void ParseResponse(string responseText)
     {
-        // Assume the response contains a JSON object like:
-        // {"Rank": 5, "PlayerID": "Player123", "HighScore": 1500}
         try
         {
             var response = JsonUtility.FromJson<HighScoreResponse>(responseText);
 
-            // Update the UI
-            rankText.text = $"Your Rank: {response.Rank}";
-            scoreText.text = $"Your Score: {response.HighScore}";
+            if (rankText != null && scoreText != null)
+            {
+                // Update the UI
+                rankText.text = $"Your Rank: {response.Rank}";
+                scoreText.text = $"Your Score: {response.HighScore}";
+            }
+            else
+            {
+                Debug.LogWarning("UI elements not assigned. Cannot update rank and score.");
+            }
         }
         catch (Exception e)
         {

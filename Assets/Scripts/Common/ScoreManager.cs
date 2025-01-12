@@ -35,13 +35,26 @@ public class ScoreManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == "GameOver" || scene.name == "GameFin") // If GameOver scene is loaded
+        // Handle high score submission in GameOver or GameFin scene
+        if (scene.name == "GameOver" || scene.name == "GameFin")
         {
             string playerName = PlayerPrefs.GetString("GamerName", "UnknownPlayer");
             AWSRequestSigner awsRequestSigner = FindObjectOfType<AWSRequestSigner>();
-            awsRequestSigner.InsertHighScore(playerName, currentScore);
+
+            if (awsRequestSigner != null)
+            {
+                awsRequestSigner.InsertHighScore(playerName, currentScore);
+            }
         }
 
+        // Skip ScoreText updates in GameOver or GameFin scene
+        if (scene.name == "GameOver" || scene.name == "GameFin")
+        {
+            scoreText = null; // Ensure no updates to ScoreText
+            return;
+        }
+
+        // Update the ScoreText reference for other scenes
         scoreText = GameObject.Find("ScoreText")?.GetComponent<TMP_Text>();
         UpdateScoreUI();
     }

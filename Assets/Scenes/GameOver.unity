@@ -300,102 +300,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &630552633
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 630552635}
-  - component: {fileID: 630552634}
-  - component: {fileID: 630552636}
-  - component: {fileID: 630552637}
-  - component: {fileID: 630552638}
-  m_Layer: 0
-  m_Name: GameOverManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &630552634
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 630552633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8498c0acc1184244599501f4ebae25f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &630552635
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 630552633}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1005.4757, y: 434.26385, z: -1.8088651}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &630552636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 630552633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2dc00cbc162a51443bc1259bd8184c08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  accessKey: AKIA2FXADYKPQD224G5R
-  secretKey: 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
-  region: ap-south-1
-  service: execute-api
-  apiUrl: https://aco7wkvnqd.execute-api.ap-south-1.amazonaws.com/Prod/Project-CP
-  rankText: {fileID: 1033002092}
-  scoreText: {fileID: 1121994442}
---- !u!114 &630552637
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 630552633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c4e4cc929770aa41a8e141a027fe802, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxLives: 3
-  livesPanel: {fileID: 0}
-  heartSprite: {fileID: 0}
---- !u!114 &630552638
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 630552633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba2067c16e5b4a846b9207657380cf15, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  levelDuration: 60
-  nextSceneName: NextScene
-  timerText: {fileID: 0}
 --- !u!1 &1033002089
 GameObject:
   m_ObjectHideFlags: 0
@@ -888,7 +792,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 630552634}
+      - m_Target: {fileID: 1970937534}
         m_TargetAssemblyTypeName: GameOverManager, Assembly-CSharp
         m_MethodName: Retry
         m_Mode: 1
@@ -949,7 +853,6 @@ GameObject:
   - component: {fileID: 1634842087}
   - component: {fileID: 1634842086}
   - component: {fileID: 1634842085}
-  - component: {fileID: 1634842088}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -1018,19 +921,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1634842088
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1634842084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b7df95eea206e444b6680fd9604406c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scoreText: {fileID: 1121994442}
 --- !u!1 &1797501180
 GameObject:
   m_ObjectHideFlags: 0
@@ -1167,6 +1057,70 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1797501180}
   m_CullTransparentMesh: 1
+--- !u!1 &1970937533
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1970937536}
+  - component: {fileID: 1970937535}
+  - component: {fileID: 1970937534}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1970937534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970937533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8498c0acc1184244599501f4ebae25f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1970937535
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970937533}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dc00cbc162a51443bc1259bd8184c08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  accessKey: AKIA2FXADYKPQD224G5R
+  secretKey: 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
+  region: ap-south-1
+  service: execute-api
+  apiUrl: https://aco7wkvnqd.execute-api.ap-south-1.amazonaws.com/Prod/Project-CP
+  rankText: {fileID: 1033002092}
+  scoreText: {fileID: 1121994442}
+--- !u!4 &1970937536
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1970937533}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 905.79083, y: -3067.683, z: -323.50128}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2099036541
 GameObject:
   m_ObjectHideFlags: 0
@@ -1310,4 +1264,4 @@ SceneRoots:
   - {fileID: 1103492214}
   - {fileID: 611437271}
   - {fileID: 1634842087}
-  - {fileID: 630552635}
+  - {fileID: 1970937536}

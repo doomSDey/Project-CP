@@ -8,7 +8,7 @@ public class TimerManager : MonoBehaviour
 
     [Header("Timer Settings")]
     public float levelDuration = 60f;         // Duration in seconds before moving to the next scene
-    public string nextSceneName = "NextScene"; // Name of the next scene to load
+    public string nextSceneName = null; // Name of the next scene to load
 
     [SerializeField] private TMP_Text timerText; // Reference to the UI Text for displaying the timer
 
@@ -52,7 +52,15 @@ public class TimerManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Try to find the TimerText in the newly loaded scene
+        // Skip TimerText updates in GameOver or GameFin scenes
+        if (scene.name == "GameOver" || scene.name == "GameFin")
+        {
+            timerText = null; // Ensure no updates to TimerText
+            nextSceneName = null;
+            return;
+        }
+
+        // Update the TimerText reference for other scenes
         timerText = GameObject.Find("TimerText")?.GetComponent<TMP_Text>();
         UpdateTimerDisplay();
     }
@@ -87,6 +95,7 @@ public class TimerManager : MonoBehaviour
 
     private void LoadNextScene()
     {
-        SceneManager.LoadScene(nextSceneName);
+        if (nextSceneName != null)
+            SceneManager.LoadScene(nextSceneName);
     }
 }
