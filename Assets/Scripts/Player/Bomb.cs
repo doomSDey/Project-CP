@@ -32,6 +32,13 @@ public class Bomb : MonoBehaviour
         {
             Debug.LogWarning("Animator component not found on Bomb!");
         }
+
+        // Ignore collisions with the player
+        Collider2D playerCollider = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Collider2D>();
+        if (playerCollider != null)
+        {
+            Physics2D.IgnoreCollision(GetComponent<Collider2D>(), playerCollider);
+        }
     }
 
     void OnCollisionEnter2D(Collision2D other)
@@ -56,7 +63,7 @@ public class Bomb : MonoBehaviour
         // Trigger explosion animation
         if (animator != null)
         {
-            animator.SetBool("Explode", true);
+            animator.SetTrigger("Explode");
         }
 
         // Damage all enemies and obstacles in the explosion radius
@@ -81,7 +88,7 @@ public class Bomb : MonoBehaviour
             }
         }
 
-        // Delay destruction to let the animation complete
+        // Destroy the bomb after the animation finishes
         StartCoroutine(DestroyAfterAnimation());
     }
 
@@ -90,7 +97,13 @@ public class Bomb : MonoBehaviour
         if (animator != null)
         {
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            yield return new WaitForSeconds(stateInfo.length);
+
+            // Wait for the animation to complete before destroying the object
+            while (stateInfo.IsName("Explosion") && stateInfo.normalizedTime < 5.0f)
+            {
+                yield return null; // Wait until the animation is fully played
+                stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            }
         }
 
         Destroy(gameObject); // Destroy the bomb after the animation finishes
