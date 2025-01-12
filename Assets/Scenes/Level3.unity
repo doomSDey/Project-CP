@@ -589,6 +589,10 @@ PrefabInstance:
       propertyPath: timerText
       value: 
       objectReference: {fileID: 780722158}
+    - target: {fileID: 6185862533370028715, guid: 54da4a596c2b041448cfb025531df02c, type: 3}
+      propertyPath: nextSceneName
+      value: Level4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
