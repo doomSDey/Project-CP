@@ -1,0 +1,157 @@
+---
+
+const apiUrl = 'https://aco7wkvnqd.execute-api.ap-south-1.amazonaws.com/Prod/Project-CP';
+
+// Server-side fetch to get initial data
+const fetchHighScores = async (limit = 10, page = 1, playerID = '') => {
+  const payload: { action: string; Limit: number; PageNumber: number; PlayerID?: string } = {
+    action: 'get_scores',
+    Limit: limit,
+    PageNumber: page,
+  };
+
+  if (playerID) {
+    payload.PlayerID = playerID;
+  }
+
+  const response = await fetch(apiUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Error fetching scores: ${response.statusText}`);
+  }
+
+  const data = await response.json();
+  return data;
+};
+
+// Fetch data on server-side
+const { Limit, PageNumber, PlayerID } = Astro.url.searchParams;
+const limit = Number(Limit) || 10;
+const pageNumber = Number(PageNumber) || 1;
+const playerID = PlayerID || '';
+
+let scoresData;
+try {
+  scoresData = await fetchHighScores(limit, pageNumber, playerID);
+} catch (error) {
+  scoresData = { Scores: [], CurrentPage: 1, TotalPages: 1, error: error.message };
+}
+
+const { Scores, CurrentPage, TotalPages, error } = scoresData || {};
+---
+
+<div class="highscores-container">
+  <h1>High Scores</h1>
+
+  <form method="get" class="search-bar">
+    <input
+      type="text"
+      name="PlayerID"
+      placeholder="Search by PlayerID"
+      value={playerID}
+    />
+    <input type="hidden" name="Limit" value={limit} />
+    <input type="hidden" name="PageNumber" value="1" />
+    <button type="submit">Search</button>
+  </form>
+
+  {error && <p class="error">{error}</p>}
+
+  <table>
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>PlayerID</th>
+        <th>HighScore</th>
+      </tr>
+    </thead>
+    <tbody>
+      {Scores.length > 0 ? (
+        Scores.map((score: { PlayerID: string; HighScore: string; }, index: number) => (
+          <tr id={`${score.PlayerID}-${index}`}>
+            <td>{(CurrentPage - 1) * limit + index + 1}</td>
+            <td>{score.PlayerID}</td>
+            <td>{score.HighScore}</td>
+          </tr>
+        ))
+      ) : (
+        <tr>
+          <td colspan="3">No scores found</td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    <form method="get" style="display: inline;">
+      <input type="hidden" name="PlayerID" value={playerID} />
+      <input type="hidden" name="Limit" value={limit} />
+      <input type="hidden" name="PageNumber" value={Math.max(CurrentPage - 1, 1)} />
+      <button type="submit" disabled={CurrentPage <= 1}>
+        Previous
+      </button>
+    </form>
+
+    <span>Page {CurrentPage} of {TotalPages}</span>
+
+    <form method="get" style="display: inline;">
+      <input type="hidden" name="PlayerID" value={playerID} />
+      <input type="hidden" name="Limit" value={limit} />
+      <input type="hidden" name="PageNumber" value={Math.min(CurrentPage + 1, TotalPages)} />
+      <button type="submit" disabled={CurrentPage >= TotalPages}>
+        Next
+      </button>
+    </form>
+  </div>
+</div>
+
+<style>
+.highscores-container {
+  font-family: Arial, sans-serif;
+  margin: 2rem;
+}
+h1 {
+  text-align: center;
+}
+.search-bar {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.search-bar input {
+  padding: 0.5rem;
+  margin-right: 0.5rem;
+}
+.search-bar button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+th, td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  text-align: center;
+}
+.pagination {
+  text-align: center;
+  margin-top: 1rem;
+}
+.pagination button {
+  margin: 0 0.5rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.error {
+  color: red;
+  text-align: center;
+  margin: 1rem 0;
+}
+</style>

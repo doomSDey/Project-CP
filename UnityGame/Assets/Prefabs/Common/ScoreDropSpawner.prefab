@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8723959796421784612
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8204274036631606107}
+  - component: {fileID: 6728313293472250257}
+  m_Layer: 0
+  m_Name: ScoreDropSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8204274036631606107
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8723959796421784612}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.30328467, y: 1.8112112, z: 474.8169}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6728313293472250257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8723959796421784612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b44e7beb772c4b4ea860b0d6d5db114, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreDropsPrefab: {fileID: 2664048806934744407, guid: f2eda081d91d2c84abcd234a1fb47e59, type: 3}
+  numberOfScoreItems: 10
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 8192
+  spawnCheckRadius: 0.5
+  spawnInterval: 5
+  player: {fileID: 0}
+  sprite20: {fileID: 4164744761163438241, guid: 7f6c4c2dddce7b34f8cf0027082681f6, type: 3}
+  sprite40: {fileID: 1192843865154028290, guid: 7e7f3589c8723dd47b7f95746632a757, type: 3}
+  sprite60: {fileID: 6810289884213664739, guid: d5a8ad1f691249747af11e6e709e4bbd, type: 3}
+  sprite80: {fileID: -2664783550769548753, guid: f6e2beff28c532943a191edf03ff3b3c, type: 3}
+  sprite100: {fileID: 7022884558154076834, guid: a50ec8c15b2728144abae9e0b0e3b55f, type: 3}
+  sprite500: {fileID: -20479217534241763, guid: e0ba1a8ca80dc554b8ddda3063636be5, type: 3}
