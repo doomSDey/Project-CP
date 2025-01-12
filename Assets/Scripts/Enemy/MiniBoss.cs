@@ -1,11 +1,11 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class MiniBoss : MonoBehaviour
 {
     [Header("Health Settings")]
-    [SerializeField] private float miniBossMaxHealth = 500f;
-
+    [SerializeField] private float miniBossMaxHealth = 5000f;
     private float currentMiniBossHealth;
 
     [Header("Bullet Waves")]
@@ -24,8 +24,18 @@ public class MiniBoss : MonoBehaviour
     [Header("Collision Handling")]
     [SerializeField] private LayerMask obstacleLayer;
 
+    [Header("Visual Settings")]
+    [SerializeField] private SpriteRenderer spriteRenderer; // For flicker effect
+    [SerializeField] private Color damageColor = Color.red; // Color to flicker when damaged
+    [SerializeField] private float flickerDuration = 0.2f; // Duration of one flicker cycle
+    [SerializeField] private int flickerCount = 3; // Number of flickers when damaged
+
     private GameObject player;
     private Rigidbody2D rb;
+    private Animator animator; // Animator reference
+    private int score; // Player's score
+    private bool facingRight = true; // To track the current facing direction
+    private Color originalColor; // Store the original color for flicker reset
 
     private void Start()
     {
@@ -36,6 +46,22 @@ public class MiniBoss : MonoBehaviour
         rb.gravityScale = 0;
 
         player = GameObject.FindGameObjectWithTag("Player");
+
+        animator = GetComponent<Animator>();
+        if (animator == null)
+        {
+            Debug.LogWarning("Animator not found! Please attach an Animator component.");
+        }
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer == null)
+        {
+            Debug.LogWarning("SpriteRenderer not found! Please attach a SpriteRenderer component.");
+        }
+        else
+        {
+            originalColor = spriteRenderer.color; // Store the original color
+        }
 
         StartCoroutine(AttackCycle());
     }
@@ -52,13 +78,8 @@ public class MiniBoss : MonoBehaviour
     {
         while (currentMiniBossHealth > 0)
         {
-            // Fire a wave of bullets
             FireSemiCircleBullets();
-
-            // Rush in the direction of the player
             StartCoroutine(RushTowardsPlayer());
-
-            // Wait for the next attack cycle
             yield return new WaitForSeconds(rushInterval);
         }
     }
@@ -103,63 +124,110 @@ public class MiniBoss : MonoBehaviour
         {
             Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
 
-            // Use raycast to check for obstacles
             RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, stopDistance, obstacleLayer);
             if (hit.collider != null)
             {
-                // If an obstacle is detected, stop or adjust direction
                 Vector2 collisionNormal = hit.normal;
                 direction = Vector2.Perpendicular(collisionNormal).normalized;
             }
 
+            FlipSprite(direction.x);
+
             Vector2 newPosition = Vector2.MoveTowards(transform.position, (Vector2)transform.position + direction, rushSpeed * Time.deltaTime);
             transform.position = newPosition;
+
+            UpdateAnimator(true);
 
             yield return null;
         }
 
-        yield return new WaitForSeconds(1f); // Pause before the next attack
+        UpdateAnimator(false);
+
+        yield return new WaitForSeconds(1f);
         isRushing = false;
+    }
+
+    private void UpdateAnimator(bool isMoving)
+    {
+        if (animator != null)
+        {
+            animator.SetBool("Moving", isMoving);
+        }
+    }
+
+    private void FlipSprite(float directionX)
+    {
+        if ((directionX > 0 && !facingRight) || (directionX < 0 && facingRight))
+        {
+            facingRight = !facingRight;
+            Vector3 scale = transform.localScale;
+            scale.x *= -1;
+            transform.localScale = scale;
+        }
     }
 
     public void TakeDamage(float damage)
     {
         currentMiniBossHealth -= damage;
         Debug.Log($"MiniBoss took {damage} damage. Remaining health: {currentMiniBossHealth}");
+        StartCoroutine(FlickerEffect());
+    }
+
+    private IEnumerator FlickerEffect()
+    {
+        if (spriteRenderer == null) yield break;
+
+        for (int i = 0; i < flickerCount; i++)
+        {
+            spriteRenderer.color = damageColor;
+            yield return new WaitForSeconds(flickerDuration / (flickerCount * 2f));
+            spriteRenderer.color = originalColor;
+            yield return new WaitForSeconds(flickerDuration / (flickerCount * 2f));
+        }
     }
 
     private void Die()
     {
         Debug.Log("MiniBoss defeated!");
+        UpdateAnimator(false);
+        AwardPoints(1000);
+        SceneManager.LoadScene("GameFin");
         Destroy(gameObject);
+    }
+
+    private void AwardPoints(int points)
+    {
+        score += points;
+        Debug.Log($"Player awarded {points} points! Total score: {score}");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Check if the collision is with the player
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Player hit");
             PlayerCapyScript player = collision.gameObject.GetComponent<PlayerCapyScript>();
             if (player != null)
             {
-                player.Die(); // Kill the player
+                player.Die();
             }
         }
-        // Check if the collision is with an obstacle
-        else if (collision.gameObject.CompareTag("Obstacle"))
+        else if (collision.gameObject.CompareTag("Bomb"))
         {
-            Debug.Log("Collided with an obstacle");
-
-            // Stop the miniboss's movement
-            if (rb != null)
+            Bomb bomb = collision.gameObject.GetComponent<Bomb>();
+            if (bomb != null)
             {
-                rb.linearVelocity = Vector2.zero; // Stop any ongoing movement
+                TakeDamage(bomb.damage);
             }
-
-            // Adjust position slightly away from the obstacle
-            Vector2 collisionNormal = collision.GetContact(0).normal;
-            transform.position += (Vector3)collisionNormal * 0.1f;
+            Destroy(collision.gameObject);
+        }
+        else if (collision.gameObject.CompareTag("Laser"))
+        {
+            Laser laser = collision.gameObject.GetComponent<Laser>();
+            if (laser != null)
+            {
+                TakeDamage(laser.damage);
+            }
+            Destroy(collision.gameObject);
         }
     }
 }

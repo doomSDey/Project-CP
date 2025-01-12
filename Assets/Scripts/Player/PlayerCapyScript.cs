@@ -28,10 +28,15 @@ public class PlayerCapyScript : MonoBehaviour
     public float bombCooldown = 1.5f;
     private float bombCooldownTimer = 0f;
 
+    [Header("Audio Settings")]
+    public AudioSource audioSource;
+    public float minPitch = 0.9f;
+    public float maxPitch = 1.1f;
+
     private SpriteRenderer spriteRenderer;
     private Animator animator;
 
-    void Start()
+    private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         shooter = GetComponentInChildren<Shooter>();
@@ -52,7 +57,7 @@ public class PlayerCapyScript : MonoBehaviour
         dashCooldownTimer = 0f;
     }
 
-    void Update()
+    private void Update()
     {
         if (dashCooldownTimer > 0)
         {
@@ -68,6 +73,7 @@ public class PlayerCapyScript : MonoBehaviour
         HandleMovement();
         HandleShooting();
         UpdateAnimator();
+        HandleMovementAudio(); // Play audio based on movement
     }
 
     private void HandleDash()
@@ -112,6 +118,25 @@ public class PlayerCapyScript : MonoBehaviour
         }
     }
 
+    private void HandleMovementAudio()
+    {
+        if (movement != Vector2.zero) // Player is moving
+        {
+            if (!audioSource.isPlaying)
+            {
+                audioSource.pitch = Random.Range(minPitch, maxPitch); // Apply pitch variation
+                audioSource.Play();
+            }
+        }
+        else // Player stopped moving
+        {
+            if (audioSource.isPlaying)
+            {
+                audioSource.Stop();
+            }
+        }
+    }
+
     private void UpdateAnimator()
     {
         bool isRunning = movement != Vector2.zero && !isDashing;
@@ -120,7 +145,7 @@ public class PlayerCapyScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isBeingPushedBack) return; // Skip movement logic when being pushed back
+        if (isBeingPushedBack) return;
 
         if (isDashing)
         {
@@ -139,7 +164,7 @@ public class PlayerCapyScript : MonoBehaviour
         if (Input.GetMouseButton(0))
         {
             shooter.ShootLaser();
-            currentMoveSpeed = (moveSpeed * 0.6f); // slight penalty
+            currentMoveSpeed = (moveSpeed * 0.6f);
         }
         else if (Input.GetMouseButton(1) && bombCooldownTimer <= 0)
         {
@@ -149,7 +174,6 @@ public class PlayerCapyScript : MonoBehaviour
         }
         else
         {
-            // Return to normal speed (accounting for MucusBlob penalties if any)
             currentMoveSpeed = moveSpeed;
         }
     }
@@ -162,7 +186,7 @@ public class PlayerCapyScript : MonoBehaviour
     public void ModifySpeed(float amount)
     {
         float ms = moveSpeed + amount;
-        if (moveSpeed > baseMoveSpeed) return; // Or remove this if you'd rather allow speed to exceed base
+        if (moveSpeed > baseMoveSpeed) return;
         moveSpeed = ms;
         if (moveSpeed < 0f) moveSpeed = 0f;
 

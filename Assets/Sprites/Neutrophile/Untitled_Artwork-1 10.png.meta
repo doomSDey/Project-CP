@@ -1,22 +1,10 @@
 fileFormatVersion: 2
-guid: 088847c5950b04b8a8e7f1c274e190af
+guid: c6bab900820a6b544a54e856a1104a7f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5313247882293972888
-    second: Untitled_Artwork 16_0
-  - first:
-      213: -1786896117937728337
-    second: Untitled_Artwork 16_1
-  - first:
-      213: 4500741232715263463
-    second: Untitled_Artwork 16_2
-  - first:
-      213: -4928627880869461054
-    second: Untitled_Artwork 16_3
-  - first:
-      213: 2626571561702812948
-    second: Untitled_Artwork 16_4
+      213: 1139520349666336131
+    second: Untitled_Artwork-1 10_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -108,93 +96,40 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Untitled_Artwork 16_0
+      name: Untitled_Artwork-1 10_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 100
-        width: 100
-        height: 100
+        x: 1
+        y: 1
+        width: 188
+        height: 196
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 752310b00460942f4b8fcdaafdb1ca9a
-      internalID: 1432082560
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Untitled_Artwork 16_1
-      rect:
-        serializedVersion: 2
-        x: 100
-        y: 100
-        width: 100
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 83367df9b06ef48d4975f9a3ce757d15
-      internalID: 156405291
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Untitled_Artwork 16_2
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 100
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f0929b5aaaed24297aa5a720fe27ddc6
-      internalID: 497761957
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Untitled_Artwork 16_3
-      rect:
-        serializedVersion: 2
-        x: 100
-        y: 0
-        width: 100
-        height: 100
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d1ea7f70e18d5446fa27fa6254c15f39
-      internalID: 64322497
+      spriteID: 38dd03878b360df00800000000000000
+      internalID: 1139520349666336131
       vertices: []
       indices: 
       edges: []
@@ -203,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: a6b4b179dfe8c467e97ff0424e170bbf
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -212,11 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Untitled_Artwork 16_0: 1432082560
-      Untitled_Artwork 16_1: 156405291
-      Untitled_Artwork 16_2: 497761957
-      Untitled_Artwork 16_3: 64322497
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -26,6 +26,7 @@ public class Neutrophil : BaseEnemy
 
     private bool isExploding = false;
     private GameObject player;
+    private Animator animator; // Reference to the Animator
 
     protected override void Start()
     {
@@ -40,6 +41,7 @@ public class Neutrophil : BaseEnemy
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
         player = GameObject.FindGameObjectWithTag("Player");
+        animator = GetComponent<Animator>(); // Get the Animator component
     }
 
     protected override void Move()
@@ -47,6 +49,7 @@ public class Neutrophil : BaseEnemy
         if (isExploding || player == null)
         {
             rb.linearVelocity = Vector2.zero;
+            UpdateAnimator(false); // Not moving
             return;
         }
 
@@ -103,11 +106,23 @@ public class Neutrophil : BaseEnemy
 
             // Clamp velocity to max speed
             rb.linearVelocity = Vector2.ClampMagnitude(rb.linearVelocity, chaseSpeed);
+
+            // Update Animator based on movement
+            UpdateAnimator(rb.linearVelocity.magnitude > 0.1f);
         }
         else
         {
             // Slow down when out of range
             rb.linearVelocity = Vector2.Lerp(rb.linearVelocity, Vector2.zero, Time.fixedDeltaTime * 2f);
+            UpdateAnimator(rb.linearVelocity.magnitude > 0.1f); // Update Animator
+        }
+    }
+
+    private void UpdateAnimator(bool isMoving)
+    {
+        if (animator != null)
+        {
+            animator.SetBool("Moving", isMoving);
         }
     }
 
@@ -143,6 +158,7 @@ public class Neutrophil : BaseEnemy
         isExploding = true;
 
         rb.linearVelocity = Vector2.zero;
+        UpdateAnimator(false); // Stop movement during explosion
         StartCoroutine(FlashBeforeExplosion());
         Invoke(nameof(TriggerExplosion), explosionDelay);
     }

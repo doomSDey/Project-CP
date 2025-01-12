@@ -10,7 +10,7 @@ public class Platelet : BaseEnemy
     private Vector2 moveDirection; // The movement direction of the platelet
 
     [Header("Clot Settings")]
-    private GameObject clotPrefab; // Clot prefab to be spawned
+    public GameObject clotPrefab; // Clot prefab to be spawned
     [SerializeField] private float clotSpawnInterval = 2f; // How often to spawn clot (seconds)
     private float clotSpawnTimer;
 
@@ -19,6 +19,7 @@ public class Platelet : BaseEnemy
     private float directionChangeTimer;
 
     private Rigidbody2D rb;
+    private Animator animator; // Reference to the Animator
 
     protected override void Start()
     {
@@ -33,6 +34,13 @@ public class Platelet : BaseEnemy
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
         rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
 
+        // Get Animator component
+        animator = GetComponent<Animator>();
+        if (animator == null)
+        {
+            Debug.LogWarning("Animator not found! Please attach an Animator to the Platelet.");
+        }
+
         // Set initial random movement direction
         moveDirection = GetRandomDirection();
         clotSpawnTimer = clotSpawnInterval;
@@ -42,6 +50,7 @@ public class Platelet : BaseEnemy
     private void FixedUpdate()
     {
         Move();
+        UpdateAnimator();
     }
 
     protected override void Move()
@@ -77,6 +86,18 @@ public class Platelet : BaseEnemy
         {
             SpawnClot();
             clotSpawnTimer = clotSpawnInterval;
+        }
+    }
+
+    /// <summary>
+    /// Updates the Animator's Moving property based on the current velocity.
+    /// </summary>
+    private void UpdateAnimator()
+    {
+        if (animator != null)
+        {
+            bool isMoving = rb.linearVelocity.magnitude > 0.1f; // Moving if velocity is above a threshold
+            animator.SetBool("Moving", isMoving);
         }
     }
 

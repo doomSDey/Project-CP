@@ -13,9 +13,11 @@ GameObject:
   - component: {fileID: 5729332047245886327}
   - component: {fileID: 2883418054317777413}
   - component: {fileID: 6394641969979188582}
-  m_Layer: 0
+  - component: {fileID: -1546143216899236684}
+  - component: {fileID: -5570305918942959186}
+  m_Layer: 11
   m_Name: Platelet
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 8.886259, y: 1.6782658, z: -0.3729381}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -106,7 +108,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 2741225206318957235, guid: 9687114b9f9983243a3ad81ba3e1e7a9, type: 3}
+  m_Sprite: {fileID: -6628749028707803357, guid: 81cca7f7a081d43439e166aa38e78356, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -175,3 +177,38 @@ MonoBehaviour:
   clotPrefab: {fileID: 7379454194063105059, guid: 46236cd08e4c06b469581e95272ee66a, type: 3}
   clotSpawnInterval: 2
   directionChangeInterval: 3
+--- !u!95 &-1546143216899236684
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910966302352254119}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8b45cb86c5fa1894b80ccffeb637aaa1, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &-5570305918942959186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910966302352254119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65a92adf18b74e049975af6b24ad22c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreValue: 40
