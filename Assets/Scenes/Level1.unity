@@ -4725,6 +4725,53 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!1 &351137021
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 351137023}
+  - component: {fileID: 351137022}
+  m_Layer: 0
+  m_Name: TimerManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &351137022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 351137021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba2067c16e5b4a846b9207657380cf15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelDuration: 11
+  nextSceneName: Level2
+  timerText: {fileID: 443947440}
+--- !u!4 &351137023
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 351137021}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.5540533, y: -0.58311605, z: 0.02293969}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &443947440 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2573211247772408680, guid: 53371d4c2a588c14b9054e2ee8e201f4, type: 3}
@@ -9705,7 +9752,8 @@ PrefabInstance:
       propertyPath: timerText
       value: 
       objectReference: {fileID: 443947440}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6185862533370028715, guid: 54da4a596c2b041448cfb025531df02c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -9784,3 +9832,4 @@ SceneRoots:
   - {fileID: 1207551167}
   - {fileID: 459998134112272017}
   - {fileID: 6905808563687502374}
+  - {fileID: 351137023}
