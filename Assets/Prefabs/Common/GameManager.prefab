@@ -62,7 +62,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxLives: 3
   livesPanel: {fileID: 0}
-  heartSprite: {fileID: 2741225206318957235, guid: 9687114b9f9983243a3ad81ba3e1e7a9, type: 3}
+  heartSprite: {fileID: -205270267638800340, guid: 7a90c47ecd6a6354583868c02b726966, type: 3}
 --- !u!114 &6185862533370028715
 MonoBehaviour:
   m_ObjectHideFlags: 0
