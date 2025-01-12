@@ -950,7 +950,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5793709208967624217, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.7
+      value: 2.57
       objectReference: {fileID: 0}
     - target: {fileID: 5811367869328567131, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: m_LocalPosition.x
@@ -982,7 +982,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7799010469702548591, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.43
+      value: -2.71
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -1048,6 +1048,53 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 548b50d8215d3414c8909ccad1f5201d, type: 3}
+--- !u!1 &310498992
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 310498994}
+  - component: {fileID: 310498993}
+  m_Layer: 0
+  m_Name: TimeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &310498993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310498992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba2067c16e5b4a846b9207657380cf15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelDuration: 60
+  nextSceneName: Level3
+  timerText: {fileID: 1284754005}
+--- !u!4 &310498994
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310498992}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.0496368, y: -1.252209, z: -9.951673}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &797689307
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10988,7 +11035,8 @@ PrefabInstance:
       propertyPath: nextSceneName
       value: Level3
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6185862533370028715, guid: 54da4a596c2b041448cfb025531df02c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -11007,9 +11055,9 @@ GameObject:
   - component: {fileID: 2040184755}
   - component: {fileID: 2040184754}
   - component: {fileID: 2040184753}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Cell group
-  m_TagString: Untagged
+  m_TagString: Obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23201,3 +23249,4 @@ SceneRoots:
   - {fileID: 978314795}
   - {fileID: 223095867}
   - {fileID: 797689307}
+  - {fileID: 310498994}
