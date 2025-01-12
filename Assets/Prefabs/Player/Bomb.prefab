@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2207019019682247839}
   - component: {fileID: 6620103681442596561}
   - component: {fileID: 7429500698603295150}
+  - component: {fileID: 3494029727155965307}
   m_Layer: 10
   m_Name: Bomb
   m_TagString: Bomb
@@ -79,7 +80,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 6989642852348889387, guid: ac3aabf7161deb94cabc6a4ef836891e, type: 3}
+  m_Sprite: {fileID: 8225108853618455340, guid: 00d6ad885e5f1ac459d2064a32cd04ad, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -132,7 +133,6 @@ MonoBehaviour:
   speed: 5
   damage: 20
   explosionRadius: 1.4
-  explosionEffect: {fileID: 0}
   shakeIntensity: 0.5
 --- !u!58 &7429500698603295150
 CircleCollider2D:
@@ -233,5 +233,30 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7977834119987526890, guid: 218a40caaeaca344ea94341899ebc608, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3494029727155965307}
   m_SourcePrefab: {fileID: 100100000, guid: 218a40caaeaca344ea94341899ebc608, type: 3}
+--- !u!95 &3494029727155965307
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6821830284371612225}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a84c0ec76967e6247a7823524c594055, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

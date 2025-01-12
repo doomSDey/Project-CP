@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Bomb : MonoBehaviour
@@ -5,12 +6,12 @@ public class Bomb : MonoBehaviour
     public float speed = 5f; // Speed of the bomb
     public int damage = 20; // Damage dealt in AoE
     public float explosionRadius = 2f; // Explosion radius
-    public GameObject explosionEffect; // Optional: explosion visual effect
 
     [SerializeField] private float shakeIntensity = 0.5f; // Value between 0 and 1
     private CameraShake cameraShake;
-
     private Rigidbody2D rb;
+    private Animator animator; // Reference to the Animator
+    private bool hasExploded = false; // Ensure Explode is called only once
 
     void Start()
     {
@@ -18,19 +19,26 @@ public class Bomb : MonoBehaviour
         rb.bodyType = RigidbodyType2D.Kinematic;
 
         // Set velocity in the direction the bomb is facing
-        rb.linearVelocity = transform.right * speed; // Fixed from `linearVelocity` to `velocity`
+        rb.linearVelocity = transform.right * speed;
 
         cameraShake = Camera.main.GetComponent<CameraShake>();
         if (cameraShake == null)
         {
             Debug.LogWarning("CameraShake component not found on Main Camera!");
         }
+
+        animator = GetComponent<Animator>();
+        if (animator == null)
+        {
+            Debug.LogWarning("Animator component not found on Bomb!");
+        }
     }
 
     void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Obstacle"))
+        if (!hasExploded && (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Obstacle")))
         {
+            hasExploded = true;
             Explode();
         }
     }
@@ -38,24 +46,22 @@ public class Bomb : MonoBehaviour
     void Explode()
     {
         Debug.Log("explode");
+
+        // Trigger camera shake
         if (cameraShake != null)
         {
             Debug.Log("Starting camera shake");
             cameraShake.AddTrauma(shakeIntensity);
         }
-        else
+
+        // Trigger explosion animation
+        if (animator != null)
         {
-            Debug.LogWarning("CameraShake is null!");
-        }
-        // Optional explosion effect
-        if (explosionEffect != null)
-        {
-            Instantiate(explosionEffect, transform.position, Quaternion.identity);
+            animator.SetBool("Explode", true);
         }
 
         // Damage all enemies in the explosion radius
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
-
         foreach (Collider2D collider in colliders)
         {
             if (collider.CompareTag("Enemy"))
@@ -69,14 +75,28 @@ public class Bomb : MonoBehaviour
 
             if (collider.CompareTag("Obstacle"))
             {
-                Obstacle obstacle = gameObject.gameObject.GetComponent<Obstacle>();
+                Obstacle obstacle = collider.GetComponent<Obstacle>();
                 if (obstacle != null)
+                {
                     obstacle.TakeDamage(damage);
-                Destroy(gameObject);
+                }
             }
         }
 
-        Destroy(gameObject); // Destroy the bomb after it explodes
+        // Delay destruction to let the animation complete
+        StartCoroutine(DestroyAfterAnimation());
+    }
+
+    private IEnumerator DestroyAfterAnimation()
+    {
+        // Wait for the explosion animation to complete
+        if (animator != null)
+        {
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            yield return new WaitForSeconds(stateInfo.length);
+        }
+
+        Destroy(gameObject); // Destroy the bomb after the animation finishes
     }
 
     void OnDrawGizmosSelected()
