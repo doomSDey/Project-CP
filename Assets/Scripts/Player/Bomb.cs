@@ -45,12 +45,11 @@ public class Bomb : MonoBehaviour
 
     void Explode()
     {
-        Debug.Log("explode");
+        Debug.Log("Explode triggered");
 
         // Trigger camera shake
         if (cameraShake != null)
         {
-            Debug.Log("Starting camera shake");
             cameraShake.AddTrauma(shakeIntensity);
         }
 
@@ -60,7 +59,7 @@ public class Bomb : MonoBehaviour
             animator.SetBool("Explode", true);
         }
 
-        // Damage all enemies in the explosion radius
+        // Damage all enemies and obstacles in the explosion radius
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
         foreach (Collider2D collider in colliders)
         {
@@ -72,8 +71,7 @@ public class Bomb : MonoBehaviour
                     enemy.TakeDamage(damage);
                 }
             }
-
-            if (collider.CompareTag("Obstacle"))
+            else if (collider.CompareTag("Obstacle"))
             {
                 Obstacle obstacle = collider.GetComponent<Obstacle>();
                 if (obstacle != null)
@@ -89,7 +87,6 @@ public class Bomb : MonoBehaviour
 
     private IEnumerator DestroyAfterAnimation()
     {
-        // Wait for the explosion animation to complete
         if (animator != null)
         {
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);

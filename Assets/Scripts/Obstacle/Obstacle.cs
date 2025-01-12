@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Threading.Tasks;  // Needed for async flicker logic
+using System.Threading.Tasks;
 
 public class Obstacle : MonoBehaviour
 {
@@ -17,7 +17,6 @@ public class Obstacle : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Color originalColor;
     private bool isFlickering = false;
-    private bool isAlive = true; // New flag to track if the object is alive
 
     private void Start()
     {
@@ -45,9 +44,6 @@ public class Obstacle : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// This is called on every physics update to check for player collision.
-    /// </summary>
     private void FixedUpdate()
     {
         if (!canBounceBack) return;
@@ -71,9 +67,6 @@ public class Obstacle : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Push the player back.
-    /// </summary>
     private void PushBack(Rigidbody2D playerRb)
     {
         if (playerRb == null) return;
@@ -94,12 +87,13 @@ public class Obstacle : MonoBehaviour
         if (!isDestroyable) return;
 
         currentHealth -= damage;
-        StartFlicker();
-
-        if (currentHealth <= 0)
+        if (currentHealth > 0)
         {
-            isAlive = false; // Object is no longer "alive"
-            Destroy(gameObject);
+            StartFlicker();
+        }
+        else
+        {
+            DestroyObstacle();
         }
     }
 
@@ -114,27 +108,25 @@ public class Obstacle : MonoBehaviour
 
         for (int i = 0; i < flickerCount; i++)
         {
-            // Check if object is destroyed
-            if (!this || spriteRenderer == null || !isAlive)
-            {
-                Debug.Log("Object destroyed. Exiting flicker early.");
-                break; // Exit flicker logic early
-            }
+            if (spriteRenderer == null) break;
 
             spriteRenderer.color = damageColor;
             await Task.Delay((int)(flickerDuration * 1000));
 
-            if (!this || spriteRenderer == null || !isAlive)
-            {
-                Debug.Log("Object destroyed. Exiting flicker early.");
-                break; // Exit flicker logic early
-            }
+            if (spriteRenderer == null) break;
 
             spriteRenderer.color = originalColor;
             await Task.Delay((int)(flickerDuration * 1000));
         }
 
         isFlickering = false;
+    }
+
+    private void DestroyObstacle()
+    {
+        Debug.Log("Destroying obstacle...");
+        StopAllCoroutines(); // Stop any active coroutines
+        Destroy(gameObject); // Mark object for destruction
     }
 
     private void OnDrawGizmos()
