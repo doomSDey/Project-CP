@@ -52,9 +52,9 @@ MonoBehaviour:
   spawnCheckRadius: 0.5
   spawnInterval: 5
   player: {fileID: 0}
-  sprite20: {fileID: 2741225206318957235, guid: 9687114b9f9983243a3ad81ba3e1e7a9, type: 3}
-  sprite40: {fileID: -7009519644620502278, guid: 4fc1f6329163c45f9ac16330d55a0928, type: 3}
-  sprite60: {fileID: 2741225206318957235, guid: 9687114b9f9983243a3ad81ba3e1e7a9, type: 3}
-  sprite80: {fileID: 2741225206318957235, guid: 9687114b9f9983243a3ad81ba3e1e7a9, type: 3}
-  sprite100: {fileID: 2741225206318957235, guid: 9687114b9f9983243a3ad81ba3e1e7a9, type: 3}
-  sprite500: {fileID: 2741225206318957235, guid: 9687114b9f9983243a3ad81ba3e1e7a9, type: 3}
+  sprite20: {fileID: 4164744761163438241, guid: 7f6c4c2dddce7b34f8cf0027082681f6, type: 3}
+  sprite40: {fileID: 1192843865154028290, guid: 7e7f3589c8723dd47b7f95746632a757, type: 3}
+  sprite60: {fileID: 6810289884213664739, guid: d5a8ad1f691249747af11e6e709e4bbd, type: 3}
+  sprite80: {fileID: -2664783550769548753, guid: f6e2beff28c532943a191edf03ff3b3c, type: 3}
+  sprite100: {fileID: 7022884558154076834, guid: a50ec8c15b2728144abae9e0b0e3b55f, type: 3}
+  sprite500: {fileID: -20479217534241763, guid: e0ba1a8ca80dc554b8ddda3063636be5, type: 3}
