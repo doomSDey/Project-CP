@@ -598,7 +598,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelDuration: 60
-  nextSceneName: Level4
+  nextSceneName: BossFightCutscene
   timerText: {fileID: 1793316970}
 --- !u!4 &945510765
 Transform:
