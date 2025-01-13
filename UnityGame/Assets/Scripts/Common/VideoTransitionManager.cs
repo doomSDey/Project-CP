@@ -1,79 +1,98 @@
 using UnityEngine;
-using UnityEngine.Video;
 using UnityEngine.UI;
+using UnityEngine.Video;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
-public class SeamlessVideoManager : MonoBehaviour
+public class TimestampPauseManager : MonoBehaviour
 {
-    [Header("Video Players")]
-    public VideoPlayer videoPlayerA; // First VideoPlayer
-    public VideoPlayer videoPlayerB; // Second VideoPlayer
+    [Header("Video Setup")]
+    [Tooltip("Reference to the VideoPlayer in the scene.")]
+    public VideoPlayer videoPlayer;
 
-    [Header("Video Clips")]
-    public VideoClip[] videoClips; // Array of video clips
-    private int currentClipIndex = 0; // Track the current clip index
+    [Tooltip("List of times (in seconds) at which the video will pause. Must be in ascending order.")]
+    public List<float> pauseTimestamps;
 
     [Header("UI Elements")]
-    public Button nextButton; // Button to transition to the next video
-    public string nextSceneName; // Name of the scene to load after the last video
+    [Tooltip("Button shown when video pauses or ends. Click to continue.")]
+    public Button nextButton;
 
-    private bool isPlayerAPlaying = true; // Track which VideoPlayer is active
+    [Tooltip("Name of the scene to load after the video ends.")]
+    public string nextSceneName;
+
+    private int currentPauseIndex = 0;
+    private bool isPausedManually = false;
+    private bool isVideoEnded = false;
 
     private void Start()
     {
-        if (videoClips.Length > 0)
+        if (videoPlayer == null)
         {
-            videoPlayerA.clip = videoClips[currentClipIndex];
-            videoPlayerA.Play();
-            PrepareNextClip(videoPlayerB);
-
-            nextButton.gameObject.SetActive(false); // Hide button initially
-            nextButton.onClick.AddListener(OnNextButtonClick); // Add button click event
+            Debug.LogError("No VideoPlayer assigned to TimestampPauseManager!");
+            return;
         }
+
+        if (pauseTimestamps == null || pauseTimestamps.Count == 0)
+        {
+            Debug.LogWarning("No pause timestamps assigned. Video will only stop at the end.");
+        }
+
+        if (nextButton != null)
+        {
+            nextButton.gameObject.SetActive(false);
+            nextButton.onClick.AddListener(OnNextButtonClick);
+        }
+        else
+        {
+            Debug.LogWarning("No Button assigned. Video will pause but cannot be resumed via UI.");
+        }
+
+        videoPlayer.loopPointReached += OnVideoEnd; // Attach event for video end
+        videoPlayer.Play();
     }
 
     private void Update()
     {
-        // Show the button when the current video finishes playing
-        if (isPlayerAPlaying && videoPlayerA.time >= videoPlayerA.clip.length - 0.1f && !nextButton.gameObject.activeSelf)
+        if (isVideoEnded || currentPauseIndex >= pauseTimestamps.Count || isPausedManually)
+            return;
+
+        if (videoPlayer.time >= pauseTimestamps[currentPauseIndex])
         {
-            nextButton.gameObject.SetActive(true);
-        }
-        else if (!isPlayerAPlaying && videoPlayerB.time >= videoPlayerB.clip.length - 0.1f && !nextButton.gameObject.activeSelf)
-        {
-            nextButton.gameObject.SetActive(true);
+            videoPlayer.Pause();
+            isPausedManually = true;
+
+            if (nextButton != null)
+            {
+                nextButton.gameObject.SetActive(true);
+            }
+
+            Debug.Log($"Video paused at {videoPlayer.time:F2}s. Waiting for user input.");
         }
     }
 
     private void OnNextButtonClick()
     {
-        nextButton.gameObject.SetActive(false); // Hide the button
-
-        if (currentClipIndex + 1 < videoClips.Length)
+        if (isVideoEnded)
         {
-            // Play the next video
-            currentClipIndex++;
-            PlayNextVideo(isPlayerAPlaying ? videoPlayerB : videoPlayerA);
+            SceneManager.LoadScene(nextSceneName);
         }
         else
         {
-            // If all videos are finished, load the next scene
-            Debug.Log("All videos played. Loading next scene...");
-            SceneManager.LoadScene(nextSceneName);
+            nextButton.gameObject.SetActive(false);
+            isPausedManually = false;
+
+            currentPauseIndex++;
+            videoPlayer.Play();
+
+            Debug.Log($"User resumed video. Next pause index = {currentPauseIndex} (time = {videoPlayer.time:F2}s).");
         }
     }
 
-    private void PlayNextVideo(VideoPlayer nextPlayer)
+    private void OnVideoEnd(VideoPlayer vp)
     {
-        nextPlayer.Play(); // Start playing the next video
-        PrepareNextClip(isPlayerAPlaying ? videoPlayerA : videoPlayerB); // Prepare the next clip
-        isPlayerAPlaying = !isPlayerAPlaying; // Toggle which player is active
-    }
+        isVideoEnded = true;
+        nextButton.gameObject.SetActive(true);
 
-    private void PrepareNextClip(VideoPlayer nextPlayer)
-    {
-        int nextClipIndex = (currentClipIndex + 1) % videoClips.Length;
-        nextPlayer.clip = videoClips[nextClipIndex];
-        nextPlayer.Prepare(); // Preload the next video to avoid any lag
+        Debug.Log("Video finished playing. Showing transition button.");
     }
 }
