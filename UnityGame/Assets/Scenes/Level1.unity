@@ -4754,7 +4754,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba2067c16e5b4a846b9207657380cf15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelDuration: 11
+  levelDuration: 60
   nextSceneName: Level2
   timerText: {fileID: 443947440}
 --- !u!4 &351137023
@@ -9434,9 +9434,21 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1330769030570739334, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: n
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1330769030570739334, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 2014276805}
+    - target: {fileID: 1330769030570739334, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: multiplier
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1330769030570739334, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: maxActivePrefabs
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1336038158074661053, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: player
       value: 
@@ -9446,13 +9458,29 @@ PrefabInstance:
       value: EnemySpawns
       objectReference: {fileID: 0}
     - target: {fileID: 2289669925694661169, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: n
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2289669925694661169, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 2014276805}
     - target: {fileID: 2826837430778903317, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: n
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2826837430778903317, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 2014276805}
+    - target: {fileID: 2826837430778903317, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: multiplier
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2826837430778903317, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: maxActivePrefabs
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 4608944348743785561, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.5540533
@@ -9494,13 +9522,37 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6720998353400339106, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: n
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6720998353400339106, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 2014276805}
+    - target: {fileID: 6720998353400339106, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: multiplier
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6720998353400339106, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: maxActivePrefabs
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7134094804804950161, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: n
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7134094804804950161, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 2014276805}
+    - target: {fileID: 7134094804804950161, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: multiplier
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7134094804804950161, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: maxActivePrefabs
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9698,7 +9750,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4334011871716365766, guid: 54da4a596c2b041448cfb025531df02c, type: 3}
       propertyPath: maxLives
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4334011871716365766, guid: 54da4a596c2b041448cfb025531df02c, type: 3}
       propertyPath: livesPanel

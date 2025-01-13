@@ -865,12 +865,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1336038158074661053, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: n
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336038158074661053, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 976291940}
     - target: {fileID: 1336038158074661053, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1336038158074661053, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: multiplier
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1336038158074661053, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: prefabToSpawn
@@ -881,6 +889,10 @@ PrefabInstance:
       value: EnemySpawns
       objectReference: {fileID: 0}
     - target: {fileID: 2289669925694661169, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: n
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2289669925694661169, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 976291940}
@@ -889,9 +901,17 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2289669925694661169, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: multiplier
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2289669925694661169, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: prefabToSpawn
       value: 
       objectReference: {fileID: 2036972513985395981, guid: 63985136f28db9f4cac3e43d6d7d3e10, type: 3}
+    - target: {fileID: 2289669925694661169, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: maxActivePrefabs
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 2717197585346716725, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9.8

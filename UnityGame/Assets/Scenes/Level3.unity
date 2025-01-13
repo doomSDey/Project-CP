@@ -702,7 +702,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelDuration: 60
   nextSceneName: Level4
-  timerText: {fileID: 0}
+  timerText: {fileID: 780722158}
 --- !u!4 &945510765
 Transform:
   m_ObjectHideFlags: 0
