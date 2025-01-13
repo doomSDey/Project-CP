@@ -35,18 +35,6 @@ public class ScoreManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Handle high score submission in GameOver or GameFin scene
-        if (scene.name == "GameOver" || scene.name == "GameFin")
-        {
-            string playerName = PlayerPrefs.GetString("GamerName", "UnknownPlayer");
-            AWSRequestSigner awsRequestSigner = FindObjectOfType<AWSRequestSigner>();
-
-            if (awsRequestSigner != null)
-            {
-                awsRequestSigner.InsertHighScore(playerName, currentScore);
-            }
-        }
-
         // Skip ScoreText updates in GameOver or GameFin scene
         if (scene.name == "GameOver" || scene.name == "GameFin")
         {
