@@ -117,6 +117,21 @@ public class LivesManager : MonoBehaviour
             return;
         }
 
+        // Calculate size of each heart based on LivesPanel
+        RectTransform panelRect = livesPanel.GetComponent<RectTransform>();
+        if (panelRect == null)
+        {
+            Debug.LogError("LivesPanel does not have a RectTransform.");
+            return;
+        }
+
+        float panelWidth = panelRect.rect.width;
+        float panelHeight = panelRect.rect.height;
+
+        // Calculate heart size and spacing
+        float heartSize = panelWidth / (maxLives + 1); // Adjust spacing as needed
+        heartSize = Mathf.Min(heartSize, panelHeight); // Ensure it fits within panel height
+
         for (int i = 0; i < maxLives; i++)
         {
             GameObject heartObj = new GameObject($"Heart_{i}", typeof(Image));
@@ -126,7 +141,8 @@ public class LivesManager : MonoBehaviour
             heartImage.sprite = heartSprite;
 
             RectTransform rectTransform = heartObj.GetComponent<RectTransform>();
-            rectTransform.sizeDelta = new Vector2(80, 80);
+            rectTransform.sizeDelta = new Vector2(heartSize, heartSize); // Set size based on calculation
+            rectTransform.anchoredPosition = new Vector2((i + 1) * heartSize, 0); // Position hearts horizontally
 
             heartImages.Add(heartImage);
         }
