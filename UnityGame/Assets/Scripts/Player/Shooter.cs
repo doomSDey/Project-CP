@@ -11,20 +11,20 @@ public class Shooter : MonoBehaviour
     [Header("Projectile Forces")]
     public float laserForce = 500f;
     public float bombForce = 250f;
-    public float bufferDistance = 0.5f; // Distance from player to bullet start point
+    public float bufferDistance = 0.5f;
 
     [Header("Rotation Settings")]
     public float rotationSpeed = 10f;
 
     [Header("Audio Settings")]
-    public AudioClip laserSound; // Laser sound effect
-    public AudioClip bombSound;  // Bomb sound effect
-    public float minPitch = 0.9f; // Minimum pitch for variation
-    public float maxPitch = 1.1f; // Maximum pitch for variation
+    public AudioClip laserSound;
+    public AudioClip bombSound;
+    public float minPitch = 0.9f;
+    public float maxPitch = 1.1f;
 
-    private AudioSource audioSource; // Shared audio source for both sounds
+    private AudioSource audioSource;
     private Camera mainCamera;
-    private bool isShootingLaser = false; // Tracks if laser is being shot
+    private bool isShootingLaser = false;
 
     void Start()
     {
@@ -32,9 +32,16 @@ public class Shooter : MonoBehaviour
         {
             firePoint = transform;
         }
+
         mainCamera = Camera.main;
 
-        // Add an AudioSource component to the shooter
+        // Ensure the camera is at the correct Z position
+        if (mainCamera.transform.position.z != -10f)
+        {
+            mainCamera.transform.position = new Vector3(mainCamera.transform.position.x, mainCamera.transform.position.y, -10f);
+        }
+
+        // Setup AudioSource
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
         audioSource.loop = true; // Enable looping for laser sound
@@ -42,24 +49,31 @@ public class Shooter : MonoBehaviour
 
     void Update()
     {
-        SmoothRotateTowardsMouse();
         HandleLaserShooting();
     }
 
-    /// <summary>
-    /// Rotates the shooter towards the mouse cursor using smooth rotation.
-    /// </summary>
-    void SmoothRotateTowardsMouse()
+    void FixedUpdate()
     {
-        Vector2 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 direction = (mousePosition - (Vector2)transform.position).normalized;
-
-        float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, targetAngle);
+        SmoothRotateTowardsMouse();
     }
 
     /// <summary>
-    /// Handles shooting the laser with looping sound.
+    /// Rotates the shooter smoothly towards the mouse position.
+    /// </summary>
+    void SmoothRotateTowardsMouse()
+    {
+        Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = 0f; // Ensure 2D rotation
+
+        Vector3 direction = (mousePosition - transform.position).normalized;
+        float targetAngle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        Quaternion targetRotation = Quaternion.Euler(0, 0, targetAngle);
+        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+    }
+
+    /// <summary>
+    /// Handles laser shooting input and sound.
     /// </summary>
     private void HandleLaserShooting()
     {
@@ -77,9 +91,6 @@ public class Shooter : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Shoots a laser projectile continuously while holding the mouse button.
-    /// </summary>
     private IEnumerator FireLaserStream()
     {
         while (isShootingLaser)
@@ -115,9 +126,6 @@ public class Shooter : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Plays the laser sound on loop.
-    /// </summary>
     private void PlayLaserSound()
     {
         if (laserSound != null && audioSource != null && !audioSource.isPlaying)
@@ -128,9 +136,6 @@ public class Shooter : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Stops the laser sound.
-    /// </summary>
     private void StopLaserSound()
     {
         if (audioSource != null && audioSource.isPlaying)
@@ -163,7 +168,6 @@ public class Shooter : MonoBehaviour
     {
         if (clip != null && audioSource != null)
         {
-            audioSource.clip = clip;
             audioSource.pitch = Random.Range(minPitch, maxPitch);
             audioSource.PlayOneShot(clip);
         }
