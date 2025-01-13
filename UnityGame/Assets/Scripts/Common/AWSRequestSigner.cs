@@ -20,39 +20,56 @@ public class AWSRequestSigner : MonoBehaviour
     public TMP_Text rankText;
     public TMP_Text scoreText;
 
+    private bool hasSubmittedScore = false; // Flag to ensure the API call is made only once per scene load
+
     private void Awake()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded; // Subscribe to sceneLoaded event
+        // Singleton pattern to ensure only one instance of AWSRequestSigner exists
+        if (FindObjectsOfType<AWSRequestSigner>().Length > 1)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDestroy()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded; // Unsubscribe from sceneLoaded event
+        SceneManager.sceneLoaded -= OnSceneLoaded; // Unsubscribe to prevent duplicate calls
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        hasSubmittedScore = false; // Reset flag for the new scene
+
+        // Handle high score submission in GameOver or GameFin scenes
         if (scene.name == "GameOver" || scene.name == "GameFin")
         {
-            // Reassign UI elements dynamically
             rankText = GameObject.Find("Rank")?.GetComponent<TMP_Text>();
             scoreText = GameObject.Find("Score")?.GetComponent<TMP_Text>();
 
             if (rankText == null || scoreText == null)
             {
-                Debug.LogError("Failed to find RankText or ScoreText in the current scene.");
+                Debug.LogError("RankText or ScoreText not found in the scene.");
+                return;
             }
 
             string playerName = PlayerPrefs.GetString("GamerName", "UnknownPlayer");
-            int currentScore = ScoreManager.Instance.GetScore(); // Access the instance method correctly
-            InsertHighScore(playerName, currentScore);
+            int currentScore = ScoreManager.Instance.GetScore();
+
+            if (!hasSubmittedScore)
+            {
+                hasSubmittedScore = true; // Set the flag to prevent duplicate API calls
+                InsertHighScore(playerName, currentScore);
+            }
         }
     }
 
     public void InsertHighScore(string playerId, int highScore)
     {
+        Debug.Log($"Inserting high score for PlayerID: {playerId}, Score: {highScore}");
         string payload = "{\"action\":\"insert\",\"PlayerID\":\"" + playerId + "\",\"HighScore\":" + highScore + "}";
-
         StartCoroutine(SendSignedRequest(payload));
     }
 
