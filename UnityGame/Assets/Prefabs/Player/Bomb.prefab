@@ -131,8 +131,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  damage: 20
-  explosionRadius: 1.4
+  damage: 80
+  explosionRadius: 4
   shakeIntensity: 0.5
 --- !u!58 &7429500698603295150
 CircleCollider2D:
