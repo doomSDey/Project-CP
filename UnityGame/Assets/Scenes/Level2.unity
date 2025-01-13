@@ -903,6 +903,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2289669925694661169, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: noSpawnRadius
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2289669925694661169, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: prefabToSpawn
       value: 
       objectReference: {fileID: 2036972513985395981, guid: 63985136f28db9f4cac3e43d6d7d3e10, type: 3}
@@ -964,7 +968,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5793709208967624217, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.78
+      value: 0.06
       objectReference: {fileID: 0}
     - target: {fileID: 5793709208967624217, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10768,10 +10772,10 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 15543
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
