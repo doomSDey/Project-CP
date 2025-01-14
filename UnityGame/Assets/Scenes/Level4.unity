@@ -28696,7 +28696,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2611805819687318094, guid: e949bcbd4ab3d714daab0f6bd8fe5fdf, type: 3}
       propertyPath: miniBossMaxHealth
-      value: 500
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 2990917418535295269, guid: e949bcbd4ab3d714daab0f6bd8fe5fdf, type: 3}
       propertyPath: m_Name
