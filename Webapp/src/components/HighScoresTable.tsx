@@ -22,7 +22,7 @@ const HighScoresTable: React.FC = () => {
     setError(null);
 
     try {
-      const response = await fetch(`https://fwacpw2vca.ap-south-1.awsapprunner.com/api/highscores?limit=10&page=${page}&playerID=${playerID}`);
+      const response = await fetch(`/api/highscores?limit=10&page=${page}&playerID=${playerID}`);
       const data = await response.json();
 
       setScores(data.Scores || []);
@@ -47,6 +47,10 @@ const HighScoresTable: React.FC = () => {
     fetchScores(page, playerID);
   };
 
+  const handleRefresh = () => {
+    fetchScores(currentPage, playerID);
+  };
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">High Scores</h1>
@@ -65,6 +69,12 @@ const HighScoresTable: React.FC = () => {
         >
           Search
         </button>
+        <button
+          onClick={handleRefresh}
+          className="bg-green-500 text-white px-4 py-2 rounded"
+        >
+          Refresh
+        </button>
       </div>
 
       {loading ? (
@@ -77,6 +87,7 @@ const HighScoresTable: React.FC = () => {
             <TableRow>
               <TableHead>Rank</TableHead>
               <TableHead>PlayerID</TableHead>
+              <TableHead>High Score</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
