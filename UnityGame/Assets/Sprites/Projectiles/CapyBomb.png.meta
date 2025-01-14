@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      CapyBomb_0: 8225108853618455340
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

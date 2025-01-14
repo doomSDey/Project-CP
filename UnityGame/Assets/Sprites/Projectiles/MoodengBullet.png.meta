@@ -797,7 +797,34 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      MoodengBullet_0: -8972296368973713631
+      MoodengBullet_1: -8696929985246834006
+      MoodengBullet_10: 5348833130618779025
+      MoodengBullet_11: -7495956911929719155
+      MoodengBullet_12: 5905364200412720196
+      MoodengBullet_13: 7023907476974971423
+      MoodengBullet_14: 1442039809599226010
+      MoodengBullet_15: -4096889454575584181
+      MoodengBullet_16: 3096529237062324959
+      MoodengBullet_17: -242777192977366057
+      MoodengBullet_18: 6322531621027547079
+      MoodengBullet_19: -8833146775994951720
+      MoodengBullet_2: 6457790062521231366
+      MoodengBullet_20: -463889540639530938
+      MoodengBullet_21: 2841901695334536561
+      MoodengBullet_22: 3287006508108282682
+      MoodengBullet_23: 1709811940264533375
+      MoodengBullet_24: 2890570854256683237
+      MoodengBullet_25: 6788310200636810026
+      MoodengBullet_26: -4222384586737208210
+      MoodengBullet_3: 5110151966376547489
+      MoodengBullet_4: -1532819785843446882
+      MoodengBullet_5: 6444684821819266850
+      MoodengBullet_6: 3302308364592875455
+      MoodengBullet_7: -2748912630347627742
+      MoodengBullet_8: -4509397743961468893
+      MoodengBullet_9: -8263091777749298555
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
