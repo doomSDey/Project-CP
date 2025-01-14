@@ -20,6 +20,12 @@ public class TimestampPauseManager : MonoBehaviour
     [Tooltip("Name of the scene to load after the video ends.")]
     public string nextSceneName;
 
+    [Header("Audio Settings")]
+    [Tooltip("Audio clip to play when the button is clicked.")]
+    public AudioClip buttonClickSound;
+
+    public AudioSource audioSource;
+
     private int currentPauseIndex = 0;
     private bool isPausedManually = false;
     private bool isVideoEnded = false;
@@ -72,6 +78,8 @@ public class TimestampPauseManager : MonoBehaviour
 
     private void OnNextButtonClick()
     {
+        PlayButtonClickSound();
+
         if (isVideoEnded)
         {
             SceneManager.LoadScene(nextSceneName);
@@ -94,5 +102,13 @@ public class TimestampPauseManager : MonoBehaviour
         nextButton.gameObject.SetActive(true);
 
         Debug.Log("Video finished playing. Showing transition button.");
+    }
+
+    private void PlayButtonClickSound()
+    {
+        if (audioSource != null && buttonClickSound != null)
+        {
+            audioSource.PlayOneShot(buttonClickSound);
+        }
     }
 }
