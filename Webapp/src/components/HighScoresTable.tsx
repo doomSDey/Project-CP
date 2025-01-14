@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 
@@ -22,7 +22,7 @@ const HighScoresTable: React.FC = () => {
     setError(null);
 
     try {
-      const response = await fetch(`/api/highscores?limit=10&page=${page}&playerID=${playerID}`);
+      const response = await fetch(`https://fwacpw2vca.ap-south-1.awsapprunner.com/api/highscores?limit=10&page=${page}&playerID=${playerID}`);
       const data = await response.json();
 
       setScores(data.Scores || []);
