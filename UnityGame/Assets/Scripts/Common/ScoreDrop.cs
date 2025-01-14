@@ -17,7 +17,7 @@ public class ScoreDrop : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("gsde");
+        //Debug.Log("gsde");
         if (collision.CompareTag("Player"))
         {
             // Award the score to the player

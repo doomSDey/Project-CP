@@ -79,7 +79,7 @@ public class Obstacle : MonoBehaviour
 
         // Apply the force to push the player back
         playerRb.AddForce(direction * pushBackForce, ForceMode2D.Impulse);
-        Debug.Log($"Pushing player back in direction {direction}");
+        //Debug.Log($"Pushing player back in direction {direction}");
     }
 
     public void TakeDamage(int damage)
@@ -124,7 +124,7 @@ public class Obstacle : MonoBehaviour
 
     private void DestroyObstacle()
     {
-        Debug.Log("Destroying obstacle...");
+        //Debug.Log("Destroying obstacle...");
         StopAllCoroutines(); // Stop any active coroutines
         Destroy(gameObject); // Mark object for destruction
     }

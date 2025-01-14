@@ -127,7 +127,7 @@ public class Platelet : BaseEnemy
         {
             Vector2 collisionNormal = collision.contacts[0].normal;
             moveDirection = Vector2.Reflect(moveDirection, collisionNormal).normalized;
-            Debug.Log($"{gameObject.name} collided with {collision.gameObject.name} and changed direction.");
+            //Debug.Log($"{gameObject.name} collided with {collision.gameObject.name} and changed direction.");
         }
     }
 

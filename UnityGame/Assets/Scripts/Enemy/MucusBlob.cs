@@ -40,7 +40,7 @@ public class MucusBlob : BaseEnemy
         if (blobGameObject == gameObject && isAttached && attachedPlayer != null)
         {
             attachedPlayer.ModifySpeed(speedReductionAmount);
-            Debug.Log($"{name} destroyed; speed restored by {speedReductionAmount}.");
+            //Debug.Log($"{name} destroyed; speed restored by {speedReductionAmount}.");
         }
     }
 
@@ -83,7 +83,7 @@ public class MucusBlob : BaseEnemy
     private void BounceBack(Vector2 collisionNormal)
     {
         movementDirection = Vector2.Reflect(movementDirection, collisionNormal).normalized;
-        Debug.Log($"{name} bounced back after hitting {collisionNormal}");
+        //Debug.Log($"{name} bounced back after hitting {collisionNormal}");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -123,7 +123,7 @@ public class MucusBlob : BaseEnemy
 
         // Apply speed reduction (subtract)
         attachedPlayer.ModifySpeed(-speedReductionAmount);
-        Debug.Log($"{name} attached to Player. Speed reduced by {speedReductionAmount}.");
+        //Debug.Log($"{name} attached to Player. Speed reduced by {speedReductionAmount}.");
     }
 
   

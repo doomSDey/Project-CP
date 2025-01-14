@@ -81,7 +81,7 @@ public class LivesManager : MonoBehaviour
 
             if (currentLives <= 0)
             {
-                Debug.Log("All lives lost!");
+                //Debug.Log("All lives lost!");
                 StartCoroutine(GoToGameOverScene());
             }
         }

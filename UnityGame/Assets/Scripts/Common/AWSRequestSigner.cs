@@ -68,7 +68,7 @@ public class AWSRequestSigner : MonoBehaviour
 
     public void InsertHighScore(string playerId, int highScore)
     {
-        Debug.Log($"Inserting high score for PlayerID: {playerId}, Score: {highScore}");
+        //Debug.Log($"Inserting high score for PlayerID: {playerId}, Score: {highScore}");
         string payload = "{\"action\":\"insert\",\"PlayerID\":\"" + playerId + "\",\"HighScore\":" + highScore + "}";
         StartCoroutine(SendSignedRequest(payload));
     }
@@ -114,7 +114,7 @@ public class AWSRequestSigner : MonoBehaviour
 
         if (request.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log("Request successful: " + request.downloadHandler.text);
+            //Debug.Log("Request successful: " + request.downloadHandler.text);
             ParseResponse(request.downloadHandler.text);
         }
         else

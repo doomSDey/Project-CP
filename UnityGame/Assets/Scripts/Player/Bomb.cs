@@ -52,7 +52,7 @@ public class Bomb : MonoBehaviour
 
     void Explode()
     {
-        Debug.Log("Explode triggered");
+        //Debug.Log("Explode triggered");
 
         // Trigger camera shake
         if (cameraShake != null)

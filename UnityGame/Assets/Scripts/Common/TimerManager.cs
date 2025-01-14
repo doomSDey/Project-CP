@@ -82,7 +82,7 @@ public class TimerManager : MonoBehaviour
 
     private void LoadNextScene()
     {
-        Debug.Log("NExas");
+        //Debug.Log("NExas");
         if (nextSceneName != null)
             SceneManager.LoadScene(nextSceneName);
     }

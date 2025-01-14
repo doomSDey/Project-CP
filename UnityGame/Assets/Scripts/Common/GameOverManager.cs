@@ -5,7 +5,7 @@ public class GameOverManager : MonoBehaviour
 {
     public void Retry()
     {
-        Debug.Log("Retry button clicked");
+        //Debug.Log("Retry button clicked");
 
         LivesManager.Instance.ResetLives();
         ScoreManager.Instance.ResetScore();

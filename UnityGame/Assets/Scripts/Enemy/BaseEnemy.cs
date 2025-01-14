@@ -39,7 +39,7 @@ public class BaseEnemy : MonoBehaviour
     public virtual void TakeDamage(float damage)
     {
         currentHealth -= damage;
-        Debug.Log($"{gameObject.name} took {damage} damage. Health: {currentHealth}/{maxHealth}");
+        //Debug.Log($"{gameObject.name} took {damage} damage. Health: {currentHealth}/{maxHealth}");
 
         StartDamageFlash();
 
@@ -52,7 +52,7 @@ public class BaseEnemy : MonoBehaviour
 
     public virtual void Die()
     {
-        Debug.Log($"{gameObject.name} has died!");
+        //Debug.Log($"{gameObject.name} has died!");
 
         // Notify the spawner and deactivate the object
         OnDestroyed?.Invoke(gameObject);

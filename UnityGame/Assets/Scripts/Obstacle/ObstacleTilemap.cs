@@ -115,7 +115,7 @@ public class ObstacleTilemap : MonoBehaviour
             playerScript.ApplyPushBack(direction * pushBackForce);
         }
 
-        Debug.Log($"Pushing player back in direction {direction} with force {pushBackForce}");
+        //Debug.Log($"Pushing player back in direction {direction} with force {pushBackForce}");
     }
 
     public void TakeDamage(int damage)
@@ -146,7 +146,7 @@ public class ObstacleTilemap : MonoBehaviour
             // Check if object is destroyed
             if (!this || spriteRenderer == null || !isAlive)
             {
-                Debug.Log("Object destroyed. Exiting flicker early.");
+                //Debug.Log("Object destroyed. Exiting flicker early.");
                 break; // Exit flicker logic early
             }
 
@@ -155,7 +155,7 @@ public class ObstacleTilemap : MonoBehaviour
 
             if (!this || spriteRenderer == null || !isAlive)
             {
-                Debug.Log("Object destroyed. Exiting flicker early.");
+                //Debug.Log("Object destroyed. Exiting flicker early.");
                 break; // Exit flicker logic early
             }
 

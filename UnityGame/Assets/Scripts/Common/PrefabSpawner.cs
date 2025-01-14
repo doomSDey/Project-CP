@@ -66,7 +66,7 @@ public class PrefabSpawner : MonoBehaviour
                     }
                     else
                     {
-                        Debug.Log("Spawn limit reached. Waiting for prefabs to be destroyed.");
+                        //Debug.Log("Spawn limit reached. Waiting for prefabs to be destroyed.");
                         break;
                     }
                 }
@@ -99,7 +99,7 @@ public class PrefabSpawner : MonoBehaviour
             float distanceToPlayer = Vector3.Distance(player.position, spawnPoint.position);
             if (distanceToPlayer <= noSpawnRadius)
             {
-                Debug.Log($"Skipping spawn as player is within {noSpawnRadius} units of the spawner.");
+                //Debug.Log($"Skipping spawn as player is within {noSpawnRadius} units of the spawner.");
                 return;
             }
 
