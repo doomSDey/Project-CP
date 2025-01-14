@@ -23,6 +23,9 @@ public class Laser : MonoBehaviour
         audioSource.clip = laserFireSound;
         audioSource.playOnAwake = false;
 
+        // Reduce volume by 50%
+        audioSource.volume = 0.1f;
+
         // Apply pitch variation
         audioSource.pitch = Random.Range(minPitch, maxPitch);
 
