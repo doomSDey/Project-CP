@@ -28,6 +28,11 @@ The project uses a serverless architecture with the following components:
 
 ## 🔧 Technical Stack
 
+### Directories
+- **Unity**: Contains the game build files for WebGL
+- **Lambda**: Contains the backend logic for handling high scores
+- **Webapp**: Contains the Next.js frontend
+
 ### Frontend
 - **Framework**: Next.js
 - **Hosting**: Amazon App Runner
@@ -72,7 +77,7 @@ The project uses a serverless architecture with the following components:
 ## 🚀 Deployment and Testing
 
 ### Frontend
-1. Clone the repository and navigate to the frontend folder.
+1. Clone the repository and navigate to the `Webapp` directory.
 2. Install dependencies:
    ```bash
    npm install
@@ -88,11 +93,12 @@ The project uses a serverless architecture with the following components:
    ```
 
 ### Backend
-1. Package the Lambda function:
+1. Navigate to the `Lambda` directory.
+2. Package the Lambda function:
    ```bash
    zip -r function.zip .
    ```
-2. Deploy the function to AWS Lambda.
+3. Deploy the function to AWS Lambda.
 
 ### Database
 - Create a DynamoDB table with the schema:
@@ -103,26 +109,22 @@ The project uses a serverless architecture with the following components:
       "HighScore": "number"
   }
   ```
+- Define the table name in the Lambda function.
 
 ### Unity Build
-1. Open the Unity project.
+1. Open the Unity project in the `Unity` directory.
 2. Build the game for WebGL.
 3. Upload the build files to the designated S3 bucket.
 
 ## 📝 Environment Variables
 
-The following environment variables are required for the Lambda function:
-- `table_name`: DynamoDB table name for high scores
+### Lambda Function
+The `table_name` must be defined directly in the Lambda function code.
 
-## ⚙️ DynamoDB Schema
-
-```json
-{
-    "PlayerID": "string",
-    "Timestamp": "string (ISO format)",
-    "HighScore": "number"
-}
-```
+### Webapp
+The following environment variables must be defined in a `.env` file, which is provided as `.env.example` in the `Webapp` directory:
+- `AWS_ACCESS_KEY`
+- `AWS_SECRET_KEY`
 
 ## Contributing
 
