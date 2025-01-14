@@ -169,7 +169,7 @@ public class MiniBoss : MonoBehaviour
     public void TakeDamage(float damage)
     {
         currentMiniBossHealth -= damage;
-        Debug.Log($"MiniBoss took {damage} damage. Remaining health: {currentMiniBossHealth}");
+        //Debug.Log($"MiniBoss took {damage} damage. Remaining health: {currentMiniBossHealth}");
         StartCoroutine(FlickerEffect());
     }
 
@@ -188,7 +188,7 @@ public class MiniBoss : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log("MiniBoss defeated!");
+        //Debug.Log("MiniBoss defeated!");
         UpdateAnimator(false);
         AwardPoints(1000);
         SceneManager.LoadScene("GameFin");
@@ -198,7 +198,7 @@ public class MiniBoss : MonoBehaviour
     private void AwardPoints(int points)
     {
         score += points;
-        Debug.Log($"Player awarded {points} points! Total score: {score}");
+        //Debug.Log($"Player awarded {points} points! Total score: {score}");
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

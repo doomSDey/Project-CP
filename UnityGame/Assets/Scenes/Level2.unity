@@ -998,6 +998,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7134094804804950161, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
+      propertyPath: noSpawnRadius
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 7385421370202777395, guid: 6e4397cd6d38ad34aba0f8e413967d30, type: 3}
       propertyPath: m_Name
       value: NeutrophilSpawns (1)

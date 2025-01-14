@@ -148,8 +148,8 @@ MonoBehaviour:
   speed: 10
   damage: 10
   laserFireSound: {fileID: 8300000, guid: 93d99d26b1831da4f957be065ea6408e, type: 3}
-  minPitch: 0.9
-  maxPitch: 1.1
+  minPitch: 0.5
+  maxPitch: 0.8
 --- !u!61 &549841530975281236
 BoxCollider2D:
   m_ObjectHideFlags: 0

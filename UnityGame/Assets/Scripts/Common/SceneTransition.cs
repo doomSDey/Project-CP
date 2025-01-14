@@ -8,7 +8,7 @@ public class SceneTransition : MonoBehaviour
 
     public void LoadScene()
     {
-        Debug.Log("Loading scene: " + sceneName);
+        //Debug.Log("Loading scene: " + sceneName);
         if (!string.IsNullOrEmpty(sceneName))
         {
             SceneManager.LoadScene(sceneName);

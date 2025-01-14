@@ -210,7 +210,7 @@ public class Boss : MonoBehaviour
         // Check if the collision is with the player
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Player hit");
+            //Debug.Log("Player hit");
             PlayerCapyScript player = collision.gameObject.GetComponent<PlayerCapyScript>();
             if (player != null)
             {
@@ -220,7 +220,7 @@ public class Boss : MonoBehaviour
         // Check if the collision is with an obstacle
         else if (collision.gameObject.CompareTag("Obstacle"))
         {
-            Debug.Log("Collided with an obstacle");
+            //Debug.Log("Collided with an obstacle");
 
             // Stop the boss's movement
             if (rb != null)

@@ -132,12 +132,12 @@ public class Neutrophil : BaseEnemy
 
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Neutrophil collided with Player — Exploding!");
+            //Debug.Log("Neutrophil collided with Player — Exploding!");
             Explode();
         }
         else if (collision.gameObject.CompareTag("Laser") || collision.gameObject.CompareTag("Bomb"))
         {
-            Debug.Log("Neutrophil hit by Capy Lazer — Detonating remotely!");
+            //Debug.Log("Neutrophil hit by Capy Lazer — Detonating remotely!");
             Explode();
         }
     }
@@ -194,7 +194,7 @@ public class Neutrophil : BaseEnemy
                 PlayerCapyScript player = obj.GetComponent<PlayerCapyScript>();
                 if (player != null)
                 {
-                    Debug.Log("Player hit by Neutrophil Explosion — Instantly Dead!");
+                    //Debug.Log("Player hit by Neutrophil Explosion — Instantly Dead!");
                     player.Die();
                 }
             }

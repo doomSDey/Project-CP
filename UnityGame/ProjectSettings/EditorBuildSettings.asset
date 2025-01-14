@@ -38,6 +38,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/StartCutscene.unity
     guid: 3002ce571f20129419fd5547d2d4158e
+  - enabled: 1
+    path: Assets/Scenes/GameControls.unity
+    guid: 52b08f2e46577854f97b2d48abe2c6fa
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

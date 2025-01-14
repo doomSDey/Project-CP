@@ -129,7 +129,7 @@ public class BrainMinion : BaseEnemy
             }
         }
 
-        Debug.Log($"Valid teleport positions calculated: {validTeleportPositions.Count} positions available.");
+        //Debug.Log($"Valid teleport positions calculated: {validTeleportPositions.Count} positions available.");
     }
 
     private bool IsPositionOccupied(Vector2 position)
@@ -152,7 +152,7 @@ public class BrainMinion : BaseEnemy
         Vector2 teleportPosition = validTeleportPositions[randomIndex];
         transform.position = teleportPosition;
 
-        Debug.Log($"Brain Minion teleported to {teleportPosition}");
+        //Debug.Log($"Brain Minion teleported to {teleportPosition}");
     }
 
     private IEnumerator PrepareLunge()
@@ -204,7 +204,7 @@ public class BrainMinion : BaseEnemy
             if (tilemap != null && tilemap.HasTile(cellPosition) == false)
             {
                 // If no tile at target cell, might be off-walkable area, stop lunge
-                Debug.Log("Lunge interrupted by non-walkable area (no tile).");
+                //Debug.Log("Lunge interrupted by non-walkable area (no tile).");
                 break;
             }
 
@@ -220,7 +220,7 @@ public class BrainMinion : BaseEnemy
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Brain Minion collided with Player — Player is Dead!");
+            //Debug.Log("Brain Minion collided with Player ï¿½ Player is Dead!");
             PlayerCapyScript player = collision.gameObject.GetComponent<PlayerCapyScript>();
             if (player != null)
             {
@@ -233,7 +233,7 @@ public class BrainMinion : BaseEnemy
     private void LatchOntoPlayer()
     {
         if (player == null) return;
-        Debug.Log("Brain Minion latches onto the player!");
+        //Debug.Log("Brain Minion latches onto the player!");
         // Teleport directly onto the player
         transform.position = player.transform.position;
 
@@ -254,7 +254,7 @@ public class BrainMinion : BaseEnemy
 
     public override void Die()
     {
-        Debug.Log("Brain Minion has been defeated!");
+        //Debug.Log("Brain Minion has been defeated!");
         base.Die();
     }
 

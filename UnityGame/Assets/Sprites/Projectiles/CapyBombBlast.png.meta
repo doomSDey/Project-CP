@@ -322,7 +322,15 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      CapyBombBlast_0: 8821243556648052075
+      CapyBombBlast_1: 8355497636586654178
+      CapyBombBlast_2: 286895111239380908
+      CapyBombBlast_3: 7837816243951439074
+      CapyBombBlast_4: -2083571225626363006
+      CapyBombBlast_5: -71272491494748896
+      CapyBombBlast_6: 3191618252268587550
+      CapyBombBlast_7: -238858409045438280
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

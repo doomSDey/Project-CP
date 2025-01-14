@@ -164,7 +164,7 @@ public class Macrophage : BaseEnemy
             if (playerScript != null)
             {
                 playerScript.Die(); // Kill player on contact
-                Debug.Log("Player killed on contact by Macrophage.");
+                //Debug.Log("Player killed on contact by Macrophage.");
             }
         }
         // 2) If we collide with a Bomb, stun this Macrophage

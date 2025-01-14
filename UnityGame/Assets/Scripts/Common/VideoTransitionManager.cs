@@ -20,6 +20,12 @@ public class TimestampPauseManager : MonoBehaviour
     [Tooltip("Name of the scene to load after the video ends.")]
     public string nextSceneName;
 
+    [Header("Audio Settings")]
+    [Tooltip("Audio clip to play when the button is clicked.")]
+    public AudioClip buttonClickSound;
+
+    public AudioSource audioSource;
+
     private int currentPauseIndex = 0;
     private bool isPausedManually = false;
     private bool isVideoEnded = false;
@@ -66,12 +72,14 @@ public class TimestampPauseManager : MonoBehaviour
                 nextButton.gameObject.SetActive(true);
             }
 
-            Debug.Log($"Video paused at {videoPlayer.time:F2}s. Waiting for user input.");
+            //Debug.Log($"Video paused at {videoPlayer.time:F2}s. Waiting for user input.");
         }
     }
 
     private void OnNextButtonClick()
     {
+        PlayButtonClickSound();
+
         if (isVideoEnded)
         {
             SceneManager.LoadScene(nextSceneName);
@@ -84,7 +92,7 @@ public class TimestampPauseManager : MonoBehaviour
             currentPauseIndex++;
             videoPlayer.Play();
 
-            Debug.Log($"User resumed video. Next pause index = {currentPauseIndex} (time = {videoPlayer.time:F2}s).");
+            //Debug.Log($"User resumed video. Next pause index = {currentPauseIndex} (time = {videoPlayer.time:F2}s).");
         }
     }
 
@@ -93,6 +101,14 @@ public class TimestampPauseManager : MonoBehaviour
         isVideoEnded = true;
         nextButton.gameObject.SetActive(true);
 
-        Debug.Log("Video finished playing. Showing transition button.");
+        //Debug.Log("Video finished playing. Showing transition button.");
+    }
+
+    private void PlayButtonClickSound()
+    {
+        if (audioSource != null && buttonClickSound != null)
+        {
+            audioSource.PlayOneShot(buttonClickSound);
+        }
     }
 }

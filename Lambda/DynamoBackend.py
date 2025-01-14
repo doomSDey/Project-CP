@@ -11,24 +11,60 @@ table_name = 'Project-CP-Highscores'
 table = dynamodb.Table(table_name)
 
 def lambda_handler(event, context):
+    # Handle CORS preflight (OPTIONS) requests
+    if event.get('httpMethod', '') == 'OPTIONS':
+        return {
+            'statusCode': 200,
+            'headers': {
+                'Access-Control-Allow-Origin': 'https://project-cp.s3.ap-south-1.amazonaws.com',
+                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+                'Access-Control-Allow-Credentials': 'true',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Amz-Date',
+            },
+            'body': '',
+        }
+
     print("Received event:", json.dumps(event, indent=2))  # Log for debugging
 
-    # Parse the body if passed through API Gateway HTTP API
+    # Parse the request body (for POST/GET)
     body = event.get('body', '{}')
     if isinstance(body, str):
-        body = json.loads(body)
+        try:
+            body = json.loads(body)
+        except json.JSONDecodeError:
+            return {
+                'statusCode': 400,
+                'body': json.dumps({'error': 'Invalid JSON in request body.'}),
+            }
 
     action = body.get('action', '')
 
-    if action == 'insert':
-        return insert_high_score(body)
-    elif action == 'get_scores':
-        return get_scores(body)
-    else:
-        return {
-            'statusCode': 400,
-            'body': json.dumps('Invalid action. Use "insert" or "get_scores".')
+    # Process the action
+    try:
+        if action == 'insert':
+            response = insert_high_score(body)
+        elif action == 'get_scores':
+            response = get_scores(body)
+        else:
+            response = {
+                'statusCode': 400,
+                'body': json.dumps({'error': 'Invalid action. Use "insert" or "get_scores".'}),
+            }
+    except Exception as e:
+        print(f"Error processing request: {e}")
+        response = {
+            'statusCode': 500,
+            'body': json.dumps({'error': 'Internal Server Error'}),
         }
+
+    # Add CORS headers to the response
+    response['headers'] = {
+        'Access-Control-Allow-Origin': 'https://project-cp.s3.ap-south-1.amazonaws.com',
+        'Access-Control-Allow-Credentials': 'true',
+    }
+
+    print('Final response:', response)
+    return response
 
 def insert_high_score(event):
     player_id = event.get('PlayerID')

@@ -191,7 +191,7 @@ public class PlayerCapyScript : MonoBehaviour
         if (moveSpeed < 0f) moveSpeed = 0f;
 
         currentMoveSpeed = moveSpeed;
-        Debug.Log($"Player speed changed by {amount}. New moveSpeed = {moveSpeed}");
+        //Debug.Log($"Player speed changed by {amount}. New moveSpeed = {moveSpeed}");
     }
 
     public void ApplyPushBack(Vector2 force)
@@ -209,7 +209,7 @@ public class PlayerCapyScript : MonoBehaviour
 
     public void Die()
     {
-        Debug.Log("Player has died!");
+        //Debug.Log("Player has died!");
         LivesManager.Instance.LoseLife();
 
         if (LivesManager.Instance.GetCurrentLives() > 0)
@@ -218,7 +218,7 @@ public class PlayerCapyScript : MonoBehaviour
         }
         else
         {
-            Debug.Log("Game Over!");
+            //Debug.Log("Game Over!");
         }
     }
 
