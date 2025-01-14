@@ -1,12 +1,19 @@
 
-# Project-CP
+# Capywarz (Codename: Project-CP)
 
-A web-based game with a global leaderboard system powered by AWS serverless architecture.
+![Title Image](https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/003/211/125/datas/original.png)
+
+A web-based arcade shooter game with a global leaderboard system powered by AWS serverless architecture.
 
 ## 🎮 Play the Game
 
 [Play Project-CP](https://d1670hkpds66xb.cloudfront.net/)
 
+[Read about the journey](https://community.aws/editor/posts/preview/content/2rbgYlmzSHXfq8b4e86i62apzKf?v=2rbgYs3OBN1JSbiznCsrc7EoEmP)
+
+![Gameplay](https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/003/214/263/datas/original.PNG)
+
+![Gameplay](https://d112y698adiu2z.cloudfront.net/photos/production/software_photos/003/214/401/datas/original.PNG)
 ## 📋 Overview
 
 Project-CP is a web game that features:
@@ -45,7 +52,6 @@ The project uses a serverless architecture with the following components:
 ## 🌟 Features
 
 ### High Score System
-- Submit new high scores
 - View global leaderboard
 - Filter scores by player ID
 - Paginated results
