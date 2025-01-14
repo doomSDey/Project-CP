@@ -34,8 +34,8 @@ public class GamerNameInputTMP : MonoBehaviour
         PlayerPrefs.SetString("GamerName", gamerName);
         PlayerPrefs.Save();
 
-        // Load Level 1
-        SceneManager.LoadScene("Level1"); // Ensure "Level1" matches your scene name
+        // Load StartCutscene
+        SceneManager.LoadScene("StartCutscene"); // Ensure "Level1" matches your scene name
     }
 
     private void OnDestroy()
