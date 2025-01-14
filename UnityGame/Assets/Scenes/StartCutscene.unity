@@ -1165,14 +1165,20 @@ MonoBehaviour:
   videoPlayer: {fileID: 1582089451}
   audioClipDataList:
   - clip: {fileID: 8300000, guid: beba77f80083a184aba1a94d387529e0, type: 3}
-    startTime: 9
-    endTime: 9.7
+    startTime: 8.38
+    endTime: 9.14
+  - clip: {fileID: 8300000, guid: 612c365baea5e554e988e5ae75c6f31a, type: 3}
+    startTime: 9.69
+    endTime: 10.56
   - clip: {fileID: 8300000, guid: 0020404f1450bbc458e4b53be5867a62, type: 3}
     startTime: 16
-    endTime: 20
+    endTime: 18.72
   - clip: {fileID: 8300000, guid: 0020404f1450bbc458e4b53be5867a62, type: 3}
-    startTime: 22
-    endTime: 25
+    startTime: 21
+    endTime: 22
+  - clip: {fileID: 8300000, guid: 9d710116fef32754cbc5220c3f913481, type: 3}
+    startTime: 27
+    endTime: 32
 --- !u!4 &2094433436
 Transform:
   m_ObjectHideFlags: 0
